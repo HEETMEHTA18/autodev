@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: [],
+      disallow: ["/cdn-cgi/"],
     },
     sitemap: "https://autodevs.dev/sitemap.xml",
   };

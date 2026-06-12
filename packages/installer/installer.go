@@ -221,6 +221,40 @@ func (i *Installer) CheckStatus(name string) Status {
 	}
 }
 
+// isUnsafeCommand returns true if the command string contains shell metacharacters
+// or constructs that require a shell (pipes, redirection, command substitution,
+// boolean operators). We refuse to execute such strings directly to avoid
+// command-injection and supply-chain risks. Commands that require complex
+// shell behavior should be reviewed and executed manually.
+func isUnsafeCommand(cmd string) bool {
+	// characters and sequences that indicate shell features
+	if strings.ContainsAny(cmd, "|&;$`<>") {
+		return true
+	}
+	if strings.Contains(cmd, "$(") || strings.Contains(cmd, "||") || strings.Contains(cmd, "&&") || strings.Contains(cmd, ";") {
+		return true
+	}
+	return false
+}
+
+// runSimpleCommand splits a simple command string into argv and runs it
+// without invoking a subshell. It rejects unsafe commands and returns an
+// error instructing the caller to run the command manually.
+func runSimpleCommand(cmdStr string) error {
+	if isUnsafeCommand(cmdStr) {
+		return fmt.Errorf("refusing to run unsafe command: %q (manual review required)", cmdStr)
+	}
+
+	parts := strings.Fields(cmdStr)
+	if len(parts) == 0 {
+		return nil
+	}
+	cmd := exec.Command(parts[0], parts[1:]...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
 // Install installs the given runtime using the platform-appropriate command.
 func (i *Installer) Install(name string) error {
 	rt, ok := runtimes[name]
@@ -247,10 +281,7 @@ func (i *Installer) Install(name string) error {
 		}
 
 		fmt.Printf("  → Running: %s\n", cmdStr)
-		cmd := exec.Command("sh", "-c", cmdStr)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		if err := cmd.Run(); err != nil {
+		if err := runSimpleCommand(cmdStr); err != nil {
 			return fmt.Errorf("command failed (%q): %w", cmdStr, err)
 		}
 	}

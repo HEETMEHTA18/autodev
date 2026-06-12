@@ -153,22 +153,34 @@ func (p *Package) IsInstalled() bool {
 	if p.Verify == "" {
 		return false
 	}
-	
 	parts := strings.Fields(p.Verify)
 	if len(parts) == 0 {
 		return false
 	}
-	
+
 	// Check if the binary executable exists in PATH
 	_, err := exec.LookPath(parts[0])
 	if err != nil {
 		return false
 	}
-	
+
+	// Reject complex shell expressions in the verify command. If the verify
+	// string contains pipes, redirection, command substitution or boolean
+	// operators, we avoid running it automatically to reduce command-injection
+	// risk and return false so the caller can perform manual verification.
+	unsafeTokens := []string{"|", "$(", "&&", "||", ";", "`", ">", "<"}
+	for _, t := range unsafeTokens {
+		if strings.Contains(p.Verify, t) {
+			return false
+		}
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
-	
-	cmd := exec.CommandContext(ctx, "sh", "-c", p.Verify)
-	err = cmd.Run()
-	return err == nil
+
+	cmd := exec.CommandContext(ctx, parts[0], parts[1:]...)
+	if err := cmd.Run(); err != nil {
+		return false
+	}
+	return true
 }

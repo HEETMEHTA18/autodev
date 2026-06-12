@@ -221,7 +221,7 @@ func UpdateRefinedPromptsMD(root string, res DevMentorSyncResponse) error {
 }
 
 // UpdateWorkflowsMD appends workflow information to .autodevs/workflows.md
-func UpdateWorkflowsMD(root string, res DevMentorSyncResponse) error {
+func UpdateWorkflowsMD(root string, res DevMentorSyncResponse) (retErr error) {
 	if res.Workflow == "" {
 		return nil
 	}
@@ -239,7 +239,11 @@ func UpdateWorkflowsMD(root string, res DevMentorSyncResponse) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() {
+		if cerr := f.Close(); retErr == nil && cerr != nil {
+			retErr = cerr
+		}
+	}()
 
 	info, err := f.Stat()
 	if err == nil && info.Size() == 0 {

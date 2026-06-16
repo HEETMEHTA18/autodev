@@ -190,7 +190,7 @@ func SyncWithDevMentor(root, prompt string) error {
 }
 
 // UpdateRefinedPromptsMD appends details to .autodevs/refined-prompts.md
-func UpdateRefinedPromptsMD(root string, res DevMentorSyncResponse) error {
+func UpdateRefinedPromptsMD(root string, res DevMentorSyncResponse) (retErr error) {
 	path := filepath.Join(root, ".autodevs", "refined-prompts.md")
 	timestamp := time.Now().Format("2006-01-02 15:04:05")
 
@@ -206,7 +206,11 @@ func UpdateRefinedPromptsMD(root string, res DevMentorSyncResponse) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() {
+		if cerr := f.Close(); retErr == nil && cerr != nil {
+			retErr = cerr
+		}
+	}()
 
 	info, err := f.Stat()
 	if err == nil && info.Size() == 0 {
@@ -217,7 +221,8 @@ func UpdateRefinedPromptsMD(root string, res DevMentorSyncResponse) error {
 	}
 
 	_, err = f.WriteString(entry)
-	return err
+	retErr = err
+	return retErr
 }
 
 // UpdateWorkflowsMD appends workflow information to .autodevs/workflows.md

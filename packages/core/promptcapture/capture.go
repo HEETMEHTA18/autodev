@@ -57,7 +57,7 @@ func AppendToPromptsMD(root, prompt string) error {
 }
 
 // AppendToPromptsMDWithTime writes the prompt to .autodevs/prompts.md with a specific timestamp
-func AppendToPromptsMDWithTime(root, prompt, timestamp string) error {
+func AppendToPromptsMDWithTime(root, prompt, timestamp string) (retErr error) {
 	if err := InitializeAutodevsDir(root); err != nil {
 		return err
 	}
@@ -79,7 +79,11 @@ func AppendToPromptsMDWithTime(root, prompt, timestamp string) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() {
+		if cerr := f.Close(); retErr == nil && cerr != nil {
+			retErr = cerr
+		}
+	}()
 
 	// If file is new, write header
 	info, err := f.Stat()
@@ -90,8 +94,8 @@ func AppendToPromptsMDWithTime(root, prompt, timestamp string) error {
 		}
 	}
 
-	_, err = f.WriteString(entry)
-	return err
+	_, retErr = f.WriteString(entry)
+	return retErr
 }
 
 func isDuplicate(content, prompt string) bool {

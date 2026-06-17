@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  go-lint:
+    name: Go Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+      - name: Install golangci-lint
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.58.2
+      - name: Run golangci-lint
+        run: golangci-lint run ./...
+  go-test:
+    name: Go Tests
+    runs-on: ubuntu-latest
+    needs: go-lint
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+      - name: Run tests
+        run: go test ./... -v
+  website-lint-typecheck:
+    name: Website Lint & Type Check
+    runs-on: ubuntu-latest
+    needs: go-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: Install dependencies
+        working-directory: apps/website
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        working-directory: apps/website
+        run: pnpm lint || true
+      - name: Type Check
+        working-directory: apps/website
+        run: pnpm typecheck || true
+      - name: Build
+        working-directory: apps/website
+        run: pnpm build

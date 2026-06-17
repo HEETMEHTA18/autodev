@@ -7,6 +7,7 @@ interface AsciiBackgroundProps {
   className?: string;
   speed?: number;
   density?: number;
+  mouseSensi?: number; // 1 to 5, scales mouse radius and distortion reaction
 }
 
 interface FloatingText {
@@ -26,6 +27,7 @@ export default function AsciiBackground({
   className = "",
   speed = 1,
   density = 1,
+  mouseSensi = 1.5,
 }: AsciiBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pathname = usePathname();
@@ -81,11 +83,14 @@ export default function AsciiBackground({
 
     const floatingTexts: FloatingText[] = [];
 
-    // Mouse coordinates tracking
+    // Mouse coordinates and velocity tracking
     let mouseX = -9999;
     let mouseY = -9999;
     let targetMouseX = -9999;
     let targetMouseY = -9999;
+    let mouseSpeed = 0;
+    let lastMouseX = -9999;
+    let lastMouseY = -9999;
 
     const handleResize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -100,11 +105,24 @@ export default function AsciiBackground({
       const rect = canvas.getBoundingClientRect();
       targetMouseX = e.clientX - rect.left;
       targetMouseY = e.clientY - rect.top;
+
+      if (lastMouseX !== -9999) {
+        const dx = targetMouseX - lastMouseX;
+        const dy = targetMouseY - lastMouseY;
+        const instantSpeed = Math.sqrt(dx * dx + dy * dy);
+        // Smooth out the speed value
+        mouseSpeed = mouseSpeed * 0.85 + instantSpeed * 0.15;
+      }
+      lastMouseX = targetMouseX;
+      lastMouseY = targetMouseY;
     };
 
     const handleMouseLeave = () => {
       targetMouseX = -9999;
       targetMouseY = -9999;
+      lastMouseX = -9999;
+      lastMouseY = -9999;
+      mouseSpeed = 0;
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -115,6 +133,9 @@ export default function AsciiBackground({
     const render = () => {
       frame += speed;
       ctx.clearRect(0, 0, width, height);
+
+      // Decelerate mouse velocity feedback
+      mouseSpeed *= 0.96;
 
       // Smooth lag interpolation for mouse coordinates
       if (targetMouseX === -9999) {
@@ -133,9 +154,17 @@ export default function AsciiBackground({
       ctx.font = `${fontSize}px var(--font-mono), monospace`;
       
       // Determine color palette based on active theme
-      const isDark = theme === "dark" || !theme;
-      const baseColor = isDark ? "255, 215, 0" : "180, 140, 10"; // Gold/Yellow (autodev brand color)
+      const isDark = theme !== "light";
+      const baseColor = isDark ? "255, 215, 0" : "217, 119, 6"; // Gold (dark mode) / Amber (light mode)
       
+      // Add text shadow glow effect in dark mode for highlighting
+      if (isDark) {
+        ctx.shadowColor = `rgba(${baseColor}, 0.7)`;
+        ctx.shadowBlur = 5;
+      } else {
+        ctx.shadowBlur = 0;
+      }
+
       const cols = Math.ceil(width / charWidth);
       const rows = Math.ceil(height / charHeight);
 
@@ -185,14 +214,14 @@ export default function AsciiBackground({
           const textItem = textOverlayMap.get(key);
 
           if (textItem) {
-            ctx.fillStyle = `rgba(${baseColor}, ${textItem.opacity * 0.45 * density})`;
+            ctx.fillStyle = `rgba(${baseColor}, ${textItem.opacity * 0.75 * density})`;
             ctx.fillText(textItem.char, x, y);
             continue;
           }
 
           // Technical grid structure: Draw a plus sign (+) at grid intersections
           if (c % 16 === 0 && r % 4 === 0) {
-            ctx.fillStyle = `rgba(${baseColor}, 0.04)`;
+            ctx.fillStyle = isDark ? `rgba(${baseColor}, 0.08)` : `rgba(${baseColor}, 0.12)`;
             ctx.fillText("+", x, y);
             continue;
           }
@@ -212,7 +241,7 @@ export default function AsciiBackground({
           // Normalize wave value to [0, 1]
           let normWave = (wave + 1) * 0.5;
 
-          // Distance-based mouse distortion
+          // Distance-based mouse distortion with speed-dependent dynamic radius
           let distance = 9999;
           if (mouseX !== -9999) {
             const dx = x - mouseX;
@@ -220,11 +249,15 @@ export default function AsciiBackground({
             distance = Math.sqrt(dx * dx + dy * dy);
           }
 
-          const mouseRadius = 120;
+          // Incorporate mouse sensitivity (multiplier for mouse influence and radius)
+          const baseRadius = 120 * mouseSensi;
+          const dynamicRadius = baseRadius + Math.min(120, mouseSpeed * 2.5 * mouseSensi);
           let mouseInfluence = 0;
-          if (distance < mouseRadius) {
-            mouseInfluence = (1 - distance / mouseRadius);
-            normWave = normWave * (1 - mouseInfluence) + mouseInfluence * 0.95;
+          if (distance < dynamicRadius) {
+            mouseInfluence = (1 - distance / dynamicRadius);
+            // Magnify wave disruption when mouse moves fast
+            const distortionFactor = 0.95 + (mouseSpeed * 0.01);
+            normWave = normWave * (1 - mouseInfluence) + mouseInfluence * distortionFactor;
           }
 
           // Incorporate sweep line scanning intensity
@@ -238,17 +271,18 @@ export default function AsciiBackground({
           const char = asciiChars[charIndex];
 
           if (char !== " ") {
-            // Calculate opacity based on density, wave, mouse and sweep presence
-            let opacity = normWave * 0.06 * density;
+            // Brighter baseline opacity: increased from 0.06 to 0.12
+            let opacity = normWave * 0.12 * density;
             if (mouseInfluence > 0) {
-              opacity = (normWave * 0.06 + mouseInfluence * 0.18) * density;
+              // Brighter mouse reaction: increased multiplier and base
+              opacity = (normWave * 0.12 + mouseInfluence * 0.28) * density;
             }
             if (sweepInfluence > 0) {
-              opacity = Math.max(opacity, sweepInfluence * 0.12 * density);
+              opacity = Math.max(opacity, sweepInfluence * 0.22 * density);
             }
             
-            // Restrict bounds
-            opacity = Math.max(0.005, Math.min(0.35, opacity));
+            // Restrict bounds (increased maximum opacity limit for brighter highlighting)
+            opacity = Math.max(0.01, Math.min(0.65, opacity));
 
             ctx.fillStyle = `rgba(${baseColor}, ${opacity})`;
             
@@ -274,15 +308,17 @@ export default function AsciiBackground({
       }
       cancelAnimationFrame(animationId);
     };
-  }, [mounted, isLandingPage, theme, speed, density]);
+  }, [mounted, isLandingPage, theme, speed, density, mouseSensi]);
 
   if (!isLandingPage) return null;
+
+  const isDark = theme !== "light";
 
   return (
     <canvas
       ref={canvasRef}
       className={`absolute inset-0 w-full h-full pointer-events-none select-none z-0 ${className}`}
-      style={{ mixBlendMode: "screen" }}
+      style={{ mixBlendMode: isDark ? "screen" : "multiply" }}
     />
   );
 }

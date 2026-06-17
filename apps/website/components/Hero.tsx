@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Copy, Check } from "lucide-react";
 import { trackInstall } from "../utils/analytics";
+import AsciiBackground from "./AsciiBackground";
 
 const container = {
   hidden: {},
@@ -75,8 +76,10 @@ export default function Hero() {
   };
 
   return (
-    <section className="pt-36 pb-24 px-6 max-w-7xl mx-auto">
-      <motion.div variants={container} initial="hidden" animate="show">
+    <section className="relative overflow-hidden w-full">
+      <AsciiBackground className="opacity-55" mouseSensi={2.0} />
+      <div className="max-w-7xl mx-auto pt-36 pb-24 px-6 relative z-10">
+        <motion.div variants={container} initial="hidden" animate="show">
         {/* Badges */}
         <motion.div
           variants={item}
@@ -224,6 +227,7 @@ export default function Hero() {
           ))}
         </motion.div>
       </motion.div>
+      </div>
     </section>
   );
 }

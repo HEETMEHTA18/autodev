@@ -221,7 +221,6 @@ export default function Navbar() {
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
-                  v0.4.0 is live!y={link.name}
                   href={link.href}
                   onClick={() => setIsMenuOpen(false)}
                   className="text-neutral-400 hover:text-[#FFD700] py-2 border-b border-[#1A1A1A] transition-colors"

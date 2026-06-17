@@ -63,6 +63,15 @@ export const metadata: Metadata = {
   },
 };
 
+// Dynamic canonical handling for all routes (ignores query parameters)
+export async function generateMetadata({ pathname }: { pathname: string }) {
+  const base = metadata.metadataBase?.toString() ?? "https://autodevs.dev";
+  const canonicalUrl = `${base}${pathname}`;
+  return {
+    alternates: { canonical: canonicalUrl },
+  } as Partial<Metadata>;
+}
+
 export default function RootLayout({
   children,
 }: {

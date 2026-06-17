@@ -19,8 +19,14 @@ jobs:
       - name: Install golangci-lint
         run: |
           curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.58.2
-      - name: Run golangci-lint
-        run: golangci-lint run ./...
+      - name: Run golangci-lint on each module
+        run: |
+          for dir in packages/*; do
+            if [ -f "$dir/go.mod" ]; then
+              echo "Running golangci-lint in $dir"
+              (cd $dir && golangci-lint run ./...)
+            fi
+          done
   go-test:
     name: Go Tests
     runs-on: ubuntu-latest

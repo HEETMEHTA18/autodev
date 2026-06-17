@@ -94,8 +94,12 @@ export default function AsciiBackground({
 
     const handleResize = () => {
       const rect = canvas.getBoundingClientRect();
-      width = canvas.width = rect.width;
-      height = canvas.height = rect.height;
+      const dpr = window.devicePixelRatio || 1;
+      width = rect.width;
+      height = rect.height;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
     };
 
     window.addEventListener("resize", handleResize);
@@ -129,15 +133,19 @@ export default function AsciiBackground({
     canvas.addEventListener("mouseleave", handleMouseLeave);
 
     let frame = 0;
+    let lastTime = performance.now();
 
-    const render = () => {
-      frame += speed;
+    const render = (time: number) => {
+      const dt = Math.min(4, (time - lastTime) / 16.666); // Cap dt to avoid huge jumps on tab wake
+      lastTime = time;
+      
+      frame += speed * dt;
       ctx.clearRect(0, 0, width, height);
 
-      // Decelerate mouse velocity feedback
-      mouseSpeed *= 0.96;
+      // Decelerate mouse velocity feedback using dt
+      mouseSpeed *= Math.pow(0.96, dt);
 
-      // Smooth lag interpolation for mouse coordinates
+      // Frame-rate independent LERP for mouse coordinates
       if (targetMouseX === -9999) {
         mouseX = -9999;
         mouseY = -9999;
@@ -146,8 +154,9 @@ export default function AsciiBackground({
           mouseX = targetMouseX;
           mouseY = targetMouseY;
         } else {
-          mouseX += (targetMouseX - mouseX) * 0.15;
-          mouseY += (targetMouseY - mouseY) * 0.15;
+          const lerpFactor = 1 - Math.pow(1 - 0.15, dt);
+          mouseX += (targetMouseX - mouseX) * lerpFactor;
+          mouseY += (targetMouseY - mouseY) * lerpFactor;
         }
       }
 
@@ -155,7 +164,7 @@ export default function AsciiBackground({
       
       // Determine color palette based on active theme
       const isDark = theme !== "light";
-      const baseColor = isDark ? "255, 215, 0" : "217, 119, 6"; // Gold (dark mode) / Amber (light mode)
+      const baseColor = isDark ? "255, 215, 0" : "217, 119, 6"; // Gold (dark) / Amber (light)
       
       // Add text shadow glow effect in dark mode for highlighting
       if (isDark) {
@@ -168,8 +177,8 @@ export default function AsciiBackground({
       const cols = Math.ceil(width / charWidth);
       const rows = Math.ceil(height / charHeight);
 
-      // Manage floating telemetry text
-      if (frame % 150 === 0 && floatingTexts.length < 5) {
+      // Manage floating telemetry text using dt for life ticks
+      if (Math.random() < 0.008 * dt && floatingTexts.length < 5) {
         const text = telemetryItems[Math.floor(Math.random() * telemetryItems.length)];
         const length = text.length;
         const c = Math.max(1, Math.floor(Math.random() * (cols - length - 2)));
@@ -185,7 +194,7 @@ export default function AsciiBackground({
 
       // Filter out dead floating texts
       for (let i = floatingTexts.length - 1; i >= 0; i--) {
-        floatingTexts[i].life += speed;
+        floatingTexts[i].life += speed * dt;
         if (floatingTexts[i].life >= floatingTexts[i].maxLife) {
           floatingTexts.splice(i, 1);
         }
@@ -271,10 +280,9 @@ export default function AsciiBackground({
           const char = asciiChars[charIndex];
 
           if (char !== " ") {
-            // Brighter baseline opacity: increased from 0.06 to 0.12
+            // Brighter baseline opacity
             let opacity = normWave * 0.12 * density;
             if (mouseInfluence > 0) {
-              // Brighter mouse reaction: increased multiplier and base
               opacity = (normWave * 0.12 + mouseInfluence * 0.28) * density;
             }
             if (sweepInfluence > 0) {
@@ -298,7 +306,8 @@ export default function AsciiBackground({
       animationId = requestAnimationFrame(render);
     };
 
-    render();
+    // Use requestAnimationFrame with high-resolution timestamp
+    animationId = requestAnimationFrame(render);
 
     return () => {
       window.removeEventListener("resize", handleResize);

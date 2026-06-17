@@ -30,8 +30,8 @@ export default function Navbar() {
       .catch((err) => console.error("Failed to fetch stars:", err));
 
     // Fetch unique page views
-    const hasVisited = localStorage.getItem("autodev_visited");
-    const endpoint = hasVisited
+    const isDismissed = localStorage.getItem("autodev_update_dismissed_v0.4.0");
+    const endpoint = isDismissed
       ? "https://api.counterapi.dev/v1/heetmehta18-autodev/views/"
       : "https://api.counterapi.dev/v1/heetmehta18-autodev/views/up";
 
@@ -40,8 +40,8 @@ export default function Navbar() {
       .then((data) => {
         if (data && typeof data.count === "number") {
           setViews(data.count);
-          if (!hasVisited) {
-            localStorage.setItem("autodev_visited", "true");
+          if (!isDismissed) {
+            localStorage.setItem("autodev_update_dismissed_v0.4.0", "true");
           }
         }
       })
@@ -67,7 +67,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <span className="text-xl md:text-2xl font-black text-[#FFD700] tracking-tighter">
-            ⚡ AUTODEV
+            UPGRADE TO AUTODEV v0.4.0
           </span>
         </Link>
 
@@ -116,7 +116,7 @@ export default function Navbar() {
               window.dispatchEvent(new Event("autodev_open_update_modal"))
             }
             className="relative p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#FFD700] text-[#FFD700] transition-colors cursor-pointer"
-            title="What's New in v0.3.2"
+            title="What's New in v0.4.0"
           >
             <Bell className="w-4 h-4" />
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FFD700] rounded-full animate-ping" />
@@ -171,7 +171,7 @@ export default function Navbar() {
               window.dispatchEvent(new Event("autodev_open_update_modal"))
             }
             className="relative p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#FFD700] text-white transition-colors cursor-pointer"
-            title="What's New in v0.3.2"
+            title="What's New in v0.4.0"
           >
             <Bell className="w-5 h-5" />
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FFD700] rounded-full animate-ping" />
@@ -221,6 +221,7 @@ export default function Navbar() {
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
+                  v0.4.0 is live!y={link.name}
                   href={link.href}
                   onClick={() => setIsMenuOpen(false)}
                   className="text-neutral-400 hover:text-[#FFD700] py-2 border-b border-[#1A1A1A] transition-colors"

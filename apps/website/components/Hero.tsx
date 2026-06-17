@@ -86,7 +86,7 @@ export default function Hero() {
           className="mb-8 flex flex-wrap items-center gap-4"
         >
           <span className="inline-block border-2 border-[#FFD700] text-[#FFD700] text-xs font-bold px-3 py-1 uppercase tracking-widest">
-            v0.3.2 — Open Source
+            v0.4.0 — Open Source
           </span>
           <a
             href="https://www.producthunt.com/products/autodevs?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-autodevs"

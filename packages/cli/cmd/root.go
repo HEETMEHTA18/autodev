@@ -96,6 +96,8 @@ func init() {
 		newBenchmarkCmd(),
 		newContainerizeCmd(),
 		newMigrateCmd(),
+		newCICmd(),
+		newPluginCmd(),
 	)
 
 	// Prompts manager command (displays history & groups prompt capture subcommands)

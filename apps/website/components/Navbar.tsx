@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Eye, Menu, X, Star, Sun, Moon, Bell } from "lucide-react";
 import { useTheme } from "next-themes";
+import AsciiBackground from "./AsciiBackground";
 
 export default function Navbar() {
   const [stars, setStars] = useState<number | null>(null);
@@ -61,7 +62,8 @@ export default function Navbar() {
       transition={{ duration: 0.4 }}
       className="fixed top-0 left-0 right-0 z-50 border-b-2 border-[#2A2A2A] bg-black/95 backdrop-blur-sm"
     >
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+      <AsciiBackground className="opacity-45" />
+      <div className="relative z-10 max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <span className="text-xl md:text-2xl font-black text-[#FFD700] tracking-tighter">

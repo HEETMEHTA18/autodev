@@ -1,9 +1,11 @@
 "use client";
+import AsciiBackground from "./AsciiBackground";
 
 export default function Footer() {
   return (
-    <footer className="border-t-2 border-[#2A2A2A] py-16 px-6">
-      <div className="max-w-7xl mx-auto">
+    <footer className="relative overflow-hidden border-t-2 border-[#2A2A2A] py-16 px-6">
+      <AsciiBackground className="opacity-30" />
+      <div className="relative z-10 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-16">
           {/* Brand */}
           <div className="md:col-span-2">

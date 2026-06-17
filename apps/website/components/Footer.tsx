@@ -1,10 +1,12 @@
 "use client";
+import AsciiBackground from "./AsciiBackground";
 
 export default function Footer() {
   return (
-    <footer className="border-t-2 border-[#2A2A2A] py-16 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-16">
+    <footer className="relative overflow-hidden border-t-2 border-[#2A2A2A] py-16 px-6">
+      <AsciiBackground className="opacity-30" />
+      <div className="relative z-10 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-10 mb-16">
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="text-2xl font-black text-[#FFD700] mb-3">
@@ -75,6 +77,31 @@ export default function Footer() {
                       {l.name}
                     </a>
                   )}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Templates */}
+          <div>
+            <h3 className="font-black text-white text-sm uppercase tracking-wider mb-4">
+              Templates
+            </h3>
+            <ul className="space-y-2 text-sm text-neutral-400">
+              {[
+                { name: "React Template", href: "/react-template" },
+                { name: "Next.js Template", href: "/nextjs-template" },
+                { name: "MERN Stack Template", href: "/mern-template" },
+                { name: "AI Agent Template", href: "/ai-agent-template" },
+                { name: "Flutter Template", href: "/flutter-template" },
+              ].map((l) => (
+                <li key={l.name}>
+                  <a
+                    href={l.href}
+                    className="hover:text-[#FFD700] transition-colors"
+                  >
+                    {l.name}
+                  </a>
                 </li>
               ))}
             </ul>

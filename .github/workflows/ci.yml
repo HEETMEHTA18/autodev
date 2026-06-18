@@ -37,8 +37,14 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "1.22"
-      - name: Run tests
-        run: go test ./... -v
+      - name: Run tests on each module
+        run: |
+          for dir in packages/*; do
+            if [ -f "$dir/go.mod" ]; then
+              echo "Running tests in $dir"
+              (cd $dir && go test ./... -v)
+            fi
+          done
   website-lint-typecheck:
     name: Website Lint & Type Check
     runs-on: ubuntu-latest

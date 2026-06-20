@@ -24,7 +24,7 @@ var (
 var rootCmd = &cobra.Command{
 	Use:     "autodev",
 	Short:   "Set up any development environment in one command.",
-	Version: "0.3.2",
+	Version: "0.4.0",
 	Long: `
   █████╗ ██╗   ██╗████████╗ ██████╗ ██████╗ ███████╗██╗   ██╗
   ██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗██╔══██╗██╔════╝██║   ██║
@@ -96,6 +96,8 @@ func init() {
 		newBenchmarkCmd(),
 		newContainerizeCmd(),
 		newMigrateCmd(),
+		newCICmd(),
+		newPluginCmd(),
 	)
 
 	// Prompts manager command (displays history & groups prompt capture subcommands)

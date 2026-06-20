@@ -112,26 +112,45 @@ export default function Profiles() {
       className="py-24 px-6 bg-[#0D0D0D] border-y-2 border-[#2A2A2A]"
     >
       <div className="max-w-7xl mx-auto">
-        <div className="mb-16">
-          <span className="text-xs text-[#FFD700] font-bold uppercase tracking-widest">
-            One command
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <span className="inline-flex items-center gap-1.5 text-xs text-[#FFD700] font-bold uppercase tracking-widest">
+            <span className="w-1.5 h-1.5 bg-[#FFD700] rounded-full" /> One command
           </span>
           <h2 className="text-5xl font-black text-white mt-2 mb-4">
-            DEVELOPER PROFILES
+            DEVELOPER <span className="text-gradient-yellow">PROFILES</span>
           </h2>
           <p className="text-neutral-400 max-w-xl">
             Pick your role. AutoDev installs everything — with smart dependency
             resolution.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.08 } },
+          }}
+        >
           {profiles.map((prof) => (
             <motion.button
               key={prof.id}
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+              }}
               onClick={() => setActive(active === prof.id ? null : prof.id)}
               whileTap={{ scale: 0.97 }}
-              className={`text-left p-6 border-2 transition-all duration-100 nb-card
+              className={`text-left p-6 border-2 transition-all duration-200 nb-card glow-yellow-hover
                 ${active === prof.id ? "border-[#FFD700] shadow-[4px_4px_0_#FFD700]" : ""}
               `}
             >
@@ -157,7 +176,7 @@ export default function Profiles() {
               </div>
             </motion.button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Command preview */}
         {current && (

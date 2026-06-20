@@ -15,53 +15,51 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://autodevs.dev"),
-  title: "AutoDevs — The App Store for Developers",
-  description:
-    "Clone. Scan. Install. Build. An open-source cross-platform developer environment bootstrapper. Install any language, framework, or tool with a single command.",
-  keywords: [
-    "developer tools",
-    "CLI",
-    "package manager",
-    "environment setup",
-    "autodev",
-    "autodevs",
-  ],
-  // Explicit canonical: tells Google the HTTPS version is authoritative,
-  // resolving the "Page with redirect" warning for http://autodevs.dev/
-  alternates: {
-    canonical: "https://autodevs.dev/",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    metadataBase: new URL("https://autodevs.dev"),
+    title: "AutoDevs — The App Store for Developers",
+    description:
+      "Clone. Scan. Install. Build. An open-source cross-platform developer environment bootstrapper. Install any language, framework, or tool with a single command.",
+    keywords: [
+      "developer tools",
+      "CLI",
+      "package manager",
+      "environment setup",
+      "autodev",
+      "autodevs",
+    ],
+    alternates: { canonical: "https://autodevs.dev/" },
+    robots: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
-  },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  },
-  openGraph: {
-    title: "AutoDevs — The App Store for Developers",
-    description: "Clone. Scan. Install. Build.",
-    url: "https://autodevs.dev/",
-    siteName: "AutoDevs",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "AutoDevs — The App Store for Developers",
-    description: "Clone. Scan. Install. Build.",
-  },
-};
+    icons: {
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+      apple: "/apple-touch-icon.png",
+    },
+    openGraph: {
+      title: "AutoDevs — The App Store for Developers",
+      description: "Clone. Scan. Install. Build.",
+      url: "https://autodevs.dev/",
+      siteName: "AutoDevs",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "AutoDevs — The App Store for Developers",
+      description: "Clone. Scan. Install. Build.",
+    },
+  };
+}
 
 export default function RootLayout({
   children,

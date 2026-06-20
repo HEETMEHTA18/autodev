@@ -12,9 +12,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type devContainerBuild struct {
+	Dockerfile string `json:"dockerfile"`
+}
+
 type devContainerConfig struct {
 	Name           string                 `json:"name"`
-	Image          string                 `json:"image"`
+	Build          *devContainerBuild     `json:"build,omitempty"`
+	Image          string                 `json:"image,omitempty"`
 	Features       map[string]interface{} `json:"features,omitempty"`
 	Customizations map[string]interface{} `json:"customizations,omitempty"`
 	PostCreateCmd  string                 `json:"postCreateCommand,omitempty"`
@@ -136,11 +141,31 @@ func runContainerize(path string) error {
 	// Always recommend git extensions
 	extensions = append(extensions, "eamodio.gitlens")
 
-	// 2. Generate .devcontainer.json
-	devContainerPath := filepath.Join(path, ".devcontainer.json")
+	// 2. Generate .devcontainer directory, Dockerfile, and devcontainer.json
+	devcontainerDir := filepath.Join(path, ".devcontainer")
+	if err := os.MkdirAll(devcontainerDir, 0755); err != nil {
+		return fmt.Errorf("create .devcontainer directory: %w", err)
+	}
+
+	dockerfilePath := filepath.Join(devcontainerDir, "Dockerfile")
+	dockerfileContent := `FROM mcr.microsoft.com/devcontainers/base:ubuntu
+
+# Pre-install base dependencies for AutoDev operations
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+`
+	if err := os.WriteFile(dockerfilePath, []byte(dockerfileContent), 0644); err != nil {
+		return fmt.Errorf("write devcontainer Dockerfile: %w", err)
+	}
+	fmt.Printf("  %s Generated DevContainer Dockerfile: %s\n", okStyle.Render("✓"), dockerfilePath)
+
+	devContainerPath := filepath.Join(devcontainerDir, "devcontainer.json")
 	dc := devContainerConfig{
-		Name:     "AutoDev Dev Container",
-		Image:    "mcr.microsoft.com/devcontainers/base:ubuntu",
+		Name:  "AutoDev Dev Container",
+		Build: &devContainerBuild{Dockerfile: "Dockerfile"},
 		Features: features,
 		Customizations: map[string]interface{}{
 			"vscode": map[string]interface{}{
@@ -157,7 +182,7 @@ func runContainerize(path string) error {
 
 	err = os.WriteFile(devContainerPath, dcData, 0644)
 	if err != nil {
-		return fmt.Errorf("write .devcontainer.json: %w", err)
+		return fmt.Errorf("write devcontainer.json: %w", err)
 	}
 	fmt.Printf("  %s Generated DevContainer config: %s\n", okStyle.Render("✓"), devContainerPath)
 

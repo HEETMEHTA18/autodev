@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Eye, Menu, X, Star, Sun, Moon, Bell } from "lucide-react";
+import { Eye, Menu, X, Star, Sun, Moon, Bell, Zap } from "lucide-react";
 import { useTheme } from "next-themes";
 import AsciiBackground from "./AsciiBackground";
 
@@ -11,7 +11,15 @@ export default function Navbar() {
   const [views, setViews] = useState<number | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -30,8 +38,8 @@ export default function Navbar() {
       .catch((err) => console.error("Failed to fetch stars:", err));
 
     // Fetch unique page views
-    const hasVisited = localStorage.getItem("autodev_visited");
-    const endpoint = hasVisited
+    const isDismissed = localStorage.getItem("autodev_update_dismissed_v0.4.0");
+    const endpoint = isDismissed
       ? "https://api.counterapi.dev/v1/heetmehta18-autodev/views/"
       : "https://api.counterapi.dev/v1/heetmehta18-autodev/views/up";
 
@@ -40,8 +48,8 @@ export default function Navbar() {
       .then((data) => {
         if (data && typeof data.count === "number") {
           setViews(data.count);
-          if (!hasVisited) {
-            localStorage.setItem("autodev_visited", "true");
+          if (!isDismissed) {
+            localStorage.setItem("autodev_update_dismissed_v0.4.0", "true");
           }
         }
       })
@@ -60,14 +68,19 @@ export default function Navbar() {
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="fixed top-0 left-0 right-0 z-50 border-b-2 border-[#2A2A2A] bg-black/95 backdrop-blur-sm"
+      className={`fixed top-0 left-0 right-0 z-50 border-b-2 transition-all duration-300 ${
+        scrolled
+          ? "border-[#2A2A2A] bg-black/95 backdrop-blur-sm"
+          : "border-transparent bg-black/60 backdrop-blur-none"
+      }`}
     >
       <AsciiBackground className="opacity-45" />
       <div className="relative z-10 max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <span className="text-xl md:text-2xl font-black text-[#FFD700] tracking-tighter">
-            ⚡ AUTODEV
+        <Link href="/" className="flex items-center gap-2 shrink-0 group">
+          <Zap className="w-5 h-5 text-[#FFD700] group-hover:scale-110 transition-transform" />
+          <span className="text-lg md:text-xl font-black gradient-mesh text-transparent bg-clip-text bg-gradient-to-r from-[#FFD700] to-[#FFB300] tracking-tighter">
+            AUTODEV
           </span>
         </Link>
 
@@ -116,7 +129,7 @@ export default function Navbar() {
               window.dispatchEvent(new Event("autodev_open_update_modal"))
             }
             className="relative p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#FFD700] text-[#FFD700] transition-colors cursor-pointer"
-            title="What's New in v0.3.2"
+            title="What's New in v0.4.0"
           >
             <Bell className="w-4 h-4" />
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FFD700] rounded-full animate-ping" />
@@ -171,7 +184,7 @@ export default function Navbar() {
               window.dispatchEvent(new Event("autodev_open_update_modal"))
             }
             className="relative p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#FFD700] text-white transition-colors cursor-pointer"
-            title="What's New in v0.3.2"
+            title="What's New in v0.4.0"
           >
             <Bell className="w-5 h-5" />
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FFD700] rounded-full animate-ping" />

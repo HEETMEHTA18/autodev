@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import { Copy, Check } from "lucide-react";
+import { motion } from "framer-motion";
+import { Copy, Check, Sparkles } from "lucide-react";
 import { trackInstall } from "../utils/analytics";
 
 const methods = [
@@ -54,23 +55,42 @@ export default function InstallMethods() {
 
   return (
     <section id="install" className="py-24 px-6 max-w-7xl mx-auto">
-      <div className="mb-16 text-center">
-        <span className="text-xs text-[#FFD700] font-bold uppercase tracking-widest">
-          Install anywhere
+      <motion.div
+        className="mb-16 text-center"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
+        <span className="inline-flex items-center gap-1.5 text-xs text-[#FFD700] font-bold uppercase tracking-widest">
+          <Sparkles className="w-3 h-3" /> Install anywhere
         </span>
         <h2 className="text-5xl font-black text-white mt-2 mb-4">
-          GET STARTED IN SECONDS
+          GET STARTED IN <span className="text-gradient-yellow">SECONDS</span>
         </h2>
         <p className="text-neutral-300">
           Pick your preferred installation method.
         </p>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.08 } },
+        }}
+      >
         {methods.map((m) => (
-          <div
+          <motion.div
             key={m.label}
-            className="nb-card p-5 cursor-pointer group"
+            variants={{
+              hidden: { opacity: 0, y: 30 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+            }}
+            className="nb-card p-5 cursor-pointer group glow-yellow-hover"
             onClick={() => copy(m.cmd, m.label)}
           >
             <div className="flex items-center justify-between mb-1">
@@ -105,23 +125,33 @@ export default function InstallMethods() {
             >
               {m.cmd}
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* OS badges */}
-      <div className="mt-12 flex flex-wrap gap-3 justify-center">
+      <motion.div
+        className="mt-12 flex flex-wrap gap-3 justify-center"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
         {["🐧 Linux", "🍎 macOS", "🪟 Windows", "🐳 Docker", "☁️ Cloud"].map(
-          (os) => (
-            <span
+          (os, i) => (
+            <motion.span
               key={os}
-              className="border-2 border-[#2A2A2A] text-neutral-400 text-sm font-semibold px-4 py-2"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 + i * 0.1 }}
+              className="border-2 border-[#2A2A2A] text-neutral-400 text-sm font-semibold px-4 py-2 hover:border-[#FFD700] hover:text-[#FFD700] transition-colors"
             >
               {os}
-            </span>
+            </motion.span>
           ),
         )}
-      </div>
+      </motion.div>
     </section>
   );
 }

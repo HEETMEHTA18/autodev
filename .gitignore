@@ -5,6 +5,7 @@
 # Node / pnpm
 node_modules/
 .next/
+.next_old*/
 dist/
 build/
 coverage/

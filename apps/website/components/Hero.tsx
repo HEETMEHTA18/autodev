@@ -126,7 +126,7 @@ export default function Hero() {
         >
           <span className="inline-flex items-center gap-1.5 border-2 border-[#FFD700] text-[#FFD700] text-xs font-bold px-3 py-1 uppercase tracking-widest">
             <Sparkles className="w-3.5 h-3.5" />
-            v0.4.0 — Open Source
+            v0.4.1 — Open Source
           </span>
           <a
             href="https://www.producthunt.com/products/autodevs?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-autodevs"

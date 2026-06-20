@@ -12,14 +12,9 @@ import {
 
 const updateMethods = [
   {
-    label: "CLI Command",
-    cmd: "autodev update",
-    desc: "AutoDev's built-in self-updater",
-  },
-  {
     label: "NPM (Global)",
-    cmd: "npm update -g @heetmehta18/autodev",
-    desc: "Upgrade the global NPM wrapper",
+    cmd: "npm install -g @heetmehta18/autodev@latest",
+    desc: "Upgrade to the latest NPM wrapper",
   },
   {
     label: "Homebrew",

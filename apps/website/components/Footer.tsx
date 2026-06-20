@@ -1,14 +1,37 @@
 "use client";
+import { motion } from "framer-motion";
 import AsciiBackground from "./AsciiBackground";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.08, duration: 0.4 },
+  }),
+};
 
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden border-t-2 border-[#2A2A2A] py-16 px-6">
       <AsciiBackground className="opacity-30" />
       <div className="relative z-10 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-10 mb-16">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-10 mb-16"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.08 } },
+          }}
+        >
           {/* Brand */}
-          <div className="md:col-span-2">
+          <motion.div
+            className="md:col-span-2"
+            variants={fadeUp}
+            custom={0}
+          >
             <div className="text-2xl font-black text-[#FFD700] mb-3">
               ⚡ AUTODEV
             </div>
@@ -40,10 +63,10 @@ export default function Footer() {
                 />
               </a>
             </div>
-          </div>
+          </motion.div>
 
           {/* Product */}
-          <div>
+          <motion.div variants={fadeUp} custom={1}>
             <h3 className="font-black text-white text-sm uppercase tracking-wider mb-4">
               Product
             </h3>
@@ -80,10 +103,10 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Templates */}
-          <div>
+          <motion.div variants={fadeUp} custom={2}>
             <h3 className="font-black text-white text-sm uppercase tracking-wider mb-4">
               Templates
             </h3>
@@ -105,10 +128,10 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Open Source */}
-          <div>
+          <motion.div variants={fadeUp} custom={3}>
             <h3 className="font-black text-white text-sm uppercase tracking-wider mb-4">
               Open Source
             </h3>
@@ -147,17 +170,23 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="border-t border-[#1A1A1A] pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <motion.div
+          className="border-t border-[#1A1A1A] pt-8 flex flex-col sm:flex-row justify-between items-center gap-4"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
           <p className="text-xs text-neutral-400">
             © 2026 AutoDev Contributors — MIT License
           </p>
           <p className="text-xs text-neutral-400 font-mono">
             Clone. Scan. Install. Build.
           </p>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );

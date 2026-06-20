@@ -380,24 +380,36 @@ export default function Categories() {
       className="py-20 px-6 max-w-7xl mx-auto scroll-mt-24"
     >
       {/* Brutalist Section Header */}
-      <div className="mb-12 text-center lg:text-left flex flex-col lg:flex-row items-center lg:items-end justify-between gap-6">
+      <motion.div
+        className="mb-12 text-center lg:text-left flex flex-col lg:flex-row items-center lg:items-end justify-between gap-6"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
         <div>
           <div className="inline-flex items-center gap-2 border border-[#FFD700] text-[#FFD700] text-xs font-bold px-3 py-1 uppercase tracking-widest bg-[#FFD70010] mb-3">
             <Sparkles className="w-3.5 h-3.5" /> Interactive Store Dashboard
           </div>
-          <h2 className="text-[2.8rem] md:text-5xl font-black text-white leading-none tracking-tight uppercase">
-            THE APP STORE <br className="hidden md:block" />
-            <span className="text-[#FFD700]">FOR DEVELOPERS.</span>
+          <h2 className="text-[2.8rem] md:text-5xl font-black leading-none tracking-tight uppercase">
+            <span className="text-gradient-white">THE APP STORE</span> <br className="hidden md:block" />
+            <span className="text-gradient-yellow">FOR DEVELOPERS.</span>
           </h2>
         </div>
         <p className="text-neutral-300 max-w-md text-sm md:text-base leading-relaxed lg:text-right font-medium">
           Select developer tools, databases, and language runtimes. Install them
           cleanly with a single command on your terminal. Try it live below.
         </p>
-      </div>
+      </motion.div>
 
       {/* Main Store Frame */}
-      <div className="border-4 border-[#2A2A2A] bg-[#0A0A0A] nb-shadow flex flex-col overflow-hidden rounded-none">
+      <motion.div
+        className="border-4 border-[#2A2A2A] bg-[#0A0A0A] nb-shadow flex flex-col overflow-hidden rounded-none"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         {/* Header Bar */}
         <div className="border-b-4 border-[#2A2A2A] bg-[#111111] p-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3 w-full md:w-auto">
@@ -553,9 +565,13 @@ export default function Categories() {
               ).map((pkg) => {
                 const state = appStates[pkg.id];
                 return (
-                  <div
+                  <motion.div
                     key={pkg.id}
-                    className={`border-2 p-4 flex flex-col justify-between transition-all duration-100 hover:border-[#444] bg-[#111] hover:bg-[#151515] relative group
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-30px" }}
+                    transition={{ duration: 0.35 }}
+                    className={`border-2 p-4 flex flex-col justify-between transition-all duration-200 hover:border-[#FFD700] bg-[#111] hover:bg-[#151515] relative group glow-yellow-hover
                       ${state === "installed" ? "border-[#FFD70018]" : "border-[#2A2A2A]"}
                     `}
                   >
@@ -626,7 +642,7 @@ export default function Categories() {
                         <Info className="w-3 h-3" /> More
                       </button>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
@@ -729,7 +745,7 @@ export default function Categories() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Package Detail Modal */}
       <AnimatePresence>

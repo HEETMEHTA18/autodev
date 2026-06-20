@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Sparkles } from "lucide-react";
 import { trackInstall } from "../utils/analytics";
 import AsciiBackground from "./AsciiBackground";
 
@@ -13,6 +13,15 @@ const item = {
   hidden: { opacity: 0, y: 30 },
   show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
+
+const floatingIcons = [
+  { icon: "⚡", x: "10%", y: "15%", delay: 0, size: "text-2xl" },
+  { icon: "🐍", x: "85%", y: "20%", delay: 1, size: "text-xl" },
+  { icon: "🔵", x: "12%", y: "70%", delay: 2, size: "text-xl" },
+  { icon: "🐳", x: "80%", y: "75%", delay: 0.5, size: "text-2xl" },
+  { icon: "⚛️", x: "50%", y: "10%", delay: 1.5, size: "text-lg" },
+  { icon: "🦀", x: "90%", y: "50%", delay: 2.5, size: "text-lg" },
+];
 
 const words = [
   "DEVELOPERS.",
@@ -53,8 +62,8 @@ function TypingText() {
   }, [text, isDeleting, wordIndex]);
 
   return (
-    <span className="text-[#FFD700] inline-flex items-center min-h-[1.1em]">
-      FOR {text}
+    <span className="inline-flex items-center min-h-[1.1em]">
+      <span className="text-gradient-yellow">FOR {text}</span>
       <span className="inline-block w-[4px] md:w-[8px] h-[0.8em] bg-[#FFD700] ml-2 align-middle animate-pulse" />
     </span>
   );
@@ -76,8 +85,38 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative overflow-hidden w-full">
+    <section className="relative overflow-hidden w-full gradient-mesh">
       <AsciiBackground className="opacity-55" mouseSensi={2.0} />
+
+      {/* Floating decorative icons */}
+      {floatingIcons.map((item, i) => (
+        <motion.div
+          key={i}
+          className={`absolute hidden md:block ${item.size} z-[1] pointer-events-none select-none`}
+          style={{ left: item.x, top: item.y }}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 0.15, scale: 1 }}
+          transition={{
+            delay: item.delay,
+            duration: 1.5,
+            ease: "easeOut",
+          }}
+          whileInView={{
+            y: [0, -8, 0],
+            transition: {
+              duration: 4 + item.delay,
+              repeat: Infinity,
+              ease: "easeInOut",
+            },
+          }}
+        >
+          {item.icon}
+        </motion.div>
+      ))}
+
+      {/* Glow orb behind heading */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full bg-[#FFD700] opacity-[0.04] blur-[100px] pointer-events-none animate-glow-pulse" />
+
       <div className="max-w-7xl mx-auto pt-36 pb-24 px-6 relative z-10">
         <motion.div variants={container} initial="hidden" animate="show">
         {/* Badges */}
@@ -85,7 +124,8 @@ export default function Hero() {
           variants={item}
           className="mb-8 flex flex-wrap items-center gap-4"
         >
-          <span className="inline-block border-2 border-[#FFD700] text-[#FFD700] text-xs font-bold px-3 py-1 uppercase tracking-widest">
+          <span className="inline-flex items-center gap-1.5 border-2 border-[#FFD700] text-[#FFD700] text-xs font-bold px-3 py-1 uppercase tracking-widest">
+            <Sparkles className="w-3.5 h-3.5" />
             v0.4.0 — Open Source
           </span>
           <a
@@ -107,9 +147,9 @@ export default function Hero() {
         {/* Headline */}
         <motion.h1
           variants={item}
-          className="text-[clamp(3.5rem,10vw,8rem)] font-black leading-[0.9] tracking-tighter text-white mb-4"
+          className="text-[clamp(3.5rem,10vw,8rem)] font-black leading-[0.9] tracking-tighter mb-4"
         >
-          THE APP STORE
+          <span className="text-gradient-white">THE APP STORE</span>
           <br />
           <TypingText />
         </motion.h1>
@@ -132,7 +172,10 @@ export default function Hero() {
 
         {/* CTAs */}
         <motion.div variants={item} className="flex flex-wrap gap-4 mb-16">
-          <a href="#install" className="nb-btn px-8 py-4 text-lg inline-block">
+          <a
+            href="#install"
+            className="nb-btn px-8 py-4 text-lg inline-block glow-yellow-hover"
+          >
             ⚡ GET STARTED
           </a>
           <a

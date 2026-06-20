@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Eye, Menu, X, Star, Sun, Moon, Bell } from "lucide-react";
+import { Eye, Menu, X, Star, Sun, Moon, Bell, Zap } from "lucide-react";
 import { useTheme } from "next-themes";
 import AsciiBackground from "./AsciiBackground";
 
@@ -11,7 +11,15 @@ export default function Navbar() {
   const [views, setViews] = useState<number | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -60,14 +68,19 @@ export default function Navbar() {
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="fixed top-0 left-0 right-0 z-50 border-b-2 border-[#2A2A2A] bg-black/95 backdrop-blur-sm"
+      className={`fixed top-0 left-0 right-0 z-50 border-b-2 transition-all duration-300 ${
+        scrolled
+          ? "border-[#2A2A2A] bg-black/95 backdrop-blur-sm"
+          : "border-transparent bg-black/60 backdrop-blur-none"
+      }`}
     >
       <AsciiBackground className="opacity-45" />
       <div className="relative z-10 max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <span className="text-xl md:text-2xl font-black text-[#FFD700] tracking-tighter">
-            UPGRADE TO AUTODEV v0.4.0
+        <Link href="/" className="flex items-center gap-2 shrink-0 group">
+          <Zap className="w-5 h-5 text-[#FFD700] group-hover:scale-110 transition-transform" />
+          <span className="text-lg md:text-xl font-black gradient-mesh text-transparent bg-clip-text bg-gradient-to-r from-[#FFD700] to-[#FFB300] tracking-tighter">
+            AUTODEV
           </span>
         </Link>
 

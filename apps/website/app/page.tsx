@@ -8,18 +8,38 @@ import Skills from "@/components/Skills";
 import InstallMethods from "@/components/InstallMethods";
 import Footer from "@/components/Footer";
 import UpdatePopup from "@/components/UpdatePopup";
+import SectionWrapper from "@/components/SectionWrapper";
+import SectionDivider from "@/components/SectionDivider";
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-grid">
       <Navbar />
       <Hero />
-      <Terminal />
-      <Categories />
-      <Profiles />
-      <GithubScanner />
-      <Skills />
-      <InstallMethods />
+      <SectionDivider variant="wave" />
+      <SectionWrapper gradient>
+        <Terminal />
+      </SectionWrapper>
+      <SectionDivider variant="angle" flip />
+      <SectionWrapper gradient>
+        <Categories />
+      </SectionWrapper>
+      <SectionDivider variant="curve" />
+      <SectionWrapper gradient>
+        <Profiles />
+      </SectionWrapper>
+      <SectionDivider variant="wave" flip />
+      <SectionWrapper gradient>
+        <GithubScanner />
+      </SectionWrapper>
+      <SectionDivider variant="angle" />
+      <SectionWrapper gradient>
+        <Skills />
+      </SectionWrapper>
+      <SectionDivider variant="curve" flip />
+      <SectionWrapper gradient>
+        <InstallMethods />
+      </SectionWrapper>
       <Footer />
       <UpdatePopup />
     </main>

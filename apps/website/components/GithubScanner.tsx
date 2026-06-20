@@ -1,6 +1,7 @@
 "use client";
 import { useState, FormEvent } from "react";
 import { motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
 
 interface ScanData {
   username: string;
@@ -290,18 +291,24 @@ export default function GithubScanner() {
 
   return (
     <section id="github-scanner" className="py-24 px-6 max-w-7xl mx-auto">
-      <div className="mb-16">
-        <span className="text-xs text-[#FFD700] font-bold uppercase tracking-widest font-mono">
-          GitHub Scanner
+      <motion.div
+        className="mb-16"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
+        <span className="inline-flex items-center gap-1.5 text-xs text-[#FFD700] font-bold uppercase tracking-widest font-mono">
+          <Sparkles className="w-3 h-3" /> GitHub Scanner
         </span>
         <h2 className="text-5xl font-black text-white mt-2 mb-4 font-mono">
-          SCAN ANY GITHUB USER
+          SCAN ANY <span className="text-gradient-yellow">GITHUB</span> USER
         </h2>
         <p className="text-neutral-400 max-w-xl font-mono text-sm">
           AutoDev reads all public repos, detects languages, and generates a
           setup plan.
         </p>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         {/* Input */}

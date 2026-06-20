@@ -339,12 +339,18 @@ export default function Skills() {
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-16">
-          <span className="text-xs text-[#FFD700] font-bold uppercase tracking-widest">
-            Skills.sh Integration
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <span className="inline-flex items-center gap-1.5 text-xs text-[#FFD700] font-bold uppercase tracking-widest">
+            <span className="w-1.5 h-1.5 bg-[#FFD700] rounded-full animate-pulse" /> Skills.sh Integration
           </span>
           <h2 className="text-5xl font-black text-white mt-2 mb-4">
-            YOUR LEARNING ROADMAP
+            YOUR LEARNING <span className="text-gradient-yellow">ROADMAP</span>
           </h2>
           <p className="text-neutral-400 max-w-2xl">
             AutoDev scans your repositories — git history, package manifests,
@@ -361,7 +367,7 @@ export default function Skills() {
             </a>
             .
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
           {/* Main Panel — Tabbed Interface */}

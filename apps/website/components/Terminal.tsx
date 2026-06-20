@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { Sparkles } from "lucide-react";
 
 const lines = [
   { delay: 0, text: "$ autodev setup", color: "#00FF87" },
@@ -73,15 +74,24 @@ export default function Terminal() {
       className="py-20 px-6 bg-[#0D0D0D] border-y-2 border-[#2A2A2A]"
     >
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-black text-white mb-3">
-            SEE IT IN ACTION
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <span className="inline-flex items-center gap-1.5 border border-[#FFD700] text-[#FFD700] text-xs font-bold px-3 py-1 uppercase tracking-widest mb-4">
+            <Sparkles className="w-3 h-3" /> Live Demo
+          </span>
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-3">
+            SEE IT IN <span className="text-gradient-yellow">ACTION</span>
           </h2>
-          <p className="text-neutral-400">
+          <p className="text-neutral-400 max-w-xl mx-auto">
             Run <code className="text-[#FFD700] font-mono">autodev setup</code>{" "}
             in any project and the interactive installer opens.
           </p>
-        </div>
+        </motion.div>
 
         <div className="terminal">
           {/* Title bar */}

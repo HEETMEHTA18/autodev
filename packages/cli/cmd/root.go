@@ -98,6 +98,7 @@ func init() {
 		newMigrateCmd(),
 		newCICmd(),
 		newPluginCmd(),
+		newPonytailCmd(),
 	)
 
 	// Prompts manager command (displays history & groups prompt capture subcommands)

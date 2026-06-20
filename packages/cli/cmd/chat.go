@@ -364,7 +364,7 @@ func queryGemini(prompt string, history []promptcapture.PromptEvent) (string, er
 		Parts []Part `json:"parts"`
 	}
 	type Request struct {
-		Contents         []Content `json:"contents"`
+		Contents          []Content `json:"contents"`
 		SystemInstruction struct {
 			Parts []Part `json:"parts"`
 		} `json:"systemInstruction,omitempty"`
@@ -394,6 +394,13 @@ func queryGemini(prompt string, history []promptcapture.PromptEvent) (string, er
 
 	reqBody.SystemInstruction.Parts = []Part{{
 		Text: "You are AutoDev CLI Assistant, a helper to the developer. Respond concisely. " +
+			"You are a lazy senior dev. The best code is the code you never wrote. Follow these rules:\n" +
+			"1. Does this need to exist? → no: skip it (YAGNI)\n" +
+			"2. Stdlib does it? → use it\n" +
+			"3. Native platform feature? → use it\n" +
+			"4. Installed dependency? → use it\n" +
+			"5. One line? → one line\n" +
+			"6. Only then: the minimum that works\n\n" +
 			"When you suggest running a command, output: [RUN_COMMAND:your command here]\n" +
 			"When you suggest writing/creating/modifying a file, output:\n" +
 			"[WRITE_FILE:path/to/file]\n" +

@@ -82,33 +82,19 @@ If you are running as a shell executor, invoke these commands to interact with t
 
 | Technology | Competency Level |
 |------------|------------------|
-| Node.js | beginner |
-| TypeScript | intermediate |
 | Go | intermediate |
-| Next.js | intermediate |
-| React | intermediate |
 
 ## 🗺️ Recommended Roadmap & Next Steps
 
 ### Next Skills to Focus On
-*   **Express** (beginner)
-    *   Resource: https://expressjs.com/en/starter/installing.html
 *   **Docker** (intermediate)
     *   Resource: https://docs.docker.com/get-started
     *   Resource: https://labs.play-with-docker.com
-*   **NestJS** (intermediate)
-    *   Resource: https://docs.nestjs.com
-*   **CI/CD** (intermediate)
-    *   Resource: https://docs.github.com/actions
-    *   Resource: https://docs.gitlab.com/ee/ci
 *   **Kubernetes** (advanced)
     *   Resource: https://kubernetes.io/docs/tutorials
     *   Resource: https://killercoda.com
 *   **Terraform** (advanced)
     *   Resource: https://developer.hashicorp.com/terraform/tutorials
-
-### Long-Term Milestones
-*   **PostgreSQL** (intermediate)
 
 ## 🗺️ Future Horizon
 

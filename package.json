@@ -1,6 +1,6 @@
 {
   "name": "autodev",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "description": "Clone. Scan. Install. Build. — Open-source developer environment bootstrapper",
   "scripts": {
@@ -25,5 +25,23 @@
     "node": ">=20.0.0",
     "pnpm": ">=9.0.0"
   },
-  "packageManager": "pnpm@9.15.4"
+  "packageManager": "pnpm@9.15.4",
+  "main": "index.js",
+  "dependencies": {
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.6",
+    "eslint-import-resolver-node": "^0.3.10",
+    "eslint-import-resolver-typescript": "^3.10.1",
+    "eslint-module-utils": "^2.13.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-scope": "^8.4.0",
+    "eslint-visitor-keys": "^4.2.1",
+    "typescript-eslint": "^8.60.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

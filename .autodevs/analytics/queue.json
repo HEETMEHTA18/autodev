@@ -62,21 +62,61 @@
   {
     "type": "session.started",
     "payload": {
+      "end_time": "0001-01-01T00:00:00Z",
+      "events": [],
+      "metadata": {
+        "branch": "main",
+        "commit": "a47f481",
+        "frameworks": [],
+        "languages": [
+          "JavaScript"
+        ],
+        "path": "/media/heet18/Futuristic1/Heet/Github/Autodev",
+        "project_name": "Autodev"
+      },
       "session_id": "2026-06-05-3",
-      "start_time": "2026-06-05T17:34:51.200082703+05:30",
+      "start_time": "2026-06-05T17:34:51.200082703+05:30"
+    },
+    "timestamp": "2026-06-05T17:34:51.200082703+05:30"
+  },
+  {
+    "type": "session.started",
+    "payload": {
+      "end_time": "0001-01-01T00:00:00Z",
+      "events": [],
+      "metadata": {
+        "branch": "main",
+        "commit": "1430dc2",
+        "frameworks": [],
+        "languages": [
+          "JavaScript"
+        ],
+        "path": "/media/heet18/Futuristic1/Heet/Github/Autodev",
+        "project_name": "Autodev"
+      },
+      "session_id": "2026-06-20-1",
+      "start_time": "2026-06-20T18:48:58.304486417+05:30"
+    },
+    "timestamp": "2026-06-20T18:48:58.304486417+05:30"
+  },
+  {
+    "type": "session.started",
+    "payload": {
+      "session_id": "2026-06-20-2",
+      "start_time": "2026-06-20T18:49:17.221552729+05:30",
       "end_time": "0001-01-01T00:00:00Z",
       "events": [],
       "metadata": {
         "project_name": "Autodev",
         "path": "/media/heet18/Futuristic1/Heet/Github/Autodev",
         "branch": "main",
-        "commit": "a47f481",
+        "commit": "1430dc2",
         "languages": [
           "JavaScript"
         ],
         "frameworks": []
       }
     },
-    "timestamp": "2026-06-05T17:34:51.200082703+05:30"
+    "timestamp": "2026-06-20T18:49:17.221552729+05:30"
   }
 ]

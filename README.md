@@ -147,6 +147,19 @@ Whenever any AutoDev command is run in a project workspace, AutoDev automaticall
 
 These rules instruct AI Agents to use AutoDev's telemetry instead of parsing directory structures or lockfiles recursively. This reduces context payloads from **200,000+ tokens to ~350 tokens (a 99.8% token context saving)** per roundtrip.
 
+### 👱‍♂️ Ponytail "Lazy Senior Dev" Mode (NEW)
+
+AutoDev now integrates [Ponytail](https://github.com/DietrichGebert/ponytail) principles natively across all AI Agent rule files (`.cursorrules`, `.clinerules`, etc.). When you run `autodev ponytail`, AutoDev injects an overpowering prompt prioritizing **YAGNI (You Aren't Gonna Need It)**, standard libraries, and extreme minimalism.
+
+**Third-Party Benchmarks (promptfoo via Claude 3.5 Haiku)**  
+Compared to a standard coding assistant without AutoDev + Ponytail:
+* **Lines of Code (LOC):** -54% 
+* **Tokens Used:** -22%
+* **Time Taken:** -27%
+* **Cost:** -20%
+
+_Credit to the original [Ponytail Project](https://github.com/DietrichGebert/ponytail) by DietrichGebert for pioneering the Lazy Senior Dev agent methodology._
+
 ### Programmatic Usage
 
 AI agents can invoke `autodev` or call its MCP tools to discover, verify, or install dependencies:

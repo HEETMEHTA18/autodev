@@ -23,7 +23,7 @@ interface RoadmapStep {
 const scanLines = [
   { text: "$ autodev skills --deep --ai", color: "#00FF87", delay: 0 },
   { text: "", color: "#888", delay: 200 },
-  { text: "  ⚡ AutoDev Skills Engine v0.3.2", color: "#FFD700", delay: 400 },
+  { text: "  ⚡ AutoDev Skills Engine v0.4.0", color: "#FFD700", delay: 400 },
   {
     text: "  Powered by skills.sh — https://skills.sh",
     color: "#888",

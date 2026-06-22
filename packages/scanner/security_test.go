@@ -11,7 +11,9 @@ func TestCheckPackageVulnerabilities(t *testing.T) {
 	// Mock OSV server
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"vulns":[{"id":"CVE-2023-1234","summary":"Test vulnerability","database_specific":{"severity":"HIGH"}}]}`))
+		if _, err := w.Write([]byte(`{"vulns":[{"id":"CVE-2023-1234","summary":"Test vulnerability","database_specific":{"severity":"HIGH"}}]}`)); err != nil {
+			t.Fatalf("failed to write response: %v", err)
+		}
 	}))
 	defer server.Close()
 

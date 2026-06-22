@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Copy, Check, Sparkles } from "lucide-react";
 import { trackInstall } from "../utils/analytics";
 import AsciiBackground from "./AsciiBackground";
+import Image from "next/image";
 
 const container = {
   hidden: {},
@@ -134,7 +135,7 @@ export default function Hero() {
             rel="noopener noreferrer"
             className="inline-block hover:opacity-90 transition-opacity"
           >
-            <img
+            <Image
               alt="Autodevs - AI-powered development setup in minutes | Product Hunt"
               width="250"
               height="54"

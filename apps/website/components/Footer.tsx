@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import AsciiBackground from "./AsciiBackground";
+import Image from "next/image";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -54,7 +55,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="inline-block hover:opacity-90 transition-opacity"
               >
-                <img
+                <Image
                   alt="Autodevs - AI-powered development setup in minutes | Product Hunt"
                   width="250"
                   height="54"

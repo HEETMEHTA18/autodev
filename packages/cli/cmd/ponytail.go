@@ -69,10 +69,13 @@ Do not write unnecessary boilerplate. Do not over-engineer.
 		
 		// Add a newline just in case existing content didn't end with one
 		_, err = f.WriteString("\n\n" + rulesContent)
-		f.Close()
-
 		if err != nil {
+			_ = f.Close()
 			return fmt.Errorf("failed to append to %s: %w", relPath, err)
+		}
+
+		if err := f.Close(); err != nil {
+			return fmt.Errorf("failed to close %s after write: %w", relPath, err)
 		}
 		fmt.Printf("  %s Injected overpowered rules into %s\n", successStyle.Render("✓"), relPath)
 	}

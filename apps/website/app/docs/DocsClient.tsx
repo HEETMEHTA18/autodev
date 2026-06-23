@@ -3,6 +3,7 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Copy, Check } from "lucide-react";
+import Image from "next/image";
 
 interface DocSection {
   id: string;
@@ -329,11 +330,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-doctor.png"
             alt="autodev doctor CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -367,11 +368,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-scan.png"
             alt="autodev scan CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -401,11 +402,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-audit.png"
             alt="autodev audit CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -445,11 +446,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-setup.png"
             alt="autodev setup CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -489,11 +490,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-profile.png"
             alt="autodev profile CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -535,11 +536,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-containerize.png"
             alt="autodev containerize CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -567,11 +568,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-migrate.png"
             alt="autodev migrate CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -632,11 +633,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-create.png"
             alt="autodev create CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -671,11 +672,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-clone.png"
             alt="autodev clone CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -717,11 +718,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-install.png"
             alt="autodev install CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -752,11 +753,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-skills.png"
             alt="autodev skills CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -786,11 +787,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-mcp.png"
             alt="autodev mcp CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -820,11 +821,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-benchmark.png"
             alt="autodev benchmark CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -854,11 +855,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-report.png"
             alt="autodev report CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -889,11 +890,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-github.png"
             alt="autodev github CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -923,11 +924,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-exec.png"
             alt="autodev exec CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -1024,11 +1025,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-8 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-prompts.png"
             alt="autodev prompts CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },
@@ -1087,11 +1088,11 @@ export default function DocsClient() {
           <h2 className="text-xl font-bold text-white mt-6 mb-2">
             Terminal Output
           </h2>
-          <img
+          <Image
             src="/screenshot-docker-integration.png"
             alt="autodev docker run CLI Output"
             className="my-4 border-2 border-[#2A2A2A] rounded-md max-w-full shadow-lg"
-          />
+           width={800} height={450}/>
         </>
       ),
     },

@@ -54,7 +54,7 @@ func parseGoMod(path string) []AuditPackage {
 	}
 	var pkgs []AuditPackage
 	lines := strings.Split(string(data), "\n")
-	
+
 	inRequireBlock := false
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
@@ -69,7 +69,7 @@ func parseGoMod(path string) []AuditPackage {
 			inRequireBlock = false
 			continue
 		}
-		
+
 		if strings.HasPrefix(line, "require ") && !strings.Contains(line, "(") {
 			parts := strings.Fields(line)
 			if len(parts) >= 3 {
@@ -118,14 +118,14 @@ func parseRequirements(path string) []AuditPackage {
 		} else {
 			continue
 		}
-		
+
 		if idx := strings.Index(name, ";"); idx != -1 {
 			name = strings.TrimSpace(name[:idx])
 		}
 		if idx := strings.Index(version, ";"); idx != -1 {
 			version = strings.TrimSpace(version[:idx])
 		}
-		
+
 		if name != "" && version != "" {
 			pkgs = append(pkgs, AuditPackage{Name: name, Version: version, Ecosystem: "PyPI"})
 		}
@@ -142,7 +142,7 @@ func parsePackageJSON(path string) []AuditPackage {
 	if err := json.Unmarshal(data, &pkg); err != nil {
 		return nil
 	}
-	
+
 	var pkgs []AuditPackage
 	extract := func(key string) {
 		if raw, ok := pkg[key]; ok {
@@ -172,10 +172,10 @@ type osvQuery struct {
 
 type osvResponse struct {
 	Vulns []struct {
-		ID       string   `json:"id"`
-		Summary  string   `json:"summary"`
-		Details  string   `json:"details"`
-		Aliases  []string `json:"aliases"`
+		ID               string   `json:"id"`
+		Summary          string   `json:"summary"`
+		Details          string   `json:"details"`
+		Aliases          []string `json:"aliases"`
 		DatabaseSpecific struct {
 			Severity string `json:"severity"`
 		} `json:"database_specific"`
@@ -207,7 +207,7 @@ func CheckPackageVulnerabilities(ctx context.Context, client *http.Client, pkg A
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		body, _ := io.ReadAll(resp.Body)
+		body, _ := io.ReadAll(io.LimitReader(resp.Body, 1024*1024))
 		return nil, fmt.Errorf("OSV API returned status %d: %s", resp.StatusCode, string(body))
 	}
 
@@ -235,37 +235,37 @@ func CheckPackageVulnerabilities(ctx context.Context, client *http.Client, pkg A
 
 func AuditRepository(rootPath string) ([]AuditResult, error) {
 	var pkgs []AuditPackage
-	
+
 	packageJsonPath := filepath.Join(rootPath, "package.json")
 	if _, err := os.Stat(packageJsonPath); err == nil {
 		pkgs = append(pkgs, parsePackageJSON(packageJsonPath)...)
 	}
-	
+
 	goModPath := filepath.Join(rootPath, "go.mod")
 	if _, err := os.Stat(goModPath); err == nil {
 		pkgs = append(pkgs, parseGoMod(goModPath)...)
 	}
-	
+
 	requirementsPath := filepath.Join(rootPath, "requirements.txt")
 	if _, err := os.Stat(requirementsPath); err == nil {
 		pkgs = append(pkgs, parseRequirements(requirementsPath)...)
 	}
-	
+
 	if len(pkgs) == 0 {
 		return nil, nil
 	}
-	
+
 	concurrencyLimit := 10
 	semaphore := make(chan struct{}, concurrencyLimit)
 	var wg sync.WaitGroup
 	var results []AuditResult
 	var mu sync.Mutex
-	
+
 	ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
 	defer cancel()
-	
+
 	client := &http.Client{Timeout: 3 * time.Second}
-	
+
 	for _, pkg := range pkgs {
 		wg.Add(1)
 		go func(p AuditPackage) {
@@ -276,7 +276,7 @@ func AuditRepository(rootPath string) ([]AuditResult, error) {
 			case <-ctx.Done():
 				return
 			}
-			
+
 			vulns, err := CheckPackageVulnerabilities(ctx, client, p)
 			if err == nil && len(vulns) > 0 {
 				mu.Lock()
@@ -288,7 +288,7 @@ func AuditRepository(rootPath string) ([]AuditResult, error) {
 			}
 		}(pkg)
 	}
-	
+
 	wg.Wait()
 	return results, nil
 }

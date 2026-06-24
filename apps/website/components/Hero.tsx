@@ -145,31 +145,54 @@ export default function Hero() {
           </a>
         </motion.div>
 
+        {/* Comparison Pill */}
+        <motion.div
+          variants={item}
+          className="mb-6 inline-flex items-center gap-2 border-2 border-[#FFD700] text-[#FFD700] bg-black text-xs md:text-sm font-bold px-4 py-2 uppercase tracking-wider shadow-[4px_4px_0px_#FFD700]"
+        >
+          <span>💡</span> AutoDevs is like Cursor + GitHub Analysis + AI Project Planning in one developer tool.
+        </motion.div>
+
         {/* Headline */}
         <motion.h1
           variants={item}
-          className="text-[clamp(3.5rem,10vw,8rem)] font-black leading-[0.9] tracking-tighter mb-4"
+          className="text-[clamp(2.2rem,5vw,4.5rem)] font-black leading-[1.05] tracking-tighter mb-6"
         >
-          <span className="text-gradient-white">THE APP STORE</span>
+          <span className="text-gradient-white">Turn any GitHub repository into</span>
           <br />
-          <TypingText />
+          <span className="text-gradient-yellow">actionable development tasks</span>
+          <span className="text-gradient-white"> in seconds.</span>
         </motion.h1>
 
         {/* Sub-headline */}
         <motion.p
           variants={item}
-          className="text-xl text-neutral-300 max-w-2xl mb-4 font-medium"
+          className="text-lg md:text-xl text-neutral-300 max-w-3xl mb-8 leading-relaxed font-medium"
         >
-          Clone. Scan. Install. Build.
+          AutoDevs analyzes your codebase, finds issues, generates improvements, and helps you ship faster.
         </motion.p>
-        <motion.p
+
+        {/* Bullet points */}
+        <motion.div
           variants={item}
-          className="text-neutral-400 max-w-xl mb-12 leading-relaxed"
+          className="flex flex-col md:flex-row gap-4 mb-12 max-w-4xl"
         >
-          Install any language, framework, database, or DevOps tool with a
-          single command. Smart dependency resolution. Cross-platform. Fully
-          open-source.
-        </motion.p>
+          {[
+            "Scan repositories instantly",
+            "Detect bugs & improvement opportunities",
+            "Generate AI-powered development tasks",
+          ].map((bullet, idx) => (
+            <div
+              key={idx}
+              className="flex items-center gap-3 bg-[#111] border-2 border-[#2A2A2A] px-4 py-3 shadow-[4px_4px_0px_#FFD700] hover:border-[#FFD700] transition-colors"
+            >
+              <span className="text-[#00FF87] font-bold text-lg select-none">✓</span>
+              <span className="text-xs md:text-sm font-bold text-white uppercase tracking-wider">
+                {bullet}
+              </span>
+            </div>
+          ))}
+        </motion.div>
 
         {/* CTAs */}
         <motion.div variants={item} className="flex flex-wrap gap-4 mb-16">

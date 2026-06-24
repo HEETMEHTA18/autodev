@@ -155,6 +155,10 @@ export default function Footer() {
                   href: "https://github.com/HEETMEHTA18/autodev/blob/main/ROADMAP.md",
                 },
                 {
+                  name: "Changelog",
+                  href: "https://github.com/HEETMEHTA18/autodev/blob/main/CHANGELOG.md",
+                },
+                {
                   name: "MIT License",
                   href: "https://github.com/HEETMEHTA18/autodev/blob/main/LICENSE",
                 },

@@ -75,6 +75,11 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://api.github.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://api.counterapi.dev" crossOrigin="anonymous" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1639394894393563"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className="font-space antialiased">
         <script

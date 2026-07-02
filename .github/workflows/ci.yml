@@ -50,22 +50,21 @@ jobs:
     needs: go-test
     steps:
       - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: pnpm
-      - name: Install pnpm
-        run: npm install -g pnpm
       - name: Install dependencies
-        working-directory: apps/website
         run: pnpm install --frozen-lockfile
       - name: Lint
         working-directory: apps/website
-        run: pnpm lint || true
+        run: pnpm lint
       - name: Type Check
         working-directory: apps/website
-        run: pnpm typecheck || true
+        run: pnpm typecheck
       - name: Build
         working-directory: apps/website
         run: pnpm build

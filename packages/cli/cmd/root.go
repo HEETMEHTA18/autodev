@@ -98,6 +98,7 @@ func init() {
 		newMigrateCmd(),
 		newCICmd(),
 		newPluginCmd(),
+		newCanvasCmd(),
 	)
 
 	// Prompts manager command (displays history & groups prompt capture subcommands)

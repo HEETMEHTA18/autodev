@@ -1,0 +1,446 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AutoDev Developer Knowledge Canvas",
+  "description": "A comprehensive, multi-lens representation of a codebase for rapid AI understanding. Saved to .autodevs/canvas/canvas.json and read by AI agents before every task.",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "project", "files", "ai_context"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Canvas schema version (semver)",
+      "const": "1.0.0"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp of canvas generation"
+    },
+    "project": {
+      "$ref": "#/definitions/ProjectOverview"
+    },
+    "files": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/FileCard" },
+      "description": "Every analyzed source file as a canvas card"
+    },
+    "architecture": {
+      "$ref": "#/definitions/ArchitectureView"
+    },
+    "dependencies": {
+      "$ref": "#/definitions/DependencyGraph"
+    },
+    "api": {
+      "$ref": "#/definitions/APIView"
+    },
+    "database": {
+      "$ref": "#/definitions/DatabaseView"
+    },
+    "security": {
+      "$ref": "#/definitions/SecurityView"
+    },
+    "git": {
+      "$ref": "#/definitions/GitSummary"
+    },
+    "notes": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/CanvasNote" },
+      "description": "User-editable sticky notes on the canvas"
+    },
+    "groups": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/CanvasGroup" },
+      "description": "User-defined colored groups for organizing nodes"
+    },
+    "connections": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/CanvasEdge" },
+      "description": "User-drawn manual connections between nodes"
+    },
+    "ai_context": {
+      "$ref": "#/definitions/AIContext"
+    },
+    "lenses": {
+      "$ref": "#/definitions/LensesView"
+    }
+  },
+  "definitions": {
+    "ProjectOverview": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "root_path": { "type": "string" },
+        "description": { "type": "string" },
+        "languages": { "type": "array", "items": { "type": "string" } },
+        "frameworks": { "type": "array", "items": { "type": "string" } },
+        "package_managers": { "type": "array", "items": { "type": "string" } },
+        "databases": { "type": "array", "items": { "type": "string" } },
+        "infra": { "type": "array", "items": { "type": "string" } },
+        "total_files": { "type": "integer" },
+        "total_loc": { "type": "integer" },
+        "monorepo": { "type": "boolean" },
+        "subprojects": { "type": "integer" }
+      }
+    },
+    "FileCard": {
+      "type": "object",
+      "properties": {
+        "path": { "type": "string" },
+        "language": { "type": "string" },
+        "loc": { "type": "integer" },
+        "imports": { "type": "array", "items": { "type": "string" } },
+        "exports": { "type": "array", "items": { "type": "string" } },
+        "functions": { "type": "array", "items": { "$ref": "#/definitions/Function" } },
+        "file_type": { "type": "string", "enum": ["entry", "component", "util", "config", "route", "model", "service", "repository", "middleware", "hook", "context", "test", "migration", "source"] },
+        "last_modified": { "type": "string", "format": "date-time" },
+        "dependencies": { "type": "array", "items": { "type": "string" } },
+        "dependents": { "type": "array", "items": { "type": "string" } },
+        "tests": { "type": "array", "items": { "type": "string" } },
+        "has_errors": { "type": "boolean" },
+        "error_count": { "type": "integer" },
+        "coverage": { "type": "number", "minimum": -1, "maximum": 100 },
+        "has_todos": { "type": "boolean" },
+        "todo_list": { "type": "array", "items": { "type": "string" } },
+        "is_entry_point": { "type": "boolean" },
+        "is_dead_code": { "type": "boolean" },
+        "security_issues": { "type": "array", "items": { "$ref": "#/definitions/SecurityFinding" } }
+      }
+    },
+    "Function": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "line": { "type": "integer" },
+        "is_exported": { "type": "boolean" },
+        "is_test": { "type": "boolean" },
+        "calls": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "ArchitectureView": {
+      "type": "object",
+      "properties": {
+        "layers": { "type": "array", "items": { "$ref": "#/definitions/ArchLayer" } },
+        "data_flow": { "type": "array", "items": { "$ref": "#/definitions/DataFlow" } },
+        "entry_points": { "type": "array", "items": { "$ref": "#/definitions/EntryPoint" } },
+        "directory_tree": { "type": "array", "items": { "$ref": "#/definitions/DirNode" } }
+      }
+    },
+    "ArchLayer": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "paths": { "type": "array", "items": { "type": "string" } },
+        "technologies": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "DataFlow": {
+      "type": "object",
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "via": { "type": "string" },
+        "type": { "type": "string" }
+      }
+    },
+    "EntryPoint": {
+      "type": "object",
+      "properties": {
+        "path": { "type": "string" },
+        "type": { "type": "string" },
+        "command": { "type": "string" },
+        "port": { "type": "integer" }
+      }
+    },
+    "DirNode": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "is_dir": { "type": "boolean" },
+        "children": { "type": "array", "items": { "$ref": "#/definitions/DirNode" } }
+      }
+    },
+    "DependencyGraph": {
+      "type": "object",
+      "properties": {
+        "files": { "type": "array", "items": { "$ref": "#/definitions/DepNode" } },
+        "edges": { "type": "array", "items": { "$ref": "#/definitions/DepEdge" } },
+        "circular_groups": { "type": "array", "items": { "type": "array", "items": { "type": "string" } } },
+        "dead_files": { "type": "array", "items": { "type": "string" } },
+        "impact_map": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "string" } } }
+      }
+    },
+    "DepNode": {
+      "type": "object",
+      "properties": {
+        "path": { "type": "string" },
+        "imports": { "type": "integer" },
+        "exports": { "type": "integer" },
+        "depth": { "type": "integer" },
+        "layer": { "type": "string" }
+      }
+    },
+    "DepEdge": {
+      "type": "object",
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "type": { "type": "string" }
+      }
+    },
+    "APIView": {
+      "type": "object",
+      "properties": {
+        "routes": { "type": "array", "items": { "$ref": "#/definitions/APIRoute" } },
+        "controllers": { "type": "array", "items": { "type": "string" } },
+        "middlewares": { "type": "array", "items": { "type": "string" } },
+        "base_path": { "type": "string" }
+      }
+    },
+    "APIRoute": {
+      "type": "object",
+      "properties": {
+        "method": { "type": "string" },
+        "path": { "type": "string" },
+        "handler": { "type": "string" },
+        "file": { "type": "string" },
+        "auth": { "type": "boolean" },
+        "rate_limited": { "type": "boolean" }
+      }
+    },
+    "DatabaseView": {
+      "type": "object",
+      "properties": {
+        "models": { "type": "array", "items": { "$ref": "#/definitions/DBModel" } },
+        "relations": { "type": "array", "items": { "$ref": "#/definitions/DBRelation" } },
+        "migrations": { "type": "array", "items": { "type": "string" } },
+        "orm": { "type": "string" }
+      }
+    },
+    "DBModel": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "file": { "type": "string" },
+        "fields": { "type": "array", "items": { "$ref": "#/definitions/DBField" } },
+        "table_name": { "type": "string" }
+      }
+    },
+    "DBField": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "is_primary_key": { "type": "boolean" },
+        "is_foreign_key": { "type": "boolean" },
+        "references": { "type": "string" },
+        "nullable": { "type": "boolean" }
+      }
+    },
+    "DBRelation": {
+      "type": "object",
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "type": { "type": "string" },
+        "via": { "type": "string" }
+      }
+    },
+    "SecurityView": {
+      "type": "object",
+      "properties": {
+        "findings": { "type": "array", "items": { "$ref": "#/definitions/SecurityFinding" } },
+        "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "critical_count": { "type": "integer" },
+        "high_count": { "type": "integer" }
+      }
+    },
+    "SecurityFinding": {
+      "type": "object",
+      "properties": {
+        "file": { "type": "string" },
+        "line": { "type": "integer" },
+        "severity": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"] },
+        "type": { "type": "string" },
+        "message": { "type": "string" },
+        "fix": { "type": "string" }
+      }
+    },
+    "GitSummary": {
+      "type": "object",
+      "properties": {
+        "total_commits": { "type": "integer" },
+        "branches": { "type": "array", "items": { "type": "string" } },
+        "contributors": { "type": "array", "items": { "$ref": "#/definitions/Contributor" } },
+        "last_commit": { "type": "string" },
+        "hot_files": { "type": "array", "items": { "$ref": "#/definitions/HotFile" } },
+        "churn_map": { "type": "object", "additionalProperties": { "type": "integer" } }
+      }
+    },
+    "Contributor": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "commit_count": { "type": "integer" }
+      }
+    },
+    "HotFile": {
+      "type": "object",
+      "properties": {
+        "path": { "type": "string" },
+        "changes": { "type": "integer" }
+      }
+    },
+    "CanvasNote": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "content": { "type": "string" },
+        "color": { "type": "string" },
+        "x": { "type": "integer" },
+        "y": { "type": "integer" },
+        "created_at": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "CanvasGroup": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "color": { "type": "string" },
+        "members": { "type": "array", "items": { "type": "string" } },
+        "pinned": { "type": "boolean" }
+      }
+    },
+    "CanvasEdge": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "label": { "type": "string" },
+        "type": { "type": "string", "enum": ["auto", "manual"] },
+        "dashed": { "type": "boolean" }
+      }
+    },
+    "AIContext": {
+      "type": "object",
+      "properties": {
+        "summary": { "type": "string" },
+        "one_liner": { "type": "string" },
+        "architecture": { "type": "string" },
+        "key_insights": { "type": "array", "items": { "type": "string" } },
+        "patterns": { "type": "array", "items": { "type": "string" } },
+        "conventions": { "type": "array", "items": { "type": "string" } },
+        "gotchas": { "type": "array", "items": { "type": "string" } },
+        "recommended_reading": { "type": "array", "items": { "type": "string" } },
+        "entry_points": { "type": "array", "items": { "$ref": "#/definitions/EntryPoint" } },
+        "critical_files": { "type": "array", "items": { "type": "string" } },
+        "frequent_changes": { "type": "array", "items": { "type": "string" } },
+        "tech_stack": { "type": "array", "items": { "type": "string" } },
+        "architecture_description": { "type": "string" },
+        "danger_zones": { "type": "array", "items": { "type": "string" } },
+        "faqs": { "type": "array", "items": { "$ref": "#/definitions/FAQ" } },
+        "glossary": { "type": "array", "items": { "$ref": "#/definitions/GlossaryTerm" } }
+      }
+    },
+    "FAQ": {
+      "type": "object",
+      "properties": {
+        "question": { "type": "string" },
+        "answer": { "type": "string" }
+      }
+    },
+    "GlossaryTerm": {
+      "type": "object",
+      "properties": {
+        "term": { "type": "string" },
+        "definition": { "type": "string" }
+      }
+    },
+    "LensesView": {
+      "type": "object",
+      "properties": {
+        "technology": { "$ref": "#/definitions/TechnologyLens" },
+        "file": { "$ref": "#/definitions/FileLens" },
+        "function": { "$ref": "#/definitions/FunctionLens" },
+        "api": { "$ref": "#/definitions/APILens" },
+        "database": { "$ref": "#/definitions/DatabaseLens" },
+        "security": { "$ref": "#/definitions/SecurityLens" },
+        "git": { "$ref": "#/definitions/GitLens" },
+        "runtime": { "$ref": "#/definitions/RuntimeLens" },
+        "architecture": { "$ref": "#/definitions/ArchitectureLens" }
+      }
+    },
+    "TechnologyLens": {
+      "type": "object",
+      "properties": {
+        "categories": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "string" } } }
+      }
+    },
+    "FileLens": {
+      "type": "object",
+      "properties": {
+        "by_layer": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "string" } } },
+        "by_type": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "string" } } }
+      }
+    },
+    "FunctionLens": {
+      "type": "object",
+      "properties": {
+        "call_graph": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "string" } } }
+      }
+    },
+    "APILens": {
+      "type": "object",
+      "properties": {
+        "routes_by_group": { "type": "object", "additionalProperties": { "type": "array", "items": { "$ref": "#/definitions/APIRoute" } } }
+      }
+    },
+    "DatabaseLens": {
+      "type": "object",
+      "properties": {
+        "tables": { "type": "array", "items": { "type": "string" } },
+        "edges": { "type": "array", "items": { "$ref": "#/definitions/DBRelation" } }
+      }
+    },
+    "SecurityLens": {
+      "type": "object",
+      "properties": {
+        "severity_map": { "type": "object", "additionalProperties": { "type": "array", "items": { "$ref": "#/definitions/SecurityFinding" } } }
+      }
+    },
+    "GitLens": {
+      "type": "object",
+      "properties": {
+        "contributor_map": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "churn_map": { "type": "object", "additionalProperties": { "type": "integer" } }
+      }
+    },
+    "RuntimeLens": {
+      "type": "object",
+      "properties": {
+        "services": { "type": "array", "items": { "$ref": "#/definitions/RuntimeService" } }
+      }
+    },
+    "RuntimeService": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "status": { "type": "string" },
+        "port": { "type": "integer" },
+        "pid": { "type": "integer" }
+      }
+    },
+    "ArchitectureLens": {
+      "type": "object",
+      "properties": {
+        "ai_architecture": { "type": "array", "items": { "$ref": "#/definitions/ArchLayer" } },
+        "flow_diagram": { "type": "string" }
+      }
+    }
+  }
+}

@@ -9,7 +9,7 @@ on:
 jobs:
   go-lint:
     name: Go Lint
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -28,7 +28,7 @@ jobs:
           done
   go-test:
     name: Go Tests
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     needs: go-lint
     steps:
       - uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
           done
   website-lint-typecheck:
     name: Website Lint & Type Check
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     needs: go-test
     steps:
       - uses: actions/checkout@v4

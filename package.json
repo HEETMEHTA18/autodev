@@ -1,6 +1,6 @@
 {
   "name": "autodev",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "private": true,
   "description": "Clone. Scan. Install. Build. — Open-source developer environment bootstrapper",
   "scripts": {

@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	currentVersion = "0.4.2"
+	currentVersion = "0.4.3"
 	owner          = "HEETMEHTA18"
 	repo           = "autodev"
 )

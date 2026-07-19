@@ -24,7 +24,7 @@ var (
 var rootCmd = &cobra.Command{
 	Use:     "autodev",
 	Short:   "Set up any development environment in one command.",
-	Version: "0.4.2",
+	Version: "0.4.3",
 	Long: `
   █████╗ ██╗   ██╗████████╗ ██████╗ ██████╗ ███████╗██╗   ██╗
   ██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗██╔══██╗██╔════╝██║   ██║

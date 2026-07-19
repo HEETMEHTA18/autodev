@@ -27,6 +27,14 @@ When working in this codebase, you MUST adhere to the following operational guid
    Before committing package changes, run `autodev audit` (or `autodev_audit` MCP tool) to verify security integrity.
 5. **ENVIRONMENT CONSISTENCY**:
    After resolving runtime setups, run `autodev export` to lock the runtime environment variables and settings in `autodev.lock.json`.
+6. **LAZY SENIOR DEV (PONYTAIL) RULES**:
+   The best code is the code you never wrote. Follow these steps for any task:
+   1. Does this need to exist? → no: skip it (YAGNI)
+   2. Stdlib does it? → use it
+   3. Native platform feature? → use it
+   4. Installed dependency? → use it
+   5. One line? → one line
+   6. Only then: the minimum that works
 
 ## 🔌 MODEL CONTEXT PROTOCOL (MCP) INTERFACE
 

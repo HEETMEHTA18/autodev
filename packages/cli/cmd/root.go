@@ -99,16 +99,11 @@ func init() {
 		newCICmd(),
 		newPluginCmd(),
 		newCanvasCmd(),
-		newGraphCmd(),
-		newDashboardCmd(),
-		newCompletionCmd(),
-		newUninstallCmd(),
+		newPonytailCmd(),
+		newSecurityCmd(),
+		newSecretsCmd(),
+		newHardenCmd(),
 		newUpgradeCmd(),
-		newInfoCmd(),
-		newInitCmd(),
-		newSnapshotCmd(),
-		newReviewCmd(),
-		newAICmd(),
 	)
 
 	// Prompts manager command (displays history & groups prompt capture subcommands)

@@ -38,7 +38,7 @@ export default function Navbar() {
       .catch((err) => console.error("Failed to fetch stars:", err));
 
     // Fetch unique page views
-    const isDismissed = localStorage.getItem("autodev_update_dismissed_v0.4.0");
+    const isDismissed = localStorage.getItem("autodev_update_dismissed_v0.4.1");
     const endpoint = isDismissed
       ? "https://api.counterapi.dev/v1/heetmehta18-autodev/views/"
       : "https://api.counterapi.dev/v1/heetmehta18-autodev/views/up";
@@ -49,7 +49,7 @@ export default function Navbar() {
         if (data && typeof data.count === "number") {
           setViews(data.count);
           if (!isDismissed) {
-            localStorage.setItem("autodev_update_dismissed_v0.4.0", "true");
+            localStorage.setItem("autodev_update_dismissed_v0.4.1", "true");
           }
         }
       })
@@ -129,7 +129,7 @@ export default function Navbar() {
               window.dispatchEvent(new Event("autodev_open_update_modal"))
             }
             className="relative p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#FFD700] text-[#FFD700] transition-colors cursor-pointer"
-            title="What's New in v0.4.0"
+            title="What's New in v0.4.1"
           >
             <Bell className="w-4 h-4" />
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FFD700] rounded-full animate-ping" />
@@ -184,7 +184,7 @@ export default function Navbar() {
               window.dispatchEvent(new Event("autodev_open_update_modal"))
             }
             className="relative p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#FFD700] text-white transition-colors cursor-pointer"
-            title="What's New in v0.4.0"
+            title="What's New in v0.4.1"
           >
             <Bell className="w-5 h-5" />
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FFD700] rounded-full animate-ping" />

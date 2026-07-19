@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/autodev-sh/autodev/cli/style"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 )
 
@@ -49,41 +49,46 @@ func newUpgradeCmd() *cobra.Command {
 }
 
 func runUpgrade(checkOnly bool) error {
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
+	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
+	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF6B6B"))
+	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
+
 	fmt.Println()
-	fmt.Println(style.Title.Render("  🔄 AutoDev Upgrade Check"))
+	fmt.Println(titleStyle.Render("  🔄 AutoDev Upgrade Check"))
 	fmt.Println()
 
 	latest, err := fetchLatestRelease()
 	if err != nil {
-		fmt.Println(style.Warning.Render(fmt.Sprintf("  ✗ Failed to check for updates: %v", err)))
-		fmt.Println(style.Dim.Render("  Check manually: https://github.com/"+owner+"/"+repo+"/releases"))
+		fmt.Println(warnStyle.Render(fmt.Sprintf("  ✗ Failed to check for updates: %v", err)))
+		fmt.Println(dimStyle.Render("  Check manually: https://github.com/"+owner+"/"+repo+"/releases"))
 		fmt.Println()
 		return nil
 	}
 
 	currentTag := "v" + currentVersion
 	if latest.TagName == currentTag {
-		fmt.Println(style.Success.Render(fmt.Sprintf("  ✓ You're running the latest version (%s)", currentTag)))
+		fmt.Println(successStyle.Render(fmt.Sprintf("  ✓ You're running the latest version (%s)", currentTag)))
 		fmt.Println()
 		return nil
 	}
 
-	fmt.Println(style.Dim.Render(fmt.Sprintf("  Current version: %s", style.Warning.Render(currentTag))))
-	fmt.Println(style.Dim.Render(fmt.Sprintf("  Latest version:  %s", style.Success.Render(latest.TagName))))
+	fmt.Println(dimStyle.Render(fmt.Sprintf("  Current version: %s", warnStyle.Render(currentTag))))
+	fmt.Println(dimStyle.Render(fmt.Sprintf("  Latest version:  %s", successStyle.Render(latest.TagName))))
 	fmt.Println()
 
 	if checkOnly {
-		fmt.Println(style.Dim.Render("  Run 'autodev upgrade' without --check-only to update."))
+		fmt.Println(dimStyle.Render("  Run 'autodev upgrade' without --check-only to update."))
 		fmt.Println()
 		return nil
 	}
 
-	fmt.Print(style.Dim.Render("  Download and install ") + style.Success.Render(latest.TagName) + style.Dim.Render("? [y/N] "))
+	fmt.Print(dimStyle.Render("  Download and install ") + successStyle.Render(latest.TagName) + dimStyle.Render("? [y/N] "))
 	var answer string
 	_, _ = fmt.Scanln(&answer)
 	answer = strings.ToLower(strings.TrimSpace(answer))
 	if answer != "y" && answer != "yes" {
-		fmt.Println(style.Warning.Render("  Upgrade cancelled."))
+		fmt.Println(warnStyle.Render("  Upgrade cancelled."))
 		fmt.Println()
 		return nil
 	}
@@ -92,8 +97,8 @@ func runUpgrade(checkOnly bool) error {
 		return fmt.Errorf("upgrade failed: %w", err)
 	}
 
-	fmt.Println(style.Success.Render(fmt.Sprintf("  ✓ Upgraded to %s!", latest.TagName)))
-	fmt.Println(style.Dim.Render("  Restart your shell or run 'autodev version' to verify."))
+	fmt.Println(successStyle.Render(fmt.Sprintf("  ✓ Upgraded to %s!", latest.TagName)))
+	fmt.Println(dimStyle.Render("  Restart your shell or run 'autodev version' to verify."))
 	fmt.Println()
 	return nil
 }
@@ -140,7 +145,8 @@ func downloadAndInstall(release *GitHubRelease) error {
 		downloadURL = release.Assets[0].BrowserDownloadURL
 	}
 
-	fmt.Println(style.Dim.Render(fmt.Sprintf("  Downloading %s...", assetName)))
+	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
+	fmt.Println(dimStyle.Render(fmt.Sprintf("  Downloading %s...", assetName)))
 
 	client := &http.Client{Timeout: 60 * time.Second}
 	resp, err := client.Get(downloadURL)

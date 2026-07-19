@@ -93,7 +93,25 @@ func shellScript(script string) error {
 	return cmd.Run()
 }
 
+func isValidPackageName(name string) bool {
+	if len(name) == 0 || name[0] == '-' {
+		return false
+	}
+	for _, c := range name {
+		if !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' || c == '+') {
+			return false
+		}
+	}
+	return true
+}
+
 func runLinuxInstall(packages []string) error {
+	for _, p := range packages {
+		if !isValidPackageName(p) {
+			return fmt.Errorf("unsafe or invalid package name detected: %s", p)
+		}
+	}
+
 	if commandExists("apt-get") {
 		return shellRun("sudo", append([]string{"apt-get", "install", "-y"}, packages...)...)
 	} else if commandExists("dnf") {

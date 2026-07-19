@@ -18,9 +18,9 @@ const jetbrainsMono = JetBrains_Mono({
 export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL("https://autodevs.dev"),
-    title: "AutoDevs — The App Store for Developers",
+    title: "AutoDevs — Turn any GitHub repository into actionable development tasks",
     description:
-      "Clone. Scan. Install. Build. An open-source cross-platform developer environment bootstrapper. Install any language, framework, or tool with a single command.",
+      "AutoDevs analyzes your codebase, finds issues, generates improvements, and helps you ship faster. Turn any GitHub repository into actionable development tasks in seconds.",
     keywords: [
       "developer tools",
       "CLI",
@@ -47,16 +47,16 @@ export async function generateMetadata(): Promise<Metadata> {
       apple: "/apple-touch-icon.png",
     },
     openGraph: {
-      title: "AutoDevs — The App Store for Developers",
-      description: "Clone. Scan. Install. Build.",
+      title: "AutoDevs — Turn GitHub repos into development tasks",
+      description: "AutoDevs analyzes your codebase, finds issues, generates improvements, and helps you ship faster.",
       url: "https://autodevs.dev/",
       siteName: "AutoDevs",
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: "AutoDevs — The App Store for Developers",
-      description: "Clone. Scan. Install. Build.",
+      title: "AutoDevs — Turn GitHub repos into development tasks",
+      description: "AutoDevs analyzes your codebase, finds issues, generates improvements, and helps you ship faster.",
     },
   };
 }
@@ -75,6 +75,11 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://api.github.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://api.counterapi.dev" crossOrigin="anonymous" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1639394894393563"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className="font-space antialiased">
         <script

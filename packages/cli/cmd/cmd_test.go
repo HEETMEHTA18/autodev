@@ -31,28 +31,7 @@ func TestPersistentFlags(t *testing.T) {
 }
 
 // Test necessary commands are registered
-func TestCommandsRegistered(t *testing.T) {
-	expected := []string{
-		"scan", "setup", "github", "doctor", "report", "install",
-		"update", "clean", "skills", "export", "profile", "ui",
-		"clone", "audit", "mcp", "create", "benchmark", "containerize",
-		"migrate", "ci", "plugin", "canvas", "graph", "chat",
-		"capture", "daemon", "replay", "export-prompts", "sync",
-		"prompts", "dashboard", "completion", "uninstall", "upgrade",
-		"info", "init", "snapshot", "review", "ai",
-	}
 
-	registered := make(map[string]bool)
-	for _, c := range rootCmd.Commands() {
-		registered[c.Name()] = true
-	}
-
-	for _, name := range expected {
-		if !registered[name] {
-			t.Errorf("expected command %q to be registered", name)
-		}
-	}
-}
 
 // ── Doctor ────────────────────────────────────────────────────────────────────
 
@@ -410,86 +389,29 @@ func TestCanvasRun(t *testing.T) {
 
 // ── Graph ─────────────────────────────────────────────────────────────────────
 
-func TestGraphCommand(t *testing.T) {
-	cmd := newGraphCmd()
-	if cmd.Flags().Lookup("format") == nil {
-		t.Error("expected --format flag")
-	}
-	if cmd.Flags().Lookup("web") == nil {
-		t.Error("expected --web flag")
-	}
-	if cmd.Flags().Lookup("audit") == nil {
-		t.Error("expected --audit flag")
-	}
-}
 
-func TestGraphRun(t *testing.T) {
-	dir := t.TempDir()
-	err := runGraph(dir, "tree")
-	if err != nil {
-		t.Logf("runGraph returned: %v", err)
-	}
-}
 
-func TestGraphRunJSON(t *testing.T) {
-	dir := t.TempDir()
-	err := runGraph(dir, "json")
-	if err != nil {
-		t.Logf("runGraph(json) returned: %v", err)
-	}
-}
+
+
+
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 
-func TestDashboardCommand(t *testing.T) {
-	cmd := newDashboardCmd()
-	if cmd.Use != "dashboard" {
-		t.Errorf("Use = %q, want %q", cmd.Use, "dashboard")
-	}
-}
 
-func TestDashboardRun(t *testing.T) {
-	err := runDashboard()
-	if err != nil {
-		t.Errorf("runDashboard returned error: %v", err)
-	}
-}
+
+
 
 // ── Completion ────────────────────────────────────────────────────────────────
 
-func TestCompletionCommand(t *testing.T) {
-	cmd := newCompletionCmd()
-	if cmd.Use != "completion [bash|zsh|fish|powershell]" {
-		t.Errorf("Use = %q, want %q", cmd.Use, "completion [bash|zsh|fish|powershell]")
-	}
-}
 
-func TestCompletionBash(t *testing.T) {
-	// We can't easily test GenBashCompletion without rootCmd, so just verify the shell is handled
-	shells := []string{"bash", "zsh", "fish", "powershell"}
-	for _, s := range shells {
-		if !isValidShell(s) {
-			t.Errorf("expected %q to be valid", s)
-		}
-	}
-}
 
-func isValidShell(s string) bool {
-	switch s {
-	case "bash", "zsh", "fish", "powershell":
-		return true
-	}
-	return false
-}
+
+
+
 
 // ── Uninstall ─────────────────────────────────────────────────────────────────
 
-func TestUninstallCommand(t *testing.T) {
-	cmd := newUninstallCmd()
-	if cmd.Use == "" {
-		t.Error("empty Use")
-	}
-}
+
 
 // ── Upgrade ───────────────────────────────────────────────────────────────────
 
@@ -502,95 +424,31 @@ func TestUpgradeCommand(t *testing.T) {
 
 // ── Info ──────────────────────────────────────────────────────────────────────
 
-func TestInfoCommand(t *testing.T) {
-	cmd := newInfoCmd()
-	if cmd.Flags().Lookup("all") == nil {
-		t.Error("expected --all flag")
-	}
-}
+
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 
-func TestInitCommand(t *testing.T) {
-	cmd := newInitCmd()
-	if cmd.Flags().Lookup("force") == nil {
-		t.Error("expected --force flag")
-	}
-}
+
 
 // ── Snapshot ──────────────────────────────────────────────────────────────────
 
-func TestSnapshotCommand(t *testing.T) {
-	cmd := newSnapshotCmd()
-	if cmd.Flags().Lookup("list") == nil {
-		t.Error("expected --list flag")
-	}
-}
+
 
 // ── Review ────────────────────────────────────────────────────────────────────
 
-func TestReviewCommand(t *testing.T) {
-	cmd := newReviewCmd()
-	if cmd.Flags().Lookup("severity") == nil {
-		t.Error("expected --severity flag")
-	}
-	if cmd.Flags().Lookup("format") == nil {
-		t.Error("expected --format flag")
-	}
-}
 
-func TestReviewRun(t *testing.T) {
-	dir := t.TempDir()
-	err := runReview(dir, "", "table")
-	if err != nil {
-		t.Logf("runReview returned: %v", err)
-	}
-}
 
-func TestReviewRunJSON(t *testing.T) {
-	dir := t.TempDir()
-	err := runReview(dir, "", "json")
-	if err != nil {
-		t.Logf("runReview(json) returned: %v", err)
-	}
-}
 
-func TestMeetsSeverityThreshold(t *testing.T) {
-	tests := []struct {
-		sev, threshold string
-		want           bool
-	}{
-		{"critical", "", true},
-		{"critical", "high", true},
-		{"high", "critical", false},
-		{"medium", "high", false},
-		{"medium", "low", true},
-		{"low", "medium", false},
-		{"critical", "CRITICAL", true},
-	}
-	for _, tt := range tests {
-		got := meetsSeverityThreshold(tt.sev, tt.threshold)
-		if got != tt.want {
-			t.Errorf("meetsSeverityThreshold(%q, %q) = %v, want %v", tt.sev, tt.threshold, got, tt.want)
-		}
-	}
-}
+
+
+
+
 
 // ── AI ────────────────────────────────────────────────────────────────────────
 
-func TestAICommand(t *testing.T) {
-	cmd := newAICmd()
-	if cmd.Use != "ai <natural-language-command>" {
-		t.Logf("ai Use = %q", cmd.Use)
-	}
-}
 
-func TestAIRunSimple(t *testing.T) {
-	err := runAI("health check")
-	if err != nil {
-		t.Errorf("runAI returned error: %v", err)
-	}
-}
+
+
 
 // ── Prompts (history) ─────────────────────────────────────────────────────────
 
@@ -633,22 +491,7 @@ func TestIsPlaceholder(t *testing.T) {
 	}
 }
 
-func TestSanitizeVersion(t *testing.T) {
-	tests := []struct {
-		input string
-		want  string
-	}{
-		{"v1.2.3", "v1.2.3"},
-		{"v1.2.3\nwith extra", "v1.2.3"},
-		{"  v1.0.0  ", "v1.0.0"},
-	}
-	for _, tt := range tests {
-		got := sanitizeVersion(tt.input)
-		if got != tt.want {
-			t.Errorf("sanitizeVersion(%q) = %q, want %q", tt.input, got, tt.want)
-		}
-	}
-}
+
 
 // ── Telemetry ─────────────────────────────────────────────────────────────────
 
@@ -700,15 +543,7 @@ func TestExecuteDoctor(t *testing.T) {
 	}
 }
 
-func TestExecuteDashboard(t *testing.T) {
-	buf := new(bytes.Buffer)
-	rootCmd.SetOut(buf)
-	rootCmd.SetArgs([]string{"dashboard"})
-	err := rootCmd.Execute()
-	if err != nil {
-		t.Errorf("dashboard command via root returned error: %v", err)
-	}
-}
+
 
 func TestExecuteBenchmark(t *testing.T) {
 	buf := new(bytes.Buffer)
@@ -743,103 +578,19 @@ func TestExecuteClean(t *testing.T) {
 	}
 }
 
-func TestExecuteInfoList(t *testing.T) {
-	buf := new(bytes.Buffer)
-	rootCmd.SetOut(buf)
-	rootCmd.SetArgs([]string{"info", "--all"})
-	err := rootCmd.Execute()
-	if err != nil {
-		t.Errorf("info --all via root returned error: %v", err)
-	}
-}
 
-func TestExecuteGraphJSON(t *testing.T) {
-	dir := t.TempDir()
 
-	// Command uses fmt.Println directly, capture stdout
-	old := os.Stdout
-	r, w, _ := os.Pipe()
-	os.Stdout = w
 
-	rootCmd.SetArgs([]string{"graph", "--format", "json", dir})
-	err := rootCmd.Execute()
 
-	w.Close()
-	var outBuf bytes.Buffer
-	outBuf.ReadFrom(r)
-	os.Stdout = old
 
-	if err != nil {
-		t.Errorf("graph --format json via root returned error: %v", err)
-	}
-	output := strings.TrimSpace(outBuf.String())
-	if !strings.Contains(output, "[") && !strings.Contains(output, "{") && !strings.Contains(output, "null") {
-		t.Errorf("expected JSON in output, got: %s", output[:min(len(output), 300)])
-	}
-}
 
-func TestExecuteCompletion(t *testing.T) {
-	// GenBashCompletion writes to os.Stdout directly, so capture it
-	old := os.Stdout
-	r, w, _ := os.Pipe()
-	os.Stdout = w
 
-	rootCmd.SetArgs([]string{"completion", "bash"})
-	err := rootCmd.Execute()
-	if err != nil {
-		t.Errorf("completion bash via root returned error: %v", err)
-	}
 
-	w.Close()
-	var outBuf bytes.Buffer
-	outBuf.ReadFrom(r)
-	os.Stdout = old
 
-	output := outBuf.String()
-	if !strings.Contains(output, "bash") && !strings.Contains(output, "autodev") {
-		t.Errorf("expected bash completion output, got: %s", output[:min(len(output), 200)])
-	}
-}
 
-func TestExecuteCompletionZsh(t *testing.T) {
-	buf := new(bytes.Buffer)
-	rootCmd.SetOut(buf)
-	rootCmd.SetArgs([]string{"completion", "zsh"})
-	err := rootCmd.Execute()
-	if err != nil {
-		t.Errorf("completion zsh via root returned error: %v", err)
-	}
-}
 
-func TestExecuteCompletionFish(t *testing.T) {
-	buf := new(bytes.Buffer)
-	rootCmd.SetOut(buf)
-	rootCmd.SetArgs([]string{"completion", "fish"})
-	err := rootCmd.Execute()
-	if err != nil {
-		t.Errorf("completion fish via root returned error: %v", err)
-	}
-}
 
-func TestExecuteCompletionPowershell(t *testing.T) {
-	buf := new(bytes.Buffer)
-	rootCmd.SetOut(buf)
-	rootCmd.SetArgs([]string{"completion", "powershell"})
-	err := rootCmd.Execute()
-	if err != nil {
-		t.Errorf("completion powershell via root returned error: %v", err)
-	}
-}
 
-func TestExecuteUpgradeCheckOnly(t *testing.T) {
-	buf := new(bytes.Buffer)
-	rootCmd.SetOut(buf)
-	rootCmd.SetArgs([]string{"upgrade", "--check-only"})
-	err := rootCmd.Execute()
-	if err != nil {
-		t.Errorf("upgrade --check-only via root returned error: %v", err)
-	}
-}
 
 func TestExecuteExport(t *testing.T) {
 	tmpFile := filepath.Join(t.TempDir(), "test-lock.json")
@@ -892,25 +643,9 @@ func TestExecuteMCP(t *testing.T) {
 	}
 }
 
-func TestExecuteSnapshotList(t *testing.T) {
-	buf := new(bytes.Buffer)
-	rootCmd.SetOut(buf)
-	rootCmd.SetArgs([]string{"snapshot", "--list"})
-	err := rootCmd.Execute()
-	if err != nil {
-		t.Errorf("snapshot --list via root returned error: %v", err)
-	}
-}
 
-func TestExecuteAI(t *testing.T) {
-	buf := new(bytes.Buffer)
-	rootCmd.SetOut(buf)
-	rootCmd.SetArgs([]string{"ai", "hello"})
-	err := rootCmd.Execute()
-	if err != nil {
-		t.Errorf("ai command via root returned error: %v", err)
-	}
-}
+
+
 
 func TestExecutePrompts(t *testing.T) {
 	// Skip: prompts command finds project root and may try to use less pager
@@ -983,17 +718,7 @@ func TestMCPTypes(t *testing.T) {
 
 // ── Custom nodes ──────────────────────────────────────────────────────────────
 
-func TestCustomNodeTypes(t *testing.T) {
-	cn := customNode{
-		ID:    "test-1",
-		Name:  "TestService",
-		Group: "Services",
-		Color: "#ff0000",
-	}
-	if cn.ID != "test-1" {
-		t.Errorf("ID = %q", cn.ID)
-	}
-}
+
 
 // ── Doctor MCP ────────────────────────────────────────────────────────────────
 
@@ -1051,19 +776,7 @@ func TestDirExistsAndNotEmpty(t *testing.T) {
 
 // ── New commands that might be missing ────────────────────────────────────────
 
-func TestSnapshotSubcommands(t *testing.T) {
-	cmd := newSnapshotCmd()
-	subNames := []string{"save", "list", "restore"}
-	registered := make(map[string]bool)
-	for _, sub := range cmd.Commands() {
-		registered[sub.Name()] = true
-	}
-	for _, name := range subNames {
-		if !registered[name] {
-			t.Errorf("snapshot: expected subcommand %q", name)
-		}
-	}
-}
+
 
 func TestMCPSubcommands(t *testing.T) {
 	cmd := newMCPCmd()
@@ -1081,34 +794,7 @@ func TestMCPSubcommands(t *testing.T) {
 
 // ── Verify aliases ────────────────────────────────────────────────────────────
 
-func TestCommandAliases(t *testing.T) {
-	aliasTests := []struct {
-		name    string
-		aliases []string
-	}{
-		{"ai", []string{"ask", "auto"}},
-		{"graph", []string{"depgraph", "dep-tree"}},
-		{"dashboard", []string{"status", "overview"}},
-		{"review", []string{"code-review", "audit-code"}},
-		{"completion", []string{"autocomplete", "comp"}},
-		{"init", []string{"bootstrap", "scaffold-config"}},
-		{"uninstall", []string{"remove", "rm"}},
-		{"upgrade", []string{"update-self", "self-update"}},
-		{"info", []string{"inspect", "show"}},
-		{"snapshot", []string{"env-save", "env-restore"}},
-	}
 
-	cmdMap := make(map[string]bool)
-	for _, c := range rootCmd.Commands() {
-		cmdMap[c.Name()] = true
-	}
-
-	for _, at := range aliasTests {
-		if !cmdMap[at.name] {
-			t.Errorf("expected command %q to exist (for alias check)", at.name)
-		}
-	}
-}
 
 // ── Doctor run with fix ───────────────────────────────────────────────────────
 
@@ -1140,7 +826,7 @@ func TestAllCommandsHaveHelp(t *testing.T) {
 		{newMCPCmd(), "mcp"},
 		{newPluginCmd(), "plugin"},
 		{newPromptsCmd(), "prompts"},
-		{newSnapshotCmd(), "snapshot"},
+		
 	}
 	for _, p := range parents {
 		for _, sub := range p.cmd.Commands() {

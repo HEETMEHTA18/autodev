@@ -1,0 +1,26 @@
+description: "Ponytail Lazy Senior Dev Benchmark"
+
+prompts:
+  - baseline.txt
+  - ponytail.txt
+
+providers:
+  - id: openrouter:openai/gpt-4o-mini
+    config:
+      temperature: 0.0
+  - id: openrouter:anthropic/claude-3-haiku
+    config:
+      temperature: 0.0
+
+tests:
+  - vars:
+      request: "Write a function named deepClone in JavaScript to deep clone an object without lodash."
+    assert:
+      - type: javascript
+        value: "output.includes('deepClone')" 
+
+  - vars:
+      request: "Write a function named reverseString that takes a string and returns it reversed in JavaScript."
+    assert:
+      - type: javascript
+        value: "output.includes('reverseString')" 

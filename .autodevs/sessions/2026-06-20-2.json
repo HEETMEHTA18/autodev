@@ -1,0 +1,16 @@
+{
+  "session_id": "2026-06-20-2",
+  "start_time": "2026-06-20T18:49:17.221552729+05:30",
+  "end_time": "0001-01-01T00:00:00Z",
+  "events": [],
+  "metadata": {
+    "project_name": "Autodev",
+    "path": "/media/heet18/Futuristic1/Heet/Github/Autodev",
+    "branch": "main",
+    "commit": "1430dc2",
+    "languages": [
+      "JavaScript"
+    ],
+    "frameworks": []
+  }
+}

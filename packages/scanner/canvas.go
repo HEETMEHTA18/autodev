@@ -633,22 +633,22 @@ func (cg *CanvasGenerator) buildGitSummary() GitSummary {
 	}
 
 	// Check if git is available
-	if err := exec.Command("git", "rev-parse", "--git-dir").Run(); err != nil {
+	if err := exec.Command("git", "-C", cg.RootPath, "rev-parse", "--git-dir").Run(); err != nil {
 		return gs
 	}
 
 	// Total commits
-	if out, err := exec.Command("git", "rev-list", "--count", "HEAD").Output(); err == nil {
+	if out, err := exec.Command("git", "-C", cg.RootPath, "rev-list", "--count", "HEAD").Output(); err == nil {
 		gs.TotalCommits, _ = strconv.Atoi(strings.TrimSpace(string(out)))
 	}
 
 	// Last commit
-	if out, err := exec.Command("git", "log", "-1", "--format=%H %s").Output(); err == nil {
+	if out, err := exec.Command("git", "-C", cg.RootPath, "log", "-1", "--format=%H %s").Output(); err == nil {
 		gs.LastCommit = strings.TrimSpace(string(out))
 	}
 
 	// Contributors
-	if out, err := exec.Command("git", "shortlog", "-sn", "--all").Output(); err == nil {
+	if out, err := exec.Command("git", "-C", cg.RootPath, "shortlog", "-sn", "--all").Output(); err == nil {
 		lines := strings.Split(strings.TrimSpace(string(out)), "\n")
 		for _, line := range lines {
 			line = strings.TrimSpace(line)
@@ -667,7 +667,7 @@ func (cg *CanvasGenerator) buildGitSummary() GitSummary {
 	}
 
 	// Branches
-	if out, err := exec.Command("git", "branch", "--format=%(refname:short)").Output(); err == nil {
+	if out, err := exec.Command("git", "-C", cg.RootPath, "branch", "--format=%(refname:short)").Output(); err == nil {
 		for _, b := range strings.Split(strings.TrimSpace(string(out)), "\n") {
 			b = strings.TrimSpace(b)
 			if b != "" {
@@ -677,7 +677,7 @@ func (cg *CanvasGenerator) buildGitSummary() GitSummary {
 	}
 
 	// Hot files (most changed) — limit to recent commits for speed
-	if out, err := exec.Command("git", "log", "--format=", "--numstat", "-50", "--all").Output(); err == nil {
+	if out, err := exec.Command("git", "-C", cg.RootPath, "log", "--format=", "--numstat", "-50", "--all").Output(); err == nil {
 		fileChanges := make(map[string]int)
 		lines := strings.Split(string(out), "\n")
 		for _, line := range lines {
@@ -1317,7 +1317,7 @@ func extractImports(content []byte, lang string) []string {
 		for _, m := range matches {
 			if len(m) > 1 {
 				imp := m[1]
-				if imp != "" && !strings.HasPrefix(imp, ".") && len(imp) > 1 {
+				if imp != "" && len(imp) > 1 {
 					imports = append(imports, imp)
 				}
 			}

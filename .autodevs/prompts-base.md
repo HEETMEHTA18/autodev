@@ -33,6 +33,15 @@ High-priority instructions for Ralph Loop agents working in **this** repo.
 - No new dependencies without strong justification in the todo
 - Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`
 
+**Ponytail Rules (Lazy Senior Dev):**
+The best code is the code you never wrote. Follow these steps:
+1. Does this need to exist? → no: skip it (YAGNI)
+2. Stdlib does it? → use it
+3. Native platform feature? → use it
+4. Installed dependency? → use it
+5. One line? → one line
+6. Only then: the minimum that works
+
 ---
 
 ## Testing

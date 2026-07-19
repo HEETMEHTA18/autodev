@@ -58,14 +58,13 @@ jobs:
           node-version: "20"
           cache: pnpm
       - name: Install dependencies
-        working-directory: apps/website
         run: pnpm install --frozen-lockfile
       - name: Lint
         working-directory: apps/website
-        run: pnpm lint || true
+        run: pnpm lint
       - name: Type Check
         working-directory: apps/website
-        run: pnpm typecheck || true
+        run: pnpm typecheck
       - name: Build
         working-directory: apps/website
         run: pnpm build

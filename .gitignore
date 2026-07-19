@@ -107,3 +107,4 @@ go.work.sum
 .antigravitycli/
 autodev-cli
 gosec-results.json
+.autodevs/canvas/canvas.json

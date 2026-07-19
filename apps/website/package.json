@@ -7,7 +7,8 @@
     "prebuild": "node -e \"const fs = require('fs'); fs.copyFileSync('../../scripts/install.sh', './public/install.sh');\"",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "framer-motion": "^12.40.0",

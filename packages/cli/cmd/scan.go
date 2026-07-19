@@ -179,6 +179,9 @@ type Enhancement struct {
 }
 
 func runEnhancerFlow(path string, result *scanner.ScanResult) error {
+	if result == nil {
+		return nil
+	}
 	// Detect project type
 	isReact := false
 	isNextJS := false

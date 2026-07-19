@@ -471,6 +471,7 @@ func newUpdateCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "update",
 		Short: "Check for and apply updates to managed packages",
+		Long:  `Check for available updates to installed packages from the catalog. Re-run 'autodev install <pkg>' to get the latest version.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
 			fmt.Println()
@@ -485,6 +486,7 @@ func newCleanCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "clean",
 		Short: "Remove AutoDev cache and temp files",
+		Long:  `Remove AutoDev cache, temporary files, and generated reports from the current project.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
 			fmt.Println()
@@ -508,6 +510,7 @@ func newExportCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "export",
 		Short: "Export environment as a reproducible JSON lockfile",
+		Long:  `Export the current development environment to a JSON lockfile that can be used to reproduce the same setup on another machine.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runExport(outFile)
 		},

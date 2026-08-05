@@ -9,7 +9,7 @@ const steps = [
     title: "Install AutoDevs",
     desc: "Install AutoDevs or run it directly using npx on your machine.",
     icon: Download,
-    color: "#FFD700",
+    color: "#C8F135",
   },
   {
     num: "02",
@@ -23,14 +23,14 @@ const steps = [
     title: "Get AI Analysis",
     desc: "Receive structured security audits, performance suggestions, and fixes.",
     icon: Brain,
-    color: "#4A90E2",
+    color: "#2563eb",
   },
   {
     num: "04",
     title: "Fix Issues Faster",
     desc: "Generate developer plans and apply changes with guided assistance.",
     icon: Zap,
-    color: "#FF4444",
+    color: "#dc2626",
   },
 ];
 
@@ -40,7 +40,7 @@ export default function HowItWorks() {
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="inline-flex items-center gap-1.5 border border-[#FFD700] text-[#FFD700] text-xs font-bold px-3 py-1 uppercase tracking-widest mb-4">
+          <span className="inline-flex items-center gap-1.5 border border-[#C8F135] text-[#C8F135] text-xs font-bold px-3 py-1 uppercase tracking-widest mb-4">
             ⚡ Workflow Demo
           </span>
           <h2 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter">
@@ -137,8 +137,8 @@ export default function HowItWorks() {
                 />
                 
                 {/* Overlay Banner */}
-                <div className="absolute bottom-4 left-4 right-4 bg-black/85 backdrop-blur-sm border-2 border-[#FFD700] p-3 text-center shadow-[4px_4px_0px_#000]">
-                  <p className="text-xs md:text-sm font-mono font-bold text-[#FFD700]">
+                <div className="absolute bottom-4 left-4 right-4 bg-black/85 backdrop-blur-sm border-2 border-[#C8F135] p-3 text-center shadow-[4px_4px_0px_#000]">
+                  <p className="text-xs md:text-sm font-mono font-bold text-[#C8F135]">
                     $ npx @heetmehta18/autodev scan
                   </p>
                 </div>

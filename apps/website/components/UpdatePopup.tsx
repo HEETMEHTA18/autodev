@@ -83,11 +83,11 @@ export default function UpdatePopup() {
           className="fixed bottom-6 right-6 z-[100] w-full max-w-[420px] p-1.5"
         >
           {/* Card Border wrapper (Neo-brutalist) */}
-          <div className="bg-black border-4 border-[#FFD700] text-white shadow-[8px_8px_0px_0px_#111] p-5 relative">
+          <div className="bg-black border-4 border-[#C8F135] text-white shadow-[8px_8px_0px_0px_#111] p-5 relative">
             {/* Close Button */}
             <button
               onClick={handleDismiss}
-              className="absolute top-3 right-3 text-neutral-400 hover:text-[#FFD700] transition-colors p-1 border-2 border-transparent hover:border-[#2A2A2A] bg-neutral-900"
+              className="absolute top-3 right-3 text-neutral-400 hover:text-[#C8F135] transition-colors p-1 border-2 border-transparent hover:border-[#2A2A2A] bg-neutral-900"
               aria-label="Dismiss notification"
             >
               <X className="w-4 h-4" />
@@ -95,7 +95,7 @@ export default function UpdatePopup() {
 
             {/* Header */}
             <div className="flex items-center gap-2 mb-3">
-              <span className="bg-[#FFD700] text-black text-[10px] font-black px-2 py-0.5 tracking-wider uppercase animate-pulse">
+              <span className="bg-[#C8F135] text-black text-[10px] font-black px-2 py-0.5 tracking-wider uppercase animate-pulse">
                 New Release
               </span>
               <span className="text-neutral-400 text-xs font-mono font-bold">
@@ -104,7 +104,7 @@ export default function UpdatePopup() {
             </div>
 
             <h3 className="text-xl font-black tracking-tight text-white mb-2 flex items-center gap-1.5">
-              <Sparkles className="w-5 h-5 text-[#FFD700] shrink-0" />
+              <Sparkles className="w-5 h-5 text-[#C8F135] shrink-0" />
               UPGRADE TO AUTODEV v0.4.1
             </h3>
 
@@ -125,7 +125,7 @@ export default function UpdatePopup() {
                   }}
                   className={`pb-1.5 px-2.5 border-b-2 transition-colors cursor-pointer ${
                     activeTab === idx
-                      ? "border-[#FFD700] text-[#FFD700]"
+                      ? "border-[#C8F135] text-[#C8F135]"
                       : "border-transparent text-neutral-400 hover:text-neutral-200"
                   }`}
                 >
@@ -170,7 +170,7 @@ export default function UpdatePopup() {
                 href="https://github.com/HEETMEHTA18/autodev/releases/tag/v0.4.1"
                 target="_blank"
                 rel="noreferrer"
-                className="nb-btn-small flex items-center justify-center gap-1.5 flex-1 py-1.5 bg-[#FFD700] text-black text-xs font-black tracking-wider uppercase"
+                className="nb-btn-small flex items-center justify-center gap-1.5 flex-1 py-1.5 bg-[#C8F135] text-black text-xs font-black tracking-wider uppercase"
               >
                 <Download className="w-3.5 h-3.5" />
                 Release Notes

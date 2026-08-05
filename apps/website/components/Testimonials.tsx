@@ -33,7 +33,7 @@ export default function Testimonials() {
         
         {/* Header */}
         <div className="text-center mb-16">
-          <span className="inline-flex items-center gap-1.5 border border-[#FFD700] text-[#FFD700] text-xs font-bold px-3 py-1 uppercase tracking-widest mb-4">
+          <span className="inline-flex items-center gap-1.5 border border-[#C8F135] text-[#C8F135] text-xs font-bold px-3 py-1 uppercase tracking-widest mb-4">
             <MessageSquare className="w-3 h-3" /> Testimonials
           </span>
           <h2 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter">
@@ -53,11 +53,11 @@ export default function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: idx * 0.15 }}
-              className="nb-card p-6 flex flex-col justify-between hover:border-[#FFD700] hover:shadow-[6px_6px_0px_#FFD700] bg-[#111]/45 transition-all"
+              className="nb-card p-6 flex flex-col justify-between hover:border-[#C8F135] hover:shadow-[6px_6px_0px_#C8F135] bg-[#111]/45 transition-all"
             >
               {/* Rating stars */}
               <div>
-                <div className="flex gap-1 mb-4 text-[#FFD700]">
+                <div className="flex gap-1 mb-4 text-[#C8F135]">
                   {[...Array(t.rating)].map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-current" />
                   ))}

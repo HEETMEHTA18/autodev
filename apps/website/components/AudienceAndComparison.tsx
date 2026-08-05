@@ -9,7 +9,7 @@ export default function AudienceAndComparison() {
         
         {/* Header */}
         <div className="text-center mb-16">
-          <span className="inline-flex items-center gap-1.5 border border-[#FF4444] text-[#FF4444] text-xs font-bold px-3 py-1 uppercase tracking-widest mb-4">
+          <span className="inline-flex items-center gap-1.5 border border-[#dc2626] text-[#dc2626] text-xs font-bold px-3 py-1 uppercase tracking-widest mb-4">
             ⚖️ Product Comparison
           </span>
           <h2 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter">
@@ -32,7 +32,7 @@ export default function AudienceAndComparison() {
             className="flex flex-col h-full"
           >
             <div className="flex items-center gap-2 mb-6">
-              <ArrowRightLeft className="w-6 h-6 text-[#FFD700]" />
+              <ArrowRightLeft className="w-6 h-6 text-[#C8F135]" />
               <h3 className="text-2xl font-black text-white uppercase tracking-tight">
                 Before & After AutoDevs
               </h3>
@@ -40,10 +40,10 @@ export default function AudienceAndComparison() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow">
               {/* Before Card */}
-              <div className="nb-card p-6 border-[#FF4444] hover:shadow-[4px_4px_0px_#FF4444] bg-[#111]/40">
+              <div className="nb-card p-6 border-[#dc2626] hover:shadow-[4px_4px_0px_#dc2626] bg-[#111]/40">
                 <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[#2A2A2A]">
-                  <XCircle className="w-5 h-5 text-[#FF4444]" />
-                  <span className="text-sm font-mono font-bold text-[#FF4444] uppercase tracking-wider">
+                  <XCircle className="w-5 h-5 text-[#dc2626]" />
+                  <span className="text-sm font-mono font-bold text-[#dc2626] uppercase tracking-wider">
                     Before AutoDevs
                   </span>
                 </div>
@@ -55,7 +55,7 @@ export default function AudienceAndComparison() {
                     "Missing hidden bugs, config leaks, and vulnerabilities",
                   ].map((item, i) => (
                     <li key={i} className="flex gap-2.5 items-start">
-                      <span className="text-[#FF4444] font-bold text-sm mt-0.5 select-none">❌</span>
+                      <span className="text-[#dc2626] font-bold text-sm mt-0.5 select-none">❌</span>
                       <span className="text-sm font-medium text-neutral-400 leading-relaxed">
                         {item}
                       </span>
@@ -100,7 +100,7 @@ export default function AudienceAndComparison() {
             className="flex flex-col h-full"
           >
             <div className="flex items-center gap-2 mb-6">
-              <Users className="w-6 h-6 text-[#FFD700]" />
+              <Users className="w-6 h-6 text-[#C8F135]" />
               <h3 className="text-2xl font-black text-white uppercase tracking-tight">
                 Target Audience
               </h3>
@@ -108,10 +108,10 @@ export default function AudienceAndComparison() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow">
               {/* Perfect For Card */}
-              <div className="nb-card p-6 border-[#FFD700] hover:shadow-[4px_4px_0px_#FFD700] bg-[#111]/40">
+              <div className="nb-card p-6 border-[#C8F135] hover:shadow-[4px_4px_0px_#C8F135] bg-[#111]/40">
                 <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[#2A2A2A]">
-                  <CheckCircle2 className="w-5 h-5 text-[#FFD700]" />
-                  <span className="text-sm font-mono font-bold text-[#FFD700] uppercase tracking-wider">
+                  <CheckCircle2 className="w-5 h-5 text-[#C8F135]" />
+                  <span className="text-sm font-mono font-bold text-[#C8F135] uppercase tracking-wider">
                     Perfect For
                   </span>
                 </div>
@@ -124,7 +124,7 @@ export default function AudienceAndComparison() {
                     "Engineering teams maintaining codebase health",
                   ].map((item, i) => (
                     <li key={i} className="flex gap-2.5 items-start">
-                      <span className="text-[#FFD700] font-bold text-sm mt-0.5 select-none">✅</span>
+                      <span className="text-[#C8F135] font-bold text-sm mt-0.5 select-none">✅</span>
                       <span className="text-sm font-medium text-neutral-200 leading-relaxed">
                         {item}
                       </span>
@@ -162,8 +162,8 @@ export default function AudienceAndComparison() {
         </div>
 
         {/* Highlight Quote Banner */}
-        <div className="mt-16 bg-[#111] border-2 border-[#2A2A2A] p-6 text-center max-w-4xl mx-auto shadow-[6px_6px_0px_#FFD700] hover:border-[#FFD700] transition-colors">
-          <p className="text-base md:text-lg font-mono font-bold text-[#FFD700]">
+        <div className="mt-16 bg-[#111] border-2 border-[#2A2A2A] p-6 text-center max-w-4xl mx-auto shadow-[6px_6px_0px_#C8F135] hover:border-[#C8F135] transition-colors">
+          <p className="text-base md:text-lg font-mono font-bold text-[#C8F135]">
             &ldquo;AutoDevs is like Cursor + GitHub Analysis + AI Project Planning in one developer tool.&rdquo;
           </p>
         </div>

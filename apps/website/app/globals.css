@@ -9,35 +9,38 @@
   --text-primary: #F0F0F0;
   --text-secondary: #A3A3A3;
   --text-muted: #888888;
-  
-  --color-yellow-theme: #FFD700;
+
+  --color-yellow-theme: #C8F135;
   --color-green-theme: #00FF87;
-  --color-blue-theme: #4A90E2;
+  --color-blue-theme: #2563eb;
+  --color-accent-soft: #e8e2d8;
 }
 
 html.light {
-  --bg-primary: #FFFFFF;
-  --bg-secondary: #F8FAFC;
-  --bg-tertiary: #F1F5F9;
-  --border-primary: #E2E8F0;
-  --border-secondary: #CBD5E1;
-  --text-primary: #0F172A;
-  --text-secondary: #475569;
-  --text-muted: #64748B;
-  
-  --color-yellow-theme: #D97706; /* Golden amber for readability on white bg */
-  --color-green-theme: #059669;  /* Emerald green for readability on white bg */
-  --color-blue-theme: #1D4ED8;   /* Royal blue for readability on white bg */
+  --bg-primary: #F7F7F8;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #ECECEF;
+  --border-primary: #E3E3E6;
+  --border-secondary: #D9D9DE;
+  --text-primary: #0D0D0D;
+  --text-secondary: #3D3D45;
+  --text-muted: #8A8A93;
+
+  --color-yellow-theme: #6B8E0D;
+  --color-green-theme: #059669;
+  --color-blue-theme: #2563eb;
+  --color-accent-soft: #F0F0F2;
 }
 
 @theme {
   --color-yellow: var(--color-yellow-theme);
   --color-green: var(--color-green-theme);
-  --color-red: #FF4444;
+  --color-red: #dc2626;
   --color-blue: var(--color-blue-theme);
   --color-black: var(--bg-primary);
   --color-dark: var(--bg-secondary);
   --color-border: var(--border-primary);
+  --color-accent-soft: #e8e2d8;
   --font-space: var(--font-space), "Space Grotesk", sans-serif;
   --font-mono: var(--font-mono), "JetBrains Mono", monospace;
 }
@@ -160,13 +163,13 @@ html.light .text-neutral-300 {
 html.light .text-neutral-400 {
   color: var(--text-secondary) !important;
 }
-html.light .text-\[\#FFD700\] {
+html.light .text-\[\#C8F135\] {
   color: var(--color-yellow-theme) !important;
 }
 html.light .text-\[\#00FF87\] {
   color: var(--color-green-theme) !important;
 }
-html.light .text-\[\#4A90E2\] {
+html.light .text-\[\#2563eb\] {
   color: var(--color-blue-theme) !important;
 }
 
@@ -179,8 +182,8 @@ html.light .nb-card {
   background-color: var(--bg-secondary) !important;
 }
 html.light .nb-card:hover {
-  border-color: #FFD700 !important;
-  box-shadow: 4px 4px 0px #FFD700 !important;
+  border-color: #C8F135 !important;
+  box-shadow: 4px 4px 0px #C8F135 !important;
 }
 html.light .nb-btn-outline {
   border: 3px solid var(--text-primary) !important;
@@ -218,7 +221,7 @@ html.light code * {
 html.light .terminal {
   background-color: #0D0D0D !important;
   border-color: #333333 !important;
-  box-shadow: 8px 8px 0px #D97706 !important;
+  box-shadow: 8px 8px 0px #6B8E0D !important;
   color: #F0F0F0 !important;
 }
 html.light .terminal-bar {
@@ -249,11 +252,11 @@ html.light .terminal .text-\[\#555\] {
 html.light .terminal .text-\[\#00FF87\] {
   color: #00FF87 !important;
 }
-html.light .terminal .text-\[\#FFD700\] {
-  color: #FFD700 !important;
+html.light .terminal .text-\[\#C8F135\] {
+  color: #C8F135 !important;
 }
-html.light .terminal .text-\[\#4A90E2\] {
-  color: #4A90E2 !important;
+html.light .terminal .text-\[\#2563eb\] {
+  color: #2563eb !important;
 }
 html.light .terminal .bg-black {
   background-color: #000000 !important;
@@ -287,9 +290,9 @@ html.light pre .text-\[\#00FF87\],
 html.light code .text-\[\#00FF87\] {
   color: #00FF87 !important;
 }
-html.light pre .text-\[\#FFD700\],
-html.light code .text-\[\#FFD700\] {
-  color: #FFD700 !important;
+html.light pre .text-\[\#C8F135\],
+html.light code .text-\[\#C8F135\] {
+  color: #C8F135 !important;
 }
 
 /* Docs code block — always dark regardless of page theme */
@@ -312,15 +315,15 @@ html.light .docs-code-copy {
   color: #A3A3A3 !important;
 }
 html.light .docs-code-copy:hover {
-  background-color: #FFD700 !important;
+  background-color: #C8F135 !important;
   color: #000000 !important;
-  border-color: #FFD700 !important;
+  border-color: #C8F135 !important;
 }
 
 
 /* ── Neo-Brutalist Utilities ─────────────────────────────────────────── */
 .nb-border {
-  border: 3px solid #FFD700;
+  border: 3px solid #C8F135;
 }
 
 .nb-border-white {
@@ -328,7 +331,7 @@ html.light .docs-code-copy:hover {
 }
 
 .nb-shadow {
-  box-shadow: 6px 6px 0px #FFD700;
+  box-shadow: 6px 6px 0px #C8F135;
 }
 
 .nb-shadow-white {
@@ -340,13 +343,13 @@ html.light .docs-code-copy:hover {
 }
 
 .nb-shadow-red {
-  box-shadow: 6px 6px 0px #FF4444;
+  box-shadow: 6px 6px 0px #dc2626;
 }
 
 .nb-btn {
-  border: 3px solid #FFD700;
-  box-shadow: 4px 4px 0px #FFD700;
-  background: #FFD700;
+  border: 3px solid #C8F135;
+  box-shadow: 4px 4px 0px #C8F135;
+  background: #C8F135;
   color: #000000;
   font-weight: 700;
   font-family: var(--font-space);
@@ -356,12 +359,12 @@ html.light .docs-code-copy:hover {
 
 .nb-btn:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px #FFD700;
+  box-shadow: 6px 6px 0px #C8F135;
 }
 
 .nb-btn:active {
   transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px #FFD700;
+  box-shadow: 2px 2px 0px #C8F135;
 }
 
 .nb-btn-outline {
@@ -394,8 +397,8 @@ html.light .docs-code-copy:hover {
 }
 
 .nb-card:hover {
-  border-color: #FFD700;
-  box-shadow: 4px 4px 0px #FFD700;
+  border-color: #C8F135;
+  box-shadow: 4px 4px 0px #C8F135;
   transform: translate(-2px, -2px);
 }
 
@@ -403,7 +406,7 @@ html.light .docs-code-copy:hover {
 .terminal {
   background: #0D0D0D;
   border: 3px solid #333;
-  box-shadow: 8px 8px 0px #FFD700;
+  box-shadow: 8px 8px 0px #C8F135;
   font-family: var(--font-mono);
 }
 
@@ -426,7 +429,7 @@ html.light .docs-code-copy:hover {
 /* ── Scrollbar ────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #111; }
-::-webkit-scrollbar-thumb { background: #FFD700; }
+::-webkit-scrollbar-thumb { background: #C8F135; }
 
 /* ── Gradient Mesh Background ─────────────────────────────────────────── */
 .gradient-mesh {
@@ -439,14 +442,14 @@ html.light .docs-code-copy:hover {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 80% 60% at 10% 20%, rgba(255, 215, 0, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 10% 20%, rgba(200, 241, 53, 0.04) 0%, transparent 60%),
     radial-gradient(ellipse 60% 50% at 90% 30%, rgba(0, 255, 135, 0.03) 0%, transparent 50%),
     radial-gradient(ellipse 50% 40% at 50% 80%, rgba(74, 144, 226, 0.03) 0%, transparent 50%);
 }
 
 /* ── Gradient Text ───────────────────────────────────────────────────── */
 .text-gradient-yellow {
-  background: linear-gradient(135deg, #FFD700 0%, #FFB300 50%, #FFD700 100%);
+  background: linear-gradient(135deg, #C8F135 0%, #A8D22E 50%, #C8F135 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -458,7 +461,7 @@ html.light .docs-code-copy:hover {
   background-clip: text;
 }
 .text-gradient-blue {
-  background: linear-gradient(135deg, #4A90E2 0%, #357ABD 50%, #4A90E2 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #1D4ED8 50%, #2563eb 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -472,7 +475,7 @@ html.light .docs-code-copy:hover {
 
 /* ── Glow Utilities ──────────────────────────────────────────────────── */
 .glow-yellow {
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.15), 0 0 40px rgba(255, 215, 0, 0.05);
+  box-shadow: 0 0 20px rgba(200, 241, 53, 0.15), 0 0 40px rgba(200, 241, 53, 0.05);
 }
 .glow-green {
   box-shadow: 0 0 20px rgba(0, 255, 135, 0.15), 0 0 40px rgba(0, 255, 135, 0.05);
@@ -481,7 +484,7 @@ html.light .docs-code-copy:hover {
   box-shadow: 0 0 20px rgba(74, 144, 226, 0.15), 0 0 40px rgba(74, 144, 226, 0.05);
 }
 .glow-yellow-hover:hover {
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.25), 0 0 60px rgba(255, 215, 0, 0.1);
+  box-shadow: 0 0 30px rgba(200, 241, 53, 0.25), 0 0 60px rgba(200, 241, 53, 0.1);
 }
 
 /* ── Animated Pulse Glow ─────────────────────────────────────────────── */
@@ -540,4 +543,4 @@ html.light .docs-code-copy:hover {
 }
 
 /* ── Selection ────────────────────────────────────────────────────────── */
-::selection { background: #FFD700; color: #000; }
+::selection { background: #C8F135; color: #000; }

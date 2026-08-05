@@ -48,8 +48,16 @@ export default function AsciiBackground({
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
+
+    // Respect users who prefer reduced motion: render a single static frame
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Cap device pixel ratio to keep rasterization cheap on HiDPI screens
+    const MAX_DPR = 1.5;
 
     let animationId: number;
     let width = 0;
@@ -94,11 +102,11 @@ export default function AsciiBackground({
 
     const handleResize = () => {
       const rect = canvas.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
       width = rect.width;
       height = rect.height;
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
       ctx.scale(dpr, dpr);
     };
 
@@ -132,13 +140,32 @@ export default function AsciiBackground({
     window.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseleave", handleMouseLeave);
 
+    // Pause expensive rendering when the tab is hidden or the canvas is far
+    // outside the viewport. This is the single biggest win for scroll smoothness.
+    let isHidden = false;
+    const handleVisibility = () => {
+      isHidden = document.hidden;
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    let observer: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== "undefined") {
+      observer = new IntersectionObserver(
+        (entries) => {
+          isHidden = !entries[0].isIntersecting;
+        },
+        { rootMargin: "400px 0px" },
+      );
+      observer.observe(canvas);
+    }
+
     let frame = 0;
     let lastTime = performance.now();
 
-    const render = (time: number) => {
+    const drawFrame = (time: number) => {
       const dt = Math.min(4, (time - lastTime) / 16.666); // Cap dt to avoid huge jumps on tab wake
       lastTime = time;
-      
+
       frame += speed * dt;
       ctx.clearRect(0, 0, width, height);
 
@@ -161,18 +188,10 @@ export default function AsciiBackground({
       }
 
       ctx.font = `${fontSize}px var(--font-mono), monospace`;
-      
+
       // Determine color palette based on active theme
       const isDark = theme !== "light";
-      const baseColor = isDark ? "255, 215, 0" : "217, 119, 6"; // Gold (dark) / Amber (light)
-      
-      // Add text shadow glow effect in dark mode for highlighting
-      if (isDark) {
-        ctx.shadowColor = `rgba(${baseColor}, 0.7)`;
-        ctx.shadowBlur = 5;
-      } else {
-        ctx.shadowBlur = 0;
-      }
+      const baseColor = isDark ? "200, 241, 53" : "148, 178, 32"; // Lime (dark) / Darker lime (light)
 
       const cols = Math.ceil(width / charWidth);
       const rows = Math.ceil(height / charHeight);
@@ -239,7 +258,7 @@ export default function AsciiBackground({
           const distToSweep = Math.abs(c - sweepCol);
           let sweepInfluence = 0;
           if (distToSweep < 15) {
-            sweepInfluence = (1 - distToSweep / 15);
+            sweepInfluence = 1 - distToSweep / 15;
           }
 
           // Organic wave effect using composite sine/cosine waves
@@ -251,22 +270,21 @@ export default function AsciiBackground({
           let normWave = (wave + 1) * 0.5;
 
           // Distance-based mouse distortion with speed-dependent dynamic radius
-          let distance = 9999;
-          if (mouseX !== -9999) {
-            const dx = x - mouseX;
-            const dy = y - mouseY;
-            distance = Math.sqrt(dx * dx + dy * dy);
-          }
-
-          // Incorporate mouse sensitivity (multiplier for mouse influence and radius)
+          // Compare squared distances first to avoid a Math.sqrt for most cells
           const baseRadius = 120 * mouseSensi;
           const dynamicRadius = baseRadius + Math.min(120, mouseSpeed * 2.5 * mouseSensi);
           let mouseInfluence = 0;
-          if (distance < dynamicRadius) {
-            mouseInfluence = (1 - distance / dynamicRadius);
-            // Magnify wave disruption when mouse moves fast
-            const distortionFactor = 0.95 + (mouseSpeed * 0.01);
-            normWave = normWave * (1 - mouseInfluence) + mouseInfluence * distortionFactor;
+          if (mouseX !== -9999) {
+            const dx = x - mouseX;
+            const dy = y - mouseY;
+            const radiusSq = dynamicRadius * dynamicRadius;
+            const distSq = dx * dx + dy * dy;
+            if (distSq < radiusSq) {
+              mouseInfluence = 1 - Math.sqrt(distSq) / dynamicRadius;
+              // Magnify wave disruption when mouse moves fast
+              const distortionFactor = 0.95 + mouseSpeed * 0.01;
+              normWave = normWave * (1 - mouseInfluence) + mouseInfluence * distortionFactor;
+            }
           }
 
           // Incorporate sweep line scanning intensity
@@ -275,7 +293,7 @@ export default function AsciiBackground({
           // Choose character
           const charIndex = Math.min(
             asciiChars.length - 1,
-            Math.floor(normWave * asciiChars.length)
+            Math.floor(normWave * asciiChars.length),
           );
           const char = asciiChars[charIndex];
 
@@ -288,12 +306,12 @@ export default function AsciiBackground({
             if (sweepInfluence > 0) {
               opacity = Math.max(opacity, sweepInfluence * 0.22 * density);
             }
-            
+
             // Restrict bounds (increased maximum opacity limit for brighter highlighting)
             opacity = Math.max(0.01, Math.min(0.65, opacity));
 
             ctx.fillStyle = `rgba(${baseColor}, ${opacity})`;
-            
+
             // Add subtle fluid animation offset
             const offsetX = Math.sin(r * 0.4 + frame * 0.03) * 1.5;
             const offsetY = Math.cos(c * 0.4 + frame * 0.03) * 1.5;
@@ -302,14 +320,25 @@ export default function AsciiBackground({
           }
         }
       }
-
-      animationId = requestAnimationFrame(render);
     };
 
-    // Use requestAnimationFrame with high-resolution timestamp
-    animationId = requestAnimationFrame(render);
+    const render = (time: number) => {
+      animationId = requestAnimationFrame(render);
+      if (isHidden) return;
+      drawFrame(time);
+    };
+
+    if (prefersReducedMotion) {
+      // Static frame — no animation loop for users who prefer reduced motion
+      drawFrame(performance.now());
+      animationId = 0;
+    } else {
+      animationId = requestAnimationFrame(render);
+    }
 
     return () => {
+      document.removeEventListener("visibilitychange", handleVisibility);
+      if (observer) observer.disconnect();
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
       if (canvas) {

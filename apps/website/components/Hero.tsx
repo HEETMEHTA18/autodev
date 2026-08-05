@@ -65,7 +65,7 @@ function TypingText() {
   return (
     <span className="inline-flex items-center min-h-[1.1em]">
       <span className="text-gradient-yellow">FOR {text}</span>
-      <span className="inline-block w-[4px] md:w-[8px] h-[0.8em] bg-[#FFD700] ml-2 align-middle animate-pulse" />
+      <span className="inline-block w-[4px] md:w-[8px] h-[0.8em] bg-[#C8F135] ml-2 align-middle animate-pulse" />
     </span>
   );
 }
@@ -115,8 +115,14 @@ export default function Hero() {
         </motion.div>
       ))}
 
-      {/* Glow orb behind heading */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full bg-[#FFD700] opacity-[0.04] blur-[100px] pointer-events-none animate-glow-pulse" />
+      {/* Glow orb behind heading — static radial gradient, GPU-composited (no blur/filter) */}
+      <div
+        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[420px] pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, rgba(200, 241, 53, 0.08) 0%, rgba(200, 241, 53, 0.03) 40%, transparent 70%)",
+        }}
+      />
 
       <div className="max-w-7xl mx-auto pt-36 pb-24 px-6 relative z-10">
         <motion.div variants={container} initial="hidden" animate="show">
@@ -125,7 +131,7 @@ export default function Hero() {
           variants={item}
           className="mb-8 flex flex-wrap items-center gap-4"
         >
-          <span className="inline-flex items-center gap-1.5 border-2 border-[#FFD700] text-[#FFD700] text-xs font-bold px-3 py-1 uppercase tracking-widest">
+          <span className="inline-flex items-center gap-1.5 border-2 border-[#C8F135] text-[#C8F135] text-xs font-bold px-3 py-1 uppercase tracking-widest">
             <Sparkles className="w-3.5 h-3.5" />
             v0.4.1 — Open Source
           </span>
@@ -148,7 +154,7 @@ export default function Hero() {
         {/* Comparison Pill */}
         <motion.div
           variants={item}
-          className="mb-6 inline-flex items-center gap-2 border-2 border-[#FFD700] text-[#FFD700] bg-black text-xs md:text-sm font-bold px-4 py-2 uppercase tracking-wider shadow-[4px_4px_0px_#FFD700]"
+          className="mb-6 inline-flex items-center gap-2 border-2 border-[#C8F135] text-[#C8F135] bg-black text-xs md:text-sm font-bold px-4 py-2 uppercase tracking-wider shadow-[4px_4px_0px_#C8F135]"
         >
           <span>💡</span> AutoDevs is like Cursor + GitHub Analysis + AI Project Planning in one developer tool.
         </motion.div>
@@ -184,7 +190,7 @@ export default function Hero() {
           ].map((bullet, idx) => (
             <div
               key={idx}
-              className="flex items-center gap-3 bg-[#111] border-2 border-[#2A2A2A] px-4 py-3 shadow-[4px_4px_0px_#FFD700] hover:border-[#FFD700] transition-colors"
+              className="flex items-center gap-3 bg-[#111] border-2 border-[#2A2A2A] px-4 py-3 shadow-[4px_4px_0px_#C8F135] hover:border-[#C8F135] transition-colors"
             >
               <span className="text-[#00FF87] font-bold text-lg select-none">✓</span>
               <span className="text-xs md:text-sm font-bold text-white uppercase tracking-wider">
@@ -228,7 +234,7 @@ export default function Hero() {
                     onClick={() => setActiveTab("npx")}
                     className={`text-xs px-2 py-0.5 font-mono rounded cursor-pointer transition-all border ${
                       activeTab === "npx"
-                        ? "bg-[#FFD700] text-black font-bold border-[#FFD700]"
+                        ? "bg-[#C8F135] text-black font-bold border-[#C8F135]"
                         : "text-neutral-400 border-transparent hover:text-white"
                     }`}
                   >
@@ -238,7 +244,7 @@ export default function Hero() {
                     onClick={() => setActiveTab("curl")}
                     className={`text-xs px-2 py-0.5 font-mono rounded cursor-pointer transition-all border ${
                       activeTab === "curl"
-                        ? "bg-[#FFD700] text-black font-bold border-[#FFD700]"
+                        ? "bg-[#C8F135] text-black font-bold border-[#C8F135]"
                         : "text-neutral-400 border-transparent hover:text-white"
                     }`}
                   >
@@ -248,7 +254,7 @@ export default function Hero() {
               </div>
               <button
                 onClick={handleCopyQuickInstall}
-                className="text-neutral-400 hover:text-[#FFD700] transition-colors p-1 flex items-center gap-1 rounded bg-[#1e1e1e] border border-[#2a2a2a] cursor-pointer"
+                className="text-neutral-400 hover:text-[#C8F135] transition-colors p-1 flex items-center gap-1 rounded bg-[#1e1e1e] border border-[#2a2a2a] cursor-pointer"
                 title="Copy install command"
               >
                 {copiedQuickInstall ? (
@@ -286,7 +292,7 @@ export default function Hero() {
             { value: "100%", label: "Open Source" },
           ].map(({ value, label }) => (
             <div key={label} className="nb-card px-6 py-4 min-w-[120px]">
-              <div className="text-3xl font-black text-[#FFD700]">{value}</div>
+              <div className="text-3xl font-black text-[#C8F135]">{value}</div>
               <div className="text-xs text-neutral-400 mt-1 font-semibold uppercase tracking-wider">
                 {label}
               </div>

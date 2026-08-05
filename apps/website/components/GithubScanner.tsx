@@ -298,7 +298,7 @@ export default function GithubScanner() {
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        <span className="inline-flex items-center gap-1.5 text-xs text-[#FFD700] font-bold uppercase tracking-widest font-mono">
+        <span className="inline-flex items-center gap-1.5 text-xs text-[#C8F135] font-bold uppercase tracking-widest font-mono">
           <Sparkles className="w-3 h-3" /> GitHub Scanner
         </span>
         <h2 className="text-5xl font-black text-white mt-2 mb-4 font-mono">
@@ -323,7 +323,7 @@ export default function GithubScanner() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="USERNAME"
               disabled={loading}
-              className="flex-1 border-2 border-[#FFD700] bg-black text-white font-mono text-sm px-4 py-3 outline-none focus:shadow-[4px_4px_0_#FFD700] transition-shadow placeholder:text-neutral-500 min-w-0"
+              className="flex-1 border-2 border-[#C8F135] bg-black text-white font-mono text-sm px-4 py-3 outline-none focus:shadow-[4px_4px_0_#C8F135] transition-shadow placeholder:text-neutral-500 min-w-0"
             />
             <button
               type="submit"
@@ -335,7 +335,7 @@ export default function GithubScanner() {
           </form>
           <p className="text-xs text-neutral-400 font-mono">
             Or run:{" "}
-            <span className="text-[#FFD700]">
+            <span className="text-[#C8F135]">
               autodev github {username || "USERNAME"}
             </span>
           </p>
@@ -363,7 +363,7 @@ export default function GithubScanner() {
                           initial={{ width: 0 }}
                           animate={{ width: `${Math.min(pct, 100)}%` }}
                           transition={{ duration: 0.6, delay: 0.1 }}
-                          className="h-full bg-[#FFD700]"
+                          className="h-full bg-[#C8F135]"
                         />
                       </div>
                     </div>
@@ -382,7 +382,7 @@ export default function GithubScanner() {
         </div>
 
         {/* Output terminal */}
-        <div className="terminal border-2 border-[#FFD700] bg-black">
+        <div className="terminal border-2 border-[#C8F135] bg-black">
           <div className="terminal-bar border-b-2 border-[#2A2A2A] px-4 py-2 flex items-center bg-[#111]">
             <span className="terminal-dot bg-[#FF5F56] w-3 h-3 rounded-full mr-1.5 inline-block" />
             <span className="terminal-dot bg-[#FFBD2E] w-3 h-3 rounded-full mr-1.5 inline-block" />
@@ -413,7 +413,7 @@ export default function GithubScanner() {
             {showStats && !error && (
               <div className="mt-4 pt-4 border-t border-[#1F1F1F] space-y-3">
                 <div>
-                  <div className="text-[#4A90E2] text-xs uppercase tracking-wider mb-1 font-bold">
+                  <div className="text-[#2563eb] text-xs uppercase tracking-wider mb-1 font-bold">
                     Technologies Detected:
                   </div>
                   <div className="flex flex-wrap gap-1.5 pl-1">
@@ -429,14 +429,14 @@ export default function GithubScanner() {
                 </div>
 
                 <div>
-                  <div className="text-[#4A90E2] text-xs uppercase tracking-wider mb-1 font-bold">
+                  <div className="text-[#2563eb] text-xs uppercase tracking-wider mb-1 font-bold">
                     Recommended Tools:
                   </div>
                   <div className="flex flex-wrap gap-1.5 pl-1">
                     {data.recommended.map((r) => (
                       <span
                         key={r}
-                        className="text-xs bg-[#111] border border-[#2A2A2A] px-2 py-0.5 text-[#FFD700]"
+                        className="text-xs bg-[#111] border border-[#2A2A2A] px-2 py-0.5 text-[#C8F135]"
                       >
                         → {r}
                       </span>
@@ -445,7 +445,7 @@ export default function GithubScanner() {
                 </div>
 
                 <div>
-                  <div className="text-[#4A90E2] text-xs uppercase tracking-wider mb-1 font-bold">
+                  <div className="text-[#2563eb] text-xs uppercase tracking-wider mb-1 font-bold">
                     Suggested Skills:
                   </div>
                   <div className="flex flex-wrap gap-1.5 pl-1">

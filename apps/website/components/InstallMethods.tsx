@@ -62,7 +62,7 @@ export default function InstallMethods() {
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        <span className="inline-flex items-center gap-1.5 text-xs text-[#FFD700] font-bold uppercase tracking-widest">
+        <span className="inline-flex items-center gap-1.5 text-xs text-[#C8F135] font-bold uppercase tracking-widest">
           <Sparkles className="w-3 h-3" /> Install anywhere
         </span>
         <h2 className="text-5xl font-black text-white mt-2 mb-4">
@@ -108,8 +108,8 @@ export default function InstallMethods() {
                   </>
                 ) : (
                   <>
-                    <Copy className="w-3.5 h-3.5 text-neutral-400 group-hover:text-[#FFD700] transition-colors" />
-                    <span className="text-[10px] text-neutral-400 group-hover:text-[#FFD700] font-mono transition-colors">
+                    <Copy className="w-3.5 h-3.5 text-neutral-400 group-hover:text-[#C8F135] transition-colors" />
+                    <span className="text-[10px] text-neutral-400 group-hover:text-[#C8F135] font-mono transition-colors">
                       Copy
                     </span>
                   </>
@@ -145,7 +145,7 @@ export default function InstallMethods() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4 + i * 0.1 }}
-              className="border-2 border-[#2A2A2A] text-neutral-400 text-sm font-semibold px-4 py-2 hover:border-[#FFD700] hover:text-[#FFD700] transition-colors"
+              className="border-2 border-[#2A2A2A] text-neutral-400 text-sm font-semibold px-4 py-2 hover:border-[#C8F135] hover:text-[#C8F135] transition-colors"
             >
               {os}
             </motion.span>

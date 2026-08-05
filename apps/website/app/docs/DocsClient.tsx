@@ -23,16 +23,16 @@ const Callout = ({
 }) => {
   const styles = {
     info: {
-      border: "border-l-4 border-l-[#4A90E2] border-[#2A2A2A]",
-      bg: "bg-[#4A90E2]/5",
+      border: "border-l-4 border-l-[#2563eb] border-[#2A2A2A]",
+      bg: "bg-[#2563eb]/5",
       icon: "ℹ️",
-      color: "text-[#4A90E2]",
+      color: "text-[#2563eb]",
     },
     warning: {
-      border: "border-l-4 border-l-[#FF4444] border-[#2A2A2A]",
-      bg: "bg-[#FF4444]/5",
+      border: "border-l-4 border-l-[#dc2626] border-[#2A2A2A]",
+      bg: "bg-[#dc2626]/5",
       icon: "⚠️",
-      color: "text-[#FF4444]",
+      color: "text-[#dc2626]",
     },
     tip: {
       border: "border-l-4 border-l-[#00FF87] border-[#2A2A2A]",
@@ -74,7 +74,7 @@ export default function DocsClient() {
     >
       <button
         onClick={() => handleCopy(code, id)}
-        className="docs-code-copy absolute top-2.5 right-2.5 text-xs bg-[#111] hover:bg-[#FFD700] hover:text-black hover:border-[#FFD700] border border-[#2A2A2A] px-2.5 py-1.5 rounded transition-all text-neutral-400 font-mono flex items-center gap-1.5 cursor-pointer"
+        className="docs-code-copy absolute top-2.5 right-2.5 text-xs bg-[#111] hover:bg-[#C8F135] hover:text-black hover:border-[#C8F135] border border-[#2A2A2A] px-2.5 py-1.5 rounded transition-all text-neutral-400 font-mono flex items-center gap-1.5 cursor-pointer"
       >
         {copiedId === id ? (
           <>
@@ -144,7 +144,7 @@ export default function DocsClient() {
             for your platform, run it directly via Node.js (npx), or run it
             inside Docker without installation.
           </p>
-          <h2 className="text-2xl font-bold text-[#FFD700] mt-8 mb-4">
+          <h2 className="text-2xl font-bold text-[#C8F135] mt-8 mb-4">
             One-line Shell Install
           </h2>
           <p className="text-neutral-300 mb-2">
@@ -155,7 +155,7 @@ export default function DocsClient() {
             "curl -fsSL https://raw.githubusercontent.com/HEETMEHTA18/autodev/main/scripts/install.sh | bash",
           )}
 
-          <h2 className="text-2xl font-bold text-[#FFD700] mt-8 mb-4">
+          <h2 className="text-2xl font-bold text-[#C8F135] mt-8 mb-4">
             Run via NPX
           </h2>
           <p className="text-neutral-300 mb-2">
@@ -163,7 +163,7 @@ export default function DocsClient() {
           </p>
           {renderCodeBlock("qs-npx", "npx @heetmehta18/autodev setup")}
 
-          <h2 className="text-2xl font-bold text-[#FFD700] mt-8 mb-4">
+          <h2 className="text-2xl font-bold text-[#C8F135] mt-8 mb-4">
             Interactive Setup
           </h2>
           <p className="text-neutral-300 mb-2">
@@ -301,7 +301,7 @@ export default function DocsClient() {
           </h1>
           <p className="text-neutral-300 leading-relaxed mb-4">
             The{" "}
-            <code className="text-[#FFD700] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
               doctor
             </code>{" "}
             command inspects your system&apos;s specifications, active package
@@ -349,7 +349,7 @@ export default function DocsClient() {
           </h1>
           <p className="text-neutral-300 leading-relaxed mb-4">
             The{" "}
-            <code className="text-[#FFD700] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
               scan
             </code>{" "}
             command analyzes your current working directory for configuration
@@ -387,7 +387,7 @@ export default function DocsClient() {
           </h1>
           <p className="text-neutral-300 leading-relaxed mb-4">
             The{" "}
-            <code className="text-[#FFD700] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
               audit
             </code>{" "}
             command scans your project&apos;s lockfiles and dependency lists and
@@ -421,7 +421,7 @@ export default function DocsClient() {
           </h1>
           <p className="text-neutral-300 leading-relaxed mb-4">
             The{" "}
-            <code className="text-[#FFD700] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
               setup
             </code>{" "}
             command scans the project and aligns your local development
@@ -587,7 +587,7 @@ export default function DocsClient() {
           </h1>
           <p className="text-neutral-300 leading-relaxed mb-4">
             The{" "}
-            <code className="text-[#FFD700] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
               create
             </code>{" "}
             command generates a new pre-configured boilerplate project matching
@@ -652,7 +652,7 @@ export default function DocsClient() {
           </h1>
           <p className="text-neutral-300 leading-relaxed mb-4">
             The{" "}
-            <code className="text-[#FFD700] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
               clone
             </code>{" "}
             command clones a Git repository, runs a deep stack technology scan,
@@ -691,7 +691,7 @@ export default function DocsClient() {
           </h1>
           <p className="text-neutral-300 leading-relaxed mb-4">
             The{" "}
-            <code className="text-[#FFD700] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
               install
             </code>{" "}
             command installs a specific developer tool, compiler runtime, or SDK
@@ -737,7 +737,7 @@ export default function DocsClient() {
           </h1>
           <p className="text-neutral-300 leading-relaxed mb-4">
             The{" "}
-            <code className="text-[#FFD700] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
               skills
             </code>{" "}
             command analyzes your developer profiles and commits in local git
@@ -772,7 +772,7 @@ export default function DocsClient() {
           </h1>
           <p className="text-neutral-300 leading-relaxed mb-4">
             The{" "}
-            <code className="text-[#FFD700] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
               mcp
             </code>{" "}
             command launches the AutoDev Model Context Protocol (MCP) server.
@@ -806,7 +806,7 @@ export default function DocsClient() {
           </h1>
           <p className="text-neutral-300 leading-relaxed mb-4">
             The{" "}
-            <code className="text-[#FFD700] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
               benchmark
             </code>{" "}
             command measures and prints AI efficiency comparisons comparing
@@ -840,7 +840,7 @@ export default function DocsClient() {
           </h1>
           <p className="text-neutral-300 leading-relaxed mb-4">
             The{" "}
-            <code className="text-[#FFD700] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
               report
             </code>{" "}
             command generates a comprehensive configuration report of your
@@ -874,7 +874,7 @@ export default function DocsClient() {
           </h1>
           <p className="text-neutral-300 leading-relaxed mb-4">
             The{" "}
-            <code className="text-[#FFD700] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
               github
             </code>{" "}
             command scans all public repositories belonging to a specified
@@ -909,7 +909,7 @@ export default function DocsClient() {
           </h1>
           <p className="text-neutral-300 leading-relaxed mb-4">
             The{" "}
-            <code className="text-[#FFD700] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
               exec
             </code>{" "}
             command runs a specific command directly inside a configured AutoDev
@@ -943,7 +943,7 @@ export default function DocsClient() {
           </h1>
           <p className="text-neutral-300 leading-relaxed mb-4">
             The{" "}
-            <code className="text-[#FFD700] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
               prompts
             </code>{" "}
             command manages the prompt capture engine. It lets you view, track, and replay prompts typed into your local AI coding sessions.
@@ -956,7 +956,7 @@ export default function DocsClient() {
             Run <code className="text-[#00FF87] font-mono font-bold bg-[#111] px-1.5 py-0.5 rounded">autodev prompts --today</code> to print a timeline of today&apos;s active captured prompts directly in the console.
           </Callout>
 
-          <h2 className="text-2xl font-bold text-[#FFD700] mt-8 mb-4">
+          <h2 className="text-2xl font-bold text-[#C8F135] mt-8 mb-4">
             Available Subcommands
           </h2>
           
@@ -1052,7 +1052,7 @@ export default function DocsClient() {
           {renderCodeBlock("adv-export", "autodev export")}
           <p className="text-neutral-300 leading-relaxed mt-4">
             This creates a{" "}
-            <code className="font-mono text-[#FFD700] bg-[#111] px-1 py-0.5 rounded">
+            <code className="font-mono text-[#C8F135] bg-[#111] px-1 py-0.5 rounded">
               .autodev.yaml
             </code>{" "}
             file at your project root. When other developers run{" "}
@@ -1129,7 +1129,7 @@ export default function DocsClient() {
                             onClick={() => setActiveSection(s.id)}
                             className={`w-full text-left px-3 py-1.5 rounded text-sm transition-all font-mono font-medium ${
                               isActive
-                                ? "bg-[#111] text-[#FFD700] border-l-2 border-[#FFD700] pl-4"
+                                ? "bg-[#111] text-[#C8F135] border-l-2 border-[#C8F135] pl-4"
                                 : "text-neutral-400 hover:text-white hover:bg-neutral-900/50"
                             }`}
                           >
@@ -1149,7 +1149,7 @@ export default function DocsClient() {
           <div className="max-w-3xl">
             {/* Mobile Navigation Selector */}
             <div className="md:hidden mb-8 border-2 border-[#2A2A2A] bg-[#111] p-3 rounded flex flex-col gap-2">
-              <label className="text-xs font-bold text-[#FFD700] uppercase font-mono tracking-wider">
+              <label className="text-xs font-bold text-[#C8F135] uppercase font-mono tracking-wider">
                 Select Page:
               </label>
               <select

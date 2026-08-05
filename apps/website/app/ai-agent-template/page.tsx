@@ -57,7 +57,7 @@ export default function AiAgentTemplatePage() {
           <h1 className="text-4xl md:text-6xl font-black tracking-tight text-white mb-6">
             Google Gemini API
             <br />
-            <span className="text-[#FFD700]">AI Chatbot Boilerplate</span>
+            <span className="text-[#C8F135]">AI Chatbot Boilerplate</span>
           </h1>
           <p className="text-lg md:text-xl text-slate-400 max-w-3xl leading-relaxed">
             Build your AI Agent products immediately using this pre-set
@@ -79,7 +79,7 @@ export default function AiAgentTemplatePage() {
             </div>
             <button
               onClick={handleCopy}
-              className="text-[#555] hover:text-[#FFD700] transition-colors p-2 shrink-0 cursor-pointer border border-[#2a2a2a] bg-[#1a1a1a]"
+              className="text-[#555] hover:text-[#C8F135] transition-colors p-2 shrink-0 cursor-pointer border border-[#2a2a2a] bg-[#1a1a1a]"
               title="Copy command"
             >
               {copied ? (
@@ -132,7 +132,7 @@ export default function AiAgentTemplatePage() {
 
         {/* Stats card */}
         <div className="bg-[#111] border-2 border-[#2A2A2A] p-8">
-          <h3 className="text-xl font-bold text-[#FFD700] mb-4">
+          <h3 className="text-xl font-bold text-[#C8F135] mb-4">
             🚀 AutoDev Efficiency Stats
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left">

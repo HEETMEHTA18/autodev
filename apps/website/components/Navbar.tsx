@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Eye, Menu, X, Star, Sun, Moon, Bell, Zap } from "lucide-react";
 import { useTheme } from "next-themes";
-import AsciiBackground from "./AsciiBackground";
 
 export default function Navbar() {
   const [stars, setStars] = useState<number | null>(null);
@@ -74,12 +73,11 @@ export default function Navbar() {
           : "border-transparent bg-black/60 backdrop-blur-none"
       }`}
     >
-      <AsciiBackground className="opacity-45" />
       <div className="relative z-10 max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 shrink-0 group">
-          <Zap className="w-5 h-5 text-[#FFD700] group-hover:scale-110 transition-transform" />
-          <span className="text-lg md:text-xl font-black gradient-mesh text-transparent bg-clip-text bg-gradient-to-r from-[#FFD700] to-[#FFB300] tracking-tighter">
+          <Zap className="w-5 h-5 text-[#C8F135] group-hover:scale-110 transition-transform" />
+          <span className="text-lg md:text-xl font-black gradient-mesh text-transparent bg-clip-text bg-gradient-to-r from-[#C8F135] to-[#A8D22E] tracking-tighter">
             AUTODEV
           </span>
         </Link>
@@ -90,7 +88,7 @@ export default function Navbar() {
             <Link
               key={link.name}
               href={link.href}
-              className="text-neutral-400 hover:text-[#FFD700] transition-colors"
+              className="text-neutral-400 hover:text-[#C8F135] transition-colors"
             >
               {link.name}
             </Link>
@@ -102,7 +100,7 @@ export default function Navbar() {
           {/* Views Button */}
           {views !== null && (
             <div className="flex items-center gap-1.5 px-3 py-1.5 border border-[#2A2A2A] bg-[#111] text-xs font-mono font-bold text-neutral-400">
-              <Eye className="w-3.5 h-3.5 text-[#FFD700]" />
+              <Eye className="w-3.5 h-3.5 text-[#C8F135]" />
               <span>{views.toLocaleString()} VIEWS</span>
             </div>
           )}
@@ -128,19 +126,19 @@ export default function Navbar() {
             onClick={() =>
               window.dispatchEvent(new Event("autodev_open_update_modal"))
             }
-            className="relative p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#FFD700] text-[#FFD700] transition-colors cursor-pointer"
+            className="relative p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#C8F135] text-[#C8F135] transition-colors cursor-pointer"
             title="What's New in v0.4.1"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FFD700] rounded-full animate-ping" />
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FFD700] rounded-full" />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#C8F135] rounded-full animate-ping" />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#C8F135] rounded-full" />
           </button>
 
           {/* Desktop Theme Toggle */}
           {mounted && (
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#FFD700] text-[#FFD700] transition-colors cursor-pointer"
+              className="p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#C8F135] text-[#C8F135] transition-colors cursor-pointer"
               aria-label="Toggle theme"
               title={
                 theme === "dark"
@@ -162,7 +160,7 @@ export default function Navbar() {
           {/* Compact views display for mobile */}
           {views !== null && (
             <div className="flex items-center gap-1 px-2 py-1 border border-[#2A2A2A] bg-[#111] text-[10px] font-mono text-neutral-400">
-              <Eye className="w-3.5 h-3.5 text-[#FFD700]" />
+              <Eye className="w-3.5 h-3.5 text-[#C8F135]" />
               <span>{views}</span>
             </div>
           )}
@@ -183,19 +181,19 @@ export default function Navbar() {
             onClick={() =>
               window.dispatchEvent(new Event("autodev_open_update_modal"))
             }
-            className="relative p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#FFD700] text-white transition-colors cursor-pointer"
+            className="relative p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#C8F135] text-white transition-colors cursor-pointer"
             title="What's New in v0.4.1"
           >
             <Bell className="w-5 h-5" />
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FFD700] rounded-full animate-ping" />
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FFD700] rounded-full" />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#C8F135] rounded-full animate-ping" />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#C8F135] rounded-full" />
           </button>
 
           {/* Theme Toggle — only render after client mount to avoid SSR mismatch */}
           {mounted && (
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#FFD700] text-white transition-colors cursor-pointer"
+              className="p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#C8F135] text-white transition-colors cursor-pointer"
               aria-label="Toggle theme"
             >
               {theme === "dark" ? (
@@ -208,7 +206,7 @@ export default function Navbar() {
           {/* Hamburger Menu Icon */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#FFD700] text-white transition-colors cursor-pointer"
+            className="p-1.5 border-2 border-[#2A2A2A] bg-[#111] hover:border-[#C8F135] text-white transition-colors cursor-pointer"
             aria-label="Toggle menu"
           >
             {isMenuOpen ? (
@@ -236,7 +234,7 @@ export default function Navbar() {
                   key={link.name}
                   href={link.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-neutral-400 hover:text-[#FFD700] py-2 border-b border-[#1A1A1A] transition-colors"
+                  className="text-neutral-400 hover:text-[#C8F135] py-2 border-b border-[#1A1A1A] transition-colors"
                 >
                   {link.name}
                 </Link>

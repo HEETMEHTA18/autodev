@@ -1,6 +1,5 @@
 "use client";
 import { motion } from "framer-motion";
-import AsciiBackground from "./AsciiBackground";
 import Image from "next/image";
 
 const fadeUp = {
@@ -15,7 +14,6 @@ const fadeUp = {
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden border-t-2 border-[#2A2A2A] py-16 px-6">
-      <AsciiBackground className="opacity-30" />
       <div className="relative z-10 max-w-7xl mx-auto">
         <motion.div
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-10 mb-16"
@@ -33,7 +31,7 @@ export default function Footer() {
             variants={fadeUp}
             custom={0}
           >
-            <div className="text-2xl font-black text-[#FFD700] mb-3">
+            <div className="text-2xl font-black text-[#C8F135] mb-3">
               ⚡ AUTODEV
             </div>
             <p className="text-neutral-400 text-sm leading-relaxed max-w-xs">
@@ -89,14 +87,14 @@ export default function Footer() {
                   {l.onClick ? (
                     <button
                       onClick={l.onClick}
-                      className="hover:text-[#FFD700] transition-colors text-left bg-transparent border-0 p-0 cursor-pointer"
+                      className="hover:text-[#C8F135] transition-colors text-left bg-transparent border-0 p-0 cursor-pointer"
                     >
                       {l.name}
                     </button>
                   ) : (
                     <a
                       href={l.href}
-                      className="hover:text-[#FFD700] transition-colors"
+                      className="hover:text-[#C8F135] transition-colors"
                     >
                       {l.name}
                     </a>
@@ -122,7 +120,7 @@ export default function Footer() {
                 <li key={l.name}>
                   <a
                     href={l.href}
-                    className="hover:text-[#FFD700] transition-colors"
+                    className="hover:text-[#C8F135] transition-colors"
                   >
                     {l.name}
                   </a>
@@ -168,7 +166,7 @@ export default function Footer() {
                     href={l.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-[#FFD700] transition-colors"
+                    className="hover:text-[#C8F135] transition-colors"
                   >
                     {l.name}
                   </a>

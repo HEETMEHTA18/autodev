@@ -23,7 +23,7 @@ interface RoadmapStep {
 const scanLines = [
   { text: "$ autodev skills --deep --ai", color: "#00FF87", delay: 0 },
   { text: "", color: "#888", delay: 200 },
-  { text: "  ⚡ AutoDev Skills Engine v0.4.1", color: "#FFD700", delay: 400 },
+  { text: "  ⚡ AutoDev Skills Engine v0.4.1", color: "#C8F135", delay: 400 },
   {
     text: "  Powered by skills.sh — https://skills.sh",
     color: "#888",
@@ -32,27 +32,27 @@ const scanLines = [
   { text: "", color: "#888", delay: 800 },
   {
     text: "  [scan] Indexing git log (2,847 commits across 14 repos)...",
-    color: "#4A90E2",
+    color: "#2563eb",
     delay: 1000,
   },
   {
     text: "  [scan] Parsing package.json, go.mod, Cargo.toml, requirements.txt...",
-    color: "#4A90E2",
+    color: "#2563eb",
     delay: 1400,
   },
   {
     text: "  [scan] Analyzing Dockerfile, docker-compose.yml, .github/workflows...",
-    color: "#4A90E2",
+    color: "#2563eb",
     delay: 1800,
   },
   {
     text: "  [scan] Resolving framework patterns: Next.js, FastAPI, Spring Boot...",
-    color: "#4A90E2",
+    color: "#2563eb",
     delay: 2200,
   },
   {
     text: "  [scan] Computing skill confidence from code frequency + recency...",
-    color: "#4A90E2",
+    color: "#2563eb",
     delay: 2600,
   },
   { text: "", color: "#888", delay: 3000 },
@@ -70,7 +70,7 @@ const scanLines = [
   { text: "", color: "#888", delay: 3800 },
   {
     text: "  CURRENT SKILLS (from repo analysis):",
-    color: "#FFD700",
+    color: "#C8F135",
     delay: 4000,
   },
   {
@@ -100,22 +100,22 @@ const scanLines = [
   },
   {
     text: "  │ 🟢 Node.js          │ Proficient│ 82%        │ 134     │",
-    color: "#4A90E2",
+    color: "#2563eb",
     delay: 4700,
   },
   {
     text: "  │ 🐳 Docker           │ Proficient│ 76%        │ 28      │",
-    color: "#4A90E2",
+    color: "#2563eb",
     delay: 4800,
   },
   {
     text: "  │ 🐘 PostgreSQL       │ Detected  │ 58%        │ 12      │",
-    color: "#FFD700",
+    color: "#C8F135",
     delay: 4900,
   },
   {
     text: "  │ 🔵 Go               │ Detected  │ 45%        │ 8       │",
-    color: "#FFD700",
+    color: "#C8F135",
     delay: 5000,
   },
   {
@@ -124,7 +124,7 @@ const scanLines = [
     delay: 5100,
   },
   { text: "", color: "#888", delay: 5200 },
-  { text: "  RECOMMENDED NEXT STEPS:", color: "#FFD700", delay: 5400 },
+  { text: "  RECOMMENDED NEXT STEPS:", color: "#C8F135", delay: 5400 },
   {
     text: "  → Learn Kubernetes (complements your Docker proficiency)",
     color: "#F0F0F0",
@@ -148,7 +148,7 @@ const scanLines = [
   { text: "", color: "#888", delay: 6400 },
   {
     text: "  [AI-POWERED INSIGHTS — Perplexity]",
-    color: "#FFD700",
+    color: "#C8F135",
     delay: 6600,
   },
   {
@@ -311,9 +311,9 @@ export default function Skills() {
       case "Expert":
         return "#00FF87";
       case "Proficient":
-        return "#4A90E2";
+        return "#2563eb";
       case "Detected":
-        return "#FFD700";
+        return "#C8F135";
       default:
         return "#A3A3A3";
     }
@@ -322,11 +322,11 @@ export default function Skills() {
   const getPriorityBadge = (p: string) => {
     switch (p) {
       case "High":
-        return "border-[#FF4444] text-[#FF4444]";
+        return "border-[#dc2626] text-[#dc2626]";
       case "Medium":
-        return "border-[#FFD700] text-[#FFD700]";
+        return "border-[#C8F135] text-[#C8F135]";
       case "Low":
-        return "border-[#4A90E2] text-[#4A90E2]";
+        return "border-[#2563eb] text-[#2563eb]";
       default:
         return "border-neutral-400 text-neutral-400";
     }
@@ -346,8 +346,8 @@ export default function Skills() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <span className="inline-flex items-center gap-1.5 text-xs text-[#FFD700] font-bold uppercase tracking-widest">
-            <span className="w-1.5 h-1.5 bg-[#FFD700] rounded-full animate-pulse" /> Skills.sh Integration
+          <span className="inline-flex items-center gap-1.5 text-xs text-[#C8F135] font-bold uppercase tracking-widest">
+            <span className="w-1.5 h-1.5 bg-[#C8F135] rounded-full animate-pulse" /> Skills.sh Integration
           </span>
           <h2 className="text-5xl font-black text-white mt-2 mb-4">
             YOUR LEARNING <span className="text-gradient-yellow">ROADMAP</span>
@@ -361,7 +361,7 @@ export default function Skills() {
             with personalized upgrade paths. Powered by{" "}
             <a
               href="https://skills.sh"
-              className="text-[#FFD700] underline hover:text-white transition-colors"
+              className="text-[#C8F135] underline hover:text-white transition-colors"
             >
               skills.sh
             </a>
@@ -390,7 +390,7 @@ export default function Skills() {
                     className={`px-5 py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors
                       ${
                         activeTab === tab.id
-                          ? "text-[#FFD700] border-[#FFD700] bg-[#FFD70008]"
+                          ? "text-[#C8F135] border-[#C8F135] bg-[#C8F13508]"
                           : "text-neutral-400 border-transparent hover:text-white"
                       }`}
                   >
@@ -408,7 +408,7 @@ export default function Skills() {
                     ${
                       isPlaying
                         ? "border-[#888] text-neutral-400 cursor-not-allowed"
-                        : "border-[#FFD700] bg-[#FFD700] text-black hover:bg-transparent hover:text-[#FFD700]"
+                        : "border-[#C8F135] bg-[#C8F135] text-black hover:bg-transparent hover:text-[#C8F135]"
                     }`}
                 >
                   {isPlaying ? "Running..." : hasPlayed ? "Replay" : "Run Demo"}
@@ -422,14 +422,14 @@ export default function Skills() {
               {activeTab === "terminal" && (
                 <div
                   ref={terminalRef}
-                  className="p-6 font-mono text-sm leading-6 overflow-y-auto max-h-[520px] select-text selection:bg-[#FFD700] selection:text-black"
+                  className="p-6 font-mono text-sm leading-6 overflow-y-auto max-h-[520px] select-text selection:bg-[#C8F135] selection:text-black"
                 >
                   {visibleLines === 0 && !isPlaying && (
                     <div className="flex flex-col items-center justify-center h-[400px] text-center gap-4">
                       <div className="text-6xl mb-2">⚡</div>
                       <p className="text-neutral-400 text-sm max-w-md">
                         Click{" "}
-                        <strong className="text-[#FFD700]">Run Demo</strong> to
+                        <strong className="text-[#C8F135]">Run Demo</strong> to
                         see AutoDev&apos;s Skills Engine scan a developer&apos;s
                         repositories and generate a live skill matrix.
                       </p>
@@ -447,7 +447,7 @@ export default function Skills() {
                     </motion.div>
                   ))}
                   {isPlaying && (
-                    <span className="inline-block w-2 h-4 bg-[#FFD700] animate-pulse mt-1" />
+                    <span className="inline-block w-2 h-4 bg-[#C8F135] animate-pulse mt-1" />
                   )}
                 </div>
               )}
@@ -462,8 +462,8 @@ export default function Skills() {
                     </p>
                     <div className="flex gap-3 text-[10px] font-mono">
                       <span className="text-[#00FF87]">● Expert</span>
-                      <span className="text-[#4A90E2]">● Proficient</span>
-                      <span className="text-[#FFD700]">● Detected</span>
+                      <span className="text-[#2563eb]">● Proficient</span>
+                      <span className="text-[#C8F135]">● Detected</span>
                     </div>
                   </div>
 
@@ -538,7 +538,7 @@ export default function Skills() {
                           <span className="text-sm font-bold text-neutral-400 whitespace-nowrap">
                             {step.from}
                           </span>
-                          <span className="text-[#FFD700] text-lg font-bold">
+                          <span className="text-[#C8F135] text-lg font-bold">
                             →
                           </span>
                           <span className="text-sm font-bold text-white whitespace-nowrap">
@@ -576,7 +576,7 @@ export default function Skills() {
                               1800,
                             );
                           }}
-                          className="text-neutral-400 hover:text-[#FFD700] transition-colors p-1 flex items-center gap-1 rounded bg-[#1e1e1e] border border-[#2a2a2a] cursor-pointer"
+                          className="text-neutral-400 hover:text-[#C8F135] transition-colors p-1 flex items-center gap-1 rounded bg-[#1e1e1e] border border-[#2a2a2a] cursor-pointer"
                           title="Copy command"
                         >
                           {copiedRoadmapExport ? (
@@ -616,7 +616,7 @@ export default function Skills() {
           <div className="space-y-6">
             <div className="border-2 border-[#2A2A2A] bg-[#111] p-5">
               <h3 className="font-bold text-white text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-                <span className="text-[#FFD700]">$</span> CLI Commands
+                <span className="text-[#C8F135]">$</span> CLI Commands
               </h3>
               <div className="space-y-3">
                 {cliCommands.map((c) => (
@@ -635,7 +635,7 @@ export default function Skills() {
                         {copiedCmd === c.cmd ? (
                           <Check className="w-3.5 h-3.5 text-[#00FF87]" />
                         ) : (
-                          <Copy className="w-3.5 h-3.5 text-neutral-400 group-hover:text-[#FFD700] transition-colors" />
+                          <Copy className="w-3.5 h-3.5 text-neutral-400 group-hover:text-[#C8F135] transition-colors" />
                         )}
                       </span>
                     </div>
@@ -675,7 +675,7 @@ export default function Skills() {
                   },
                 ].map((s) => (
                   <div key={s.step} className="flex gap-3">
-                    <span className="w-5 h-5 bg-[#FFD700] text-black font-black text-[10px] flex items-center justify-center shrink-0">
+                    <span className="w-5 h-5 bg-[#C8F135] text-black font-black text-[10px] flex items-center justify-center shrink-0">
                       {s.step}
                     </span>
                     <div>
@@ -691,9 +691,9 @@ export default function Skills() {
               href="https://skills.sh"
               target="_blank"
               rel="noopener noreferrer"
-              className="block border-2 border-[#FFD700] bg-[#FFD70008] p-4 text-center hover:bg-[#FFD70015] transition-colors group"
+              className="block border-2 border-[#C8F135] bg-[#C8F13508] p-4 text-center hover:bg-[#C8F13515] transition-colors group"
             >
-              <div className="text-[#FFD700] font-black text-sm mb-1">
+              <div className="text-[#C8F135] font-black text-sm mb-1">
                 skills.sh
               </div>
               <p className="text-[10px] text-neutral-400 group-hover:text-[#aaa] transition-colors">

@@ -72,7 +72,7 @@ export default function RealExample() {
           {/* Left Column: Command CLI Terminal */}
           <div className="lg:col-span-6 flex flex-col justify-between">
             <div className="flex items-center gap-2 mb-4">
-              <Terminal className="w-5 h-5 text-[#FFD700]" />
+              <Terminal className="w-5 h-5 text-[#C8F135]" />
               <span className="text-sm font-mono font-bold text-white uppercase tracking-wider">
                 Interactive CLI Simulation
               </span>
@@ -100,27 +100,27 @@ export default function RealExample() {
                   <span className="text-neutral-500">$ </span>
                   {typedCommand}
                   {typedCommand.length < 25 && (
-                    <span className="inline-block w-1.5 h-4 bg-[#FFD700] ml-0.5 animate-pulse" />
+                    <span className="inline-block w-1.5 h-4 bg-[#C8F135] ml-0.5 animate-pulse" />
                   )}
                 </div>
 
                 {step >= 1 && (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-neutral-400">
-                    🔍 Scan initiated in <span className="text-[#FFD700]">./my-react-app</span>
+                    🔍 Scan initiated in <span className="text-[#C8F135]">./my-react-app</span>
                   </motion.div>
                 )}
 
                 {step >= 2 && (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-1">
-                    <div className="text-[#4A90E2]">● Indexing source files (128 source files found)...</div>
-                    <div className="text-[#4A90E2]">● Resolving dependency graph configuration...</div>
-                    <div className="text-[#4A90E2]">● Evaluating code smells, test-coverage, and lockfiles...</div>
+                    <div className="text-[#2563eb]">● Indexing source files (128 source files found)...</div>
+                    <div className="text-[#2563eb]">● Resolving dependency graph configuration...</div>
+                    <div className="text-[#2563eb]">● Evaluating code smells, test-coverage, and lockfiles...</div>
                   </motion.div>
                 )}
 
                 {step >= 3 && (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-4 space-y-1 border-t border-[#1A1A1A] mt-4">
-                    <div className="text-[#FF4444] font-bold">Found 12 Issues:</div>
+                    <div className="text-[#dc2626] font-bold">Found 12 Issues:</div>
                     <div className="text-neutral-300 ml-3">1. Missing error boundaries (stability danger)</div>
                     <div className="text-neutral-300 ml-3">2. Large bundle size (slow page rendering)</div>
                     <div className="text-neutral-300 ml-3">3. Unused dependencies (unneeded overhead)</div>
@@ -132,7 +132,7 @@ export default function RealExample() {
                 {step >= 4 && (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-4 border-t border-dashed border-[#2A2A2A] mt-4 space-y-1">
                     <div className="text-[#00FF87] font-bold">Generated 8 Improvement Tasks</div>
-                    <div className="text-[#FFD700] font-bold">Estimated Fix Time: 2 hours</div>
+                    <div className="text-[#C8F135] font-bold">Estimated Fix Time: 2 hours</div>
                   </motion.div>
                 )}
               </div>
@@ -149,7 +149,7 @@ export default function RealExample() {
                 </span>
               </div>
               {step >= 4 && (
-                <div className="flex items-center gap-1.5 px-3 py-1 bg-yellow/10 border border-yellow/20 rounded-full text-xs font-mono font-bold text-[#FFD700]">
+                <div className="flex items-center gap-1.5 px-3 py-1 bg-yellow/10 border border-yellow/20 rounded-full text-xs font-mono font-bold text-[#C8F135]">
                   <Clock className="w-3.5 h-3.5" />
                   2 hrs left
                 </div>
@@ -168,7 +168,7 @@ export default function RealExample() {
                       Ready to execute · 5/8 critical shown
                     </p>
                   </div>
-                  <span className="text-xs px-2.5 py-1 border border-[#FFD700] text-[#FFD700] font-mono font-bold bg-[#FFD700]/5">
+                  <span className="text-xs px-2.5 py-1 border border-[#C8F135] text-[#C8F135] font-mono font-bold bg-[#C8F135]/5">
                     EST: 2H
                   </span>
                 </div>

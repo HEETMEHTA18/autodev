@@ -8,7 +8,7 @@ const profiles = [
     icon: "🌐",
     name: "Web Developer",
     desc: "Full-stack web development",
-    color: "#4A90E2",
+    color: "#2563eb",
     packages: [
       "git",
       "nodejs",
@@ -71,7 +71,7 @@ const profiles = [
     icon: "🔧",
     name: "Backend Developer",
     desc: "Server-side APIs & services",
-    color: "#FFD700",
+    color: "#C8F135",
     packages: [
       "git",
       "nodejs",
@@ -119,8 +119,8 @@ export default function Profiles() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <span className="inline-flex items-center gap-1.5 text-xs text-[#FFD700] font-bold uppercase tracking-widest">
-            <span className="w-1.5 h-1.5 bg-[#FFD700] rounded-full" /> One command
+          <span className="inline-flex items-center gap-1.5 text-xs text-[#C8F135] font-bold uppercase tracking-widest">
+            <span className="w-1.5 h-1.5 bg-[#C8F135] rounded-full" /> One command
           </span>
           <h2 className="text-5xl font-black text-white mt-2 mb-4">
             DEVELOPER <span className="text-gradient-yellow">PROFILES</span>
@@ -151,7 +151,7 @@ export default function Profiles() {
               onClick={() => setActive(active === prof.id ? null : prof.id)}
               whileTap={{ scale: 0.97 }}
               className={`text-left p-6 border-2 transition-all duration-200 nb-card glow-yellow-hover
-                ${active === prof.id ? "border-[#FFD700] shadow-[4px_4px_0_#FFD700]" : ""}
+                ${active === prof.id ? "border-[#C8F135] shadow-[4px_4px_0_#C8F135]" : ""}
               `}
             >
               <div className="text-4xl mb-4">{prof.icon}</div>
@@ -169,7 +169,7 @@ export default function Profiles() {
                   </span>
                 ))}
                 {prof.packages.length > 5 && (
-                  <span className="text-[10px] px-2 py-0.5 border border-[#333] text-[#FFD700] font-mono">
+                  <span className="text-[10px] px-2 py-0.5 border border-[#333] text-[#C8F135] font-mono">
                     +{prof.packages.length - 5} more
                   </span>
                 )}
@@ -201,7 +201,7 @@ export default function Profiles() {
                 {current.icon} {current.name}
               </div>
               <div className="text-neutral-400"> {current.desc}</div>
-              <div className="mt-3 text-[#4A90E2]">
+              <div className="mt-3 text-[#2563eb]">
                 Packages ({current.packages.length}):
               </div>
               {current.packages.map((p) => (

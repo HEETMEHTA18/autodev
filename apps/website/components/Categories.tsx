@@ -388,7 +388,7 @@ export default function Categories() {
         transition={{ duration: 0.5 }}
       >
         <div>
-          <div className="inline-flex items-center gap-2 border border-[#FFD700] text-[#FFD700] text-xs font-bold px-3 py-1 uppercase tracking-widest bg-[#FFD70010] mb-3">
+          <div className="inline-flex items-center gap-2 border border-[#C8F135] text-[#C8F135] text-xs font-bold px-3 py-1 uppercase tracking-widest bg-[#C8F13510] mb-3">
             <Sparkles className="w-3.5 h-3.5" /> Interactive Store Dashboard
           </div>
           <h2 className="text-[2.8rem] md:text-5xl font-black leading-none tracking-tight uppercase">
@@ -437,7 +437,7 @@ export default function Categories() {
               placeholder="Search CLI compilers, DBs, tools..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-black border-2 border-[#2A2A2A] py-1.5 pl-10 pr-4 text-sm font-mono text-white placeholder-neutral-600 focus:outline-none focus:border-[#FFD700] transition-colors"
+              className="w-full bg-black border-2 border-[#2A2A2A] py-1.5 pl-10 pr-4 text-sm font-mono text-white placeholder-neutral-600 focus:outline-none focus:border-[#C8F135] transition-colors"
             />
             {searchQuery && (
               <button
@@ -464,7 +464,7 @@ export default function Categories() {
                 className={`flex-shrink-0 px-3 py-2.5 font-bold text-xs flex items-center justify-between border-2 transition-all gap-4
                   ${
                     activeCategory === cat.id
-                      ? "border-[#FFD700] text-[#FFD700] bg-[#FFD70010]"
+                      ? "border-[#C8F135] text-[#C8F135] bg-[#C8F13510]"
                       : "border-transparent text-neutral-400 hover:border-[#2A2A2A] hover:text-white"
                   }`}
               >
@@ -512,12 +512,12 @@ export default function Categories() {
           <div className="p-6 bg-[#080808] overflow-y-auto">
             {/* Banner (Visible on Discover "all" state and empty search) */}
             {activeCategory === "all" && !searchQuery && (
-              <div className="mb-6 border-2 border-[#FFD700] bg-[#FFD70010] p-5 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+              <div className="mb-6 border-2 border-[#C8F135] bg-[#C8F13510] p-5 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
                 <div className="absolute right-4 top-4 text-6xl opacity-10 pointer-events-none select-none">
                   ⚡
                 </div>
                 <div className="space-y-2 max-w-xl">
-                  <div className="inline-block text-[10px] font-black bg-[#FFD700] text-black px-2 py-0.5 uppercase tracking-wide">
+                  <div className="inline-block text-[10px] font-black bg-[#C8F135] text-black px-2 py-0.5 uppercase tracking-wide">
                     Featured Environment Tool
                   </div>
                   <h3 className="text-2xl font-black text-white">
@@ -571,8 +571,8 @@ export default function Categories() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-30px" }}
                     transition={{ duration: 0.35 }}
-                    className={`border-2 p-4 flex flex-col justify-between transition-all duration-200 hover:border-[#FFD700] bg-[#111] hover:bg-[#151515] relative group glow-yellow-hover
-                      ${state === "installed" ? "border-[#FFD70018]" : "border-[#2A2A2A]"}
+                    className={`border-2 p-4 flex flex-col justify-between transition-all duration-200 hover:border-[#C8F135] bg-[#111] hover:bg-[#151515] relative group glow-yellow-hover
+                      ${state === "installed" ? "border-[#C8F13518]" : "border-[#2A2A2A]"}
                     `}
                   >
                     <div>
@@ -583,7 +583,7 @@ export default function Categories() {
                             {pkg.icon}
                           </span>
                           <div>
-                            <h3 className="font-black text-sm text-white group-hover:text-[#FFD700] transition-colors">
+                            <h3 className="font-black text-sm text-white group-hover:text-[#C8F135] transition-colors">
                               {pkg.name}
                             </h3>
                             <span className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider font-mono">
@@ -598,7 +598,7 @@ export default function Categories() {
                             <button
                               onClick={() => installPackage(pkg)}
                               disabled={isTerminalRunning}
-                              className="px-3.5 py-1 text-xs font-black border-2 border-[#FFD700] bg-[#FFD700] text-black hover:bg-transparent hover:text-[#FFD700] transition-colors disabled:opacity-50"
+                              className="px-3.5 py-1 text-xs font-black border-2 border-[#C8F135] bg-[#C8F135] text-black hover:bg-transparent hover:text-[#C8F135] transition-colors disabled:opacity-50"
                             >
                               GET
                             </button>
@@ -654,7 +654,7 @@ export default function Categories() {
           {/* CLI Builder */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <Layers className="w-4 h-4 text-[#FFD700]" />
+              <Layers className="w-4 h-4 text-[#C8F135]" />
               <h3 className="text-xs font-black text-white uppercase tracking-wider">
                 Installer CLI Command Builder
               </h3>
@@ -684,7 +684,7 @@ export default function Categories() {
                     setCopiedCompiler(true);
                     setTimeout(() => setCopiedCompiler(false), 1800);
                   }}
-                  className="text-neutral-400 hover:text-[#FFD700] transition-colors p-1.5 flex items-center gap-1 rounded bg-[#1e1e1e] border border-[#2a2a2a] cursor-pointer"
+                  className="text-neutral-400 hover:text-[#C8F135] transition-colors p-1.5 flex items-center gap-1 rounded bg-[#1e1e1e] border border-[#2a2a2a] cursor-pointer"
                   title="Copy installation command"
                 >
                   {copiedCompiler ? (
@@ -708,7 +708,7 @@ export default function Categories() {
                 <code className="whitespace-nowrap">
                   <span className="text-neutral-500">$</span> curl -fsSL
                   https://autodevs.dev/install.sh | bash -s -- --install{" "}
-                  <span className="text-[#FFD700] font-bold">
+                  <span className="text-[#C8F135] font-bold">
                     {selectedPackagesForCliCommand || "nodejs git"}
                   </span>
                 </code>
@@ -724,7 +724,7 @@ export default function Categories() {
               </span>
               <span>{isTerminalRunning ? "RUNNING" : "READY"}</span>
             </div>
-            <div className="p-3.5 font-mono text-[11px] leading-5 text-neutral-400 overflow-y-auto flex-1 space-y-0.5 select-text selection:bg-[#FFD700] selection:text-black">
+            <div className="p-3.5 font-mono text-[11px] leading-5 text-neutral-400 overflow-y-auto flex-1 space-y-0.5 select-text selection:bg-[#C8F135] selection:text-black">
               {terminalLogs.map((log, i) => (
                 <div
                   key={i}
@@ -732,7 +732,7 @@ export default function Categories() {
                     log.startsWith("$")
                       ? "text-[#00FF87]"
                       : log.includes("✓")
-                        ? "text-[#FFD700]"
+                        ? "text-[#C8F135]"
                         : ""
                   }
                 >
@@ -755,12 +755,12 @@ export default function Categories() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="w-full max-w-2xl border-4 border-[#FFD700] bg-[#0A0A0A] p-6 md:p-8 relative overflow-y-auto max-h-[90vh]"
+              className="w-full max-w-2xl border-4 border-[#C8F135] bg-[#0A0A0A] p-6 md:p-8 relative overflow-y-auto max-h-[90vh]"
             >
               {/* Close button */}
               <button
                 onClick={() => setSelectedApp(null)}
-                className="absolute right-4 top-4 p-1.5 border-2 border-[#2A2A2A] bg-black text-neutral-400 hover:text-white hover:border-[#FFD700] transition-all"
+                className="absolute right-4 top-4 p-1.5 border-2 border-[#2A2A2A] bg-black text-neutral-400 hover:text-white hover:border-[#C8F135] transition-all"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -798,7 +798,7 @@ export default function Categories() {
                           onClick={() => {
                             installPackage(selectedApp);
                           }}
-                          className="px-4 py-1.5 text-xs font-black border-2 border-[#FFD700] bg-[#FFD700] text-black hover:bg-transparent hover:text-[#FFD700] transition-colors"
+                          className="px-4 py-1.5 text-xs font-black border-2 border-[#C8F135] bg-[#C8F135] text-black hover:bg-transparent hover:text-[#C8F135] transition-colors"
                         >
                           INSTALL NOW
                         </button>
@@ -809,7 +809,7 @@ export default function Categories() {
                           onClick={() => {
                             uninstallPackage(selectedApp.id, selectedApp.name);
                           }}
-                          className="px-3 py-1.5 text-xs font-bold border-2 border-[#FF4444] hover:bg-[#FF4444] hover:text-white text-[#FF4444] transition-all"
+                          className="px-3 py-1.5 text-xs font-bold border-2 border-[#dc2626] hover:bg-[#dc2626] hover:text-white text-[#dc2626] transition-all"
                         >
                           Uninstall
                         </button>
@@ -820,7 +820,7 @@ export default function Categories() {
 
                 {/* Description */}
                 <div className="space-y-2">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#FFD700] font-mono">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#C8F135] font-mono">
                     Overview
                   </h4>
                   <p className="text-sm text-neutral-300 leading-relaxed">
@@ -858,7 +858,7 @@ export default function Categories() {
                     <span className="block text-[10px] font-mono text-neutral-400 uppercase">
                       Category
                     </span>
-                    <span className="text-xs font-bold text-[#FFD700] block mt-0.5 capitalize">
+                    <span className="text-xs font-bold text-[#C8F135] block mt-0.5 capitalize">
                       {selectedApp.category}
                     </span>
                   </div>
@@ -867,7 +867,7 @@ export default function Categories() {
                 {/* Dependencies */}
                 {selectedApp.dependencies.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#FFD700] font-mono">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#C8F135] font-mono">
                       Dependencies
                     </h4>
                     <div className="flex flex-wrap gap-1.5">
@@ -885,7 +885,7 @@ export default function Categories() {
 
                 {/* Execution command snippet */}
                 <div className="space-y-2">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#FFD700] font-mono">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#C8F135] font-mono">
                     Run / Execute Example
                   </h4>
                   <div className="bg-[#111] border border-[#2A2A2A] p-3 text-xs font-mono text-neutral-400 flex items-center justify-between gap-4">
@@ -896,7 +896,7 @@ export default function Categories() {
                         setCopiedModalSnippet(true);
                         setTimeout(() => setCopiedModalSnippet(false), 1800);
                       }}
-                      className="text-xs text-[#FFD700] hover:text-[#00FF87] font-mono bg-[#1E1E1E] px-2.5 py-1.5 rounded border border-[#333] flex items-center gap-1.5 transition-colors cursor-pointer shrink-0"
+                      className="text-xs text-[#C8F135] hover:text-[#00FF87] font-mono bg-[#1E1E1E] px-2.5 py-1.5 rounded border border-[#333] flex items-center gap-1.5 transition-colors cursor-pointer shrink-0"
                     >
                       {copiedModalSnippet ? (
                         <>

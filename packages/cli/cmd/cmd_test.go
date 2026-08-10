@@ -70,7 +70,7 @@ func TestScanCommand(t *testing.T) {
 func TestScanRun(t *testing.T) {
 	// Create temp dir with a known file
 	dir := t.TempDir()
-	os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"test"}`), 0644)
+	_ = os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"test"}`), 0644)
 
 	err := runScan(dir, false)
 	if err != nil {
@@ -80,7 +80,7 @@ func TestScanRun(t *testing.T) {
 
 func TestScanRunJSON(t *testing.T) {
 	dir := t.TempDir()
-	os.WriteFile(filepath.Join(dir, "main.go"), []byte(`package main`), 0644)
+	_ = os.WriteFile(filepath.Join(dir, "main.go"), []byte(`package main`), 0644)
 
 	err := runScan(dir, true)
 	if err != nil {
@@ -95,9 +95,6 @@ func TestSetupCommand(t *testing.T) {
 	if cmd.Use != "setup [path]" && cmd.Use != "setup" {
 		t.Logf("setup Use = %q", cmd.Use)
 	}
-	if cmd.Flags().Lookup("yes") == nil && cmd.Flags().Lookup("path") == nil {
-		// setup might have path/yes flags
-	}
 }
 
 // ── GitHub ────────────────────────────────────────────────────────────────────
@@ -106,9 +103,6 @@ func TestGitHubCommand(t *testing.T) {
 	cmd := newGitHubCmd()
 	if cmd.Flags().Lookup("token") == nil {
 		t.Error("expected --token flag")
-	}
-	if cmd.Flags().Lookup("json") == nil {
-		// could be defined
 	}
 }
 
@@ -126,7 +120,7 @@ func TestReportCommand(t *testing.T) {
 
 func TestReportRun(t *testing.T) {
 	dir := t.TempDir()
-	os.WriteFile(filepath.Join(dir, "go.mod"), []byte(`module test`), 0644)
+	_ = os.WriteFile(filepath.Join(dir, "go.mod"), []byte(`module test`), 0644)
 	err := runReport(dir, "markdown", "")
 	if err != nil {
 		t.Logf("runReport returned: %v (may be expected if not a real project)", err)
@@ -242,7 +236,7 @@ func TestAuditCommand(t *testing.T) {
 
 func TestAuditRun(t *testing.T) {
 	dir := t.TempDir()
-	os.WriteFile(filepath.Join(dir, "go.mod"), []byte(`module test
+	_ = os.WriteFile(filepath.Join(dir, "go.mod"), []byte(`module test
 go 1.22
 `), 0644)
 	err := runAudit(dir)
@@ -327,11 +321,11 @@ func TestMigrateCommand(t *testing.T) {
 func TestMigrateRun(t *testing.T) {
 	dir := t.TempDir()
 	oldFile := filepath.Join(dir, ".autodev.json")
-	os.WriteFile(oldFile, []byte(`{"github_token":"test"}`), 0644)
+	_ = os.WriteFile(oldFile, []byte(`{"github_token":"test"}`), 0644)
 	defer func() {
-		os.Chdir(".") // restore
+		_ = os.Chdir(".") // restore
 	}()
-	os.Chdir(dir)
+	_ = os.Chdir(dir)
 
 	err := runMigrate()
 	if err != nil {
@@ -373,10 +367,7 @@ func TestPluginCommand(t *testing.T) {
 // ── Canvas ────────────────────────────────────────────────────────────────────
 
 func TestCanvasCommand(t *testing.T) {
-	cmd := newCanvasCmd()
-	if cmd.Flags().Lookup("save") == nil && cmd.Flags().Lookup("summary") == nil {
-		// canvas has path/save/summary/web/serve/port flags
-	}
+	_ = newCanvasCmd()
 }
 
 func TestCanvasRun(t *testing.T) {
@@ -670,7 +661,7 @@ func TestExecuteBenchmark(t *testing.T) {
 
 func TestExecuteScan(t *testing.T) {
 	dir := t.TempDir()
-	os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"test"}`), 0644)
+	_ = os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"test"}`), 0644)
 
 	buf := new(bytes.Buffer)
 	rootCmd.SetOut(buf)
@@ -784,8 +775,8 @@ func TestExecuteContainerize(t *testing.T) {
 func TestExecuteInit(t *testing.T) {
 	dir := t.TempDir()
 	oldDir, _ := os.Getwd()
-	os.Chdir(dir)
-	defer os.Chdir(oldDir)
+	_ = os.Chdir(dir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	buf := new(bytes.Buffer)
 	rootCmd.SetOut(buf)
@@ -858,7 +849,7 @@ func TestEnhancerFlow(t *testing.T) {
 func TestFileExists(t *testing.T) {
 	dir := t.TempDir()
 	tmpFile := filepath.Join(dir, "test.txt")
-	os.WriteFile(tmpFile, []byte("hello"), 0644)
+	_ = os.WriteFile(tmpFile, []byte("hello"), 0644)
 
 	if !fileExists(dir, "test.txt") {
 		t.Error("expected fileExists to be true")
@@ -871,13 +862,13 @@ func TestFileExists(t *testing.T) {
 func TestDirExistsAndNotEmpty(t *testing.T) {
 	dir := t.TempDir()
 	subDir := filepath.Join(dir, "subdir")
-	os.MkdirAll(subDir, 0755)
+	_ = os.MkdirAll(subDir, 0755)
 
 	if dirExistsAndNotEmpty(dir, "subdir") {
 		t.Error("expected empty dir to return false")
 	}
 
-	os.WriteFile(filepath.Join(subDir, "file.txt"), []byte("hello"), 0644)
+	_ = os.WriteFile(filepath.Join(subDir, "file.txt"), []byte("hello"), 0644)
 	if !dirExistsAndNotEmpty(dir, "subdir") {
 		t.Error("expected non-empty dir to return true")
 	}

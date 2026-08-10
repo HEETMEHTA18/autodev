@@ -82,7 +82,7 @@ func (cg *CanvasGenerator) buildProjectOverview(sr *ScanResult) ProjectOverview 
 	name := filepath.Base(cg.RootPath)
 	cg.fileCount = 0
 	cg.locCount = 0
-	filepath.Walk(cg.RootPath, func(p string, info os.FileInfo, err error) error {
+	_ = filepath.Walk(cg.RootPath, func(p string, info os.FileInfo, err error) error {
 		if err != nil {
 			return nil
 		}
@@ -122,7 +122,7 @@ func (cg *CanvasGenerator) buildFileCards() []FileCard {
 	var cards []FileCard
 	langMap := buildLanguageMap()
 
-	filepath.Walk(cg.RootPath, func(p string, info os.FileInfo, err error) error {
+	_ = filepath.Walk(cg.RootPath, func(p string, info os.FileInfo, err error) error {
 		if err != nil {
 			return nil
 		}
@@ -270,7 +270,7 @@ func (cg *CanvasGenerator) detectLayers() []ArchLayer {
 		"Tests":          {"test", "tests", "__tests__", "spec", "specs"},
 	}
 
-	filepath.Walk(cg.RootPath, func(p string, info os.FileInfo, err error) error {
+	_ = filepath.Walk(cg.RootPath, func(p string, info os.FileInfo, err error) error {
 		if err != nil || !info.IsDir() {
 			return nil
 		}
@@ -314,7 +314,7 @@ func (cg *CanvasGenerator) detectEntryPoints() []EntryPoint {
 		{"manage.py", "cli"},
 	}
 
-	filepath.Walk(cg.RootPath, func(p string, info os.FileInfo, err error) error {
+	_ = filepath.Walk(cg.RootPath, func(p string, info os.FileInfo, err error) error {
 		if err != nil {
 			return nil
 		}
@@ -391,9 +391,7 @@ func (cg *CanvasGenerator) buildDependencyGraph(files []FileCard) DependencyGrap
 
 	// Build impact map
 	for _, f := range files {
-		for _, dep := range f.Dependents {
-			dg.ImpactMap[f.Path] = append(dg.ImpactMap[f.Path], dep)
-		}
+		dg.ImpactMap[f.Path] = append(dg.ImpactMap[f.Path], f.Dependents...)
 	}
 
 	return dg
@@ -527,7 +525,7 @@ func (cg *CanvasGenerator) buildSecurityView() SecurityView {
 	sv.Findings = []SecurityFinding{}
 	sv.Score = 100
 
-	filepath.Walk(cg.RootPath, func(p string, info os.FileInfo, err error) error {
+	_ = filepath.Walk(cg.RootPath, func(p string, info os.FileInfo, err error) error {
 		if err != nil {
 			return nil
 		}
@@ -699,7 +697,7 @@ func (cg *CanvasGenerator) buildGitSummary() GitSummary {
 			if i >= 20 {
 				break
 			}
-			gs.HotFiles = append(gs.HotFiles, HotFile{Path: s.Path, Changes: s.Changes})
+			gs.HotFiles = append(gs.HotFiles, HotFile(s))
 			gs.ChurnMap[s.Path] = s.Changes
 		}
 	}
@@ -1081,7 +1079,7 @@ func loadJSON[T any](path string) T {
 	if err != nil {
 		return result
 	}
-	json.Unmarshal(data, &result)
+	_ = json.Unmarshal(data, &result)
 	return result
 }
 

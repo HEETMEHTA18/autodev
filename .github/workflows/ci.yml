@@ -23,7 +23,7 @@ jobs:
           for dir in packages/*; do
             if [ -f "$dir/go.mod" ]; then
               echo "Running golangci-lint in $dir"
-              (cd $dir && golangci-lint run ./...)
+              (cd $dir && GOWORK=off golangci-lint run ./...)
             fi
           done
   go-test:
@@ -41,7 +41,7 @@ jobs:
           for dir in packages/*; do
             if [ -f "$dir/go.mod" ]; then
               echo "Running tests in $dir"
-              (cd $dir && go test ./... -v)
+              (cd $dir && GOWORK=off go test ./... -v)
             fi
           done
   website-lint-typecheck:

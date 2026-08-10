@@ -727,6 +727,64 @@ export default function DocsClient() {
       ),
     },
     {
+      id: "agent-orchestrator",
+      category: "AI Agents",
+      title: "Agent Orchestrator (v0.5.0)",
+      content: (
+        <>
+          <h1 className="text-4xl font-black text-white mb-6 uppercase tracking-tight">
+            Agent Orchestrator
+          </h1>
+          <p className="text-neutral-300 leading-relaxed mb-4">
+            AutoDev 0.5.0 turns the CLI into a{" "}
+            <strong className="text-white">
+              unified orchestrator for AI coding agents
+            </strong>
+            . Install, launch, and manage OpenCode, Claude Code, Codex, Gemini
+            CLI, and Aider from a single terminal.
+          </p>
+          {renderCodeBlock("agent-stack", "autodev tools install opencode claude codex gemini aider")}
+          <Callout type="tip" title="One-command install">
+            <code className="text-[#00FF87] font-mono font-bold bg-[#111] px-1.5 py-0.5 rounded">
+              autodev setup
+            </code>{" "}
+            detects your machine and the{" "}
+            <code className="text-[#C8F135] font-mono bg-[#111] px-1 py-0.5 rounded text-sm">
+              ai-agents
+            </code>{" "}
+            profile installs the full recommended agent stack.
+          </Callout>
+          <h2 className="text-xl font-bold text-white mt-6 mb-2">
+            Manage agents
+          </h2>
+          {renderCodeBlock("cmd-tools", "autodev tools list\nautodev tools install <agent>\nautodev tools remove <agent>")}
+          <h2 className="text-xl font-bold text-white mt-6 mb-2">
+            Launch an agent
+          </h2>
+          <p className="text-neutral-300 leading-relaxed mb-4">
+            Agents run inside a managed pseudo-terminal — arrow keys, colors and
+            window resizing work exactly like a real shell.
+          </p>
+          {renderCodeBlock("cmd-run", "autodev run opencode\nautodev run codex exec \"fix the auth bug\"")}
+          <h2 className="text-xl font-bold text-white mt-6 mb-2">
+            Sessions
+          </h2>
+          {renderCodeBlock("cmd-session", "autodev session\nautodev session new opencode\nautodev session list\nautodev session stop opencode")}
+          <h2 className="text-xl font-bold text-white mt-6 mb-2">
+            Task routing
+          </h2>
+          <p className="text-neutral-300 leading-relaxed mb-4">
+            AutoDev classifies your request and launches the best-fit agent:
+          </p>
+          {renderCodeBlock("cmd-agent", "autodev agent \"fix the authentication bug\"        # → OpenCode (coding)\nautodev agent \"research the postgres release\"      # → Gemini (research)\nautodev agent \"review this pull request\"          # → Codex (review)\nautodev agent \"harden this codebase\"              # → AutoDevs security")}
+          <h2 className="text-xl font-bold text-white mt-6 mb-2">
+            The full workflow
+          </h2>
+          {renderCodeBlock("agent-flow", "curl -fsSL https://raw.githubusercontent.com/HEETMEHTA18/autodev/main/scripts/install.sh | bash\nautodev setup              # scan machine + install stack\nautodev tools list         # verify agents\nautodev agent \"ship my feature\"  # route task to the best agent")}
+        </>
+      ),
+    },
+    {
       id: "cmd-skills",
       category: "Commands",
       title: "autodev skills",

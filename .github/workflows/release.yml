@@ -12,7 +12,7 @@ permissions:
 jobs:
   goreleaser:
     name: GoReleaser
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -36,7 +36,7 @@ jobs:
 
   docker:
     name: Docker Image
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up QEMU

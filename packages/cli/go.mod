@@ -7,12 +7,15 @@ require (
 	github.com/autodev-sh/autodev/core v0.0.0
 	github.com/autodev-sh/autodev/github v0.0.0
 	github.com/autodev-sh/autodev/installer v0.0.0
+	github.com/autodev-sh/autodev/registry v0.0.0
 	github.com/autodev-sh/autodev/scanner v0.0.0
 	github.com/autodev-sh/autodev/skills v0.0.0
 	github.com/charmbracelet/bubbletea v1.3.4
 	github.com/charmbracelet/lipgloss v1.1.0
+	github.com/creack/pty v1.1.24
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.19.0
+	golang.org/x/term v0.24.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -50,7 +53,7 @@ require (
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
 	golang.org/x/sync v0.11.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/text v0.19.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 )
 
@@ -59,6 +62,7 @@ replace (
 	github.com/autodev-sh/autodev/core => ../core
 	github.com/autodev-sh/autodev/github => ../github
 	github.com/autodev-sh/autodev/installer => ../installer
+	github.com/autodev-sh/autodev/registry => ../registry
 	github.com/autodev-sh/autodev/scanner => ../scanner
 	github.com/autodev-sh/autodev/skills => ../skills
 )

@@ -15,8 +15,8 @@ func TestRootCommand(t *testing.T) {
 	if rootCmd.Use != "autodev" {
 		t.Errorf("root Use = %q, want %q", rootCmd.Use, "autodev")
 	}
-	if rootCmd.Version != "0.4.3" {
-		t.Errorf("root Version = %q, want %q", rootCmd.Version, "0.4.3")
+	if rootCmd.Version != "0.5.0" {
+		t.Errorf("root Version = %q, want %q", rootCmd.Version, "0.5.0")
 	}
 }
 
@@ -498,6 +498,119 @@ func TestIsPlaceholder(t *testing.T) {
 func TestTrackCLIMetric(t *testing.T) {
 	// This should not panic
 	trackCLIMetric("test")
+}
+
+// ── Tools ─────────────────────────────────────────────────────────────────────
+
+func TestToolsCommand(t *testing.T) {
+	cmd := newToolsCmd()
+	if cmd.Use != "tools" {
+		t.Errorf("Use = %q, want %q", cmd.Use, "tools")
+	}
+	subNames := []string{"list", "install", "remove"}
+	registered := make(map[string]bool)
+	for _, sub := range cmd.Commands() {
+		registered[sub.Name()] = true
+	}
+	for _, name := range subNames {
+		if !registered[name] {
+			t.Errorf("expected subcommand %q under tools", name)
+		}
+	}
+}
+
+func TestToolsListRun(t *testing.T) {
+	if err := runToolsList(); err != nil {
+		t.Errorf("runToolsList returned error: %v", err)
+	}
+}
+
+func TestToolsInstallUnknown(t *testing.T) {
+	if err := runToolsInstall("nope"); err == nil {
+		t.Error("expected error for unknown agent")
+	}
+}
+
+// ── Run ───────────────────────────────────────────────────────────────────────
+
+func TestRunCommand(t *testing.T) {
+	cmd := newRunCmd()
+	if cmd.Use != "run <agent> [args...]" {
+		t.Logf("run Use = %q", cmd.Use)
+	}
+}
+
+func TestRunUnknownAgent(t *testing.T) {
+	if err := runAgent("nope", nil); err == nil {
+		t.Error("expected error for unknown agent")
+	}
+}
+
+// ── Session ───────────────────────────────────────────────────────────────────
+
+func TestSessionCommand(t *testing.T) {
+	cmd := newSessionCmd()
+	if cmd.Use != "session" {
+		t.Errorf("Use = %q, want %q", cmd.Use, "session")
+	}
+	subNames := []string{"new", "list", "stop"}
+	registered := make(map[string]bool)
+	for _, sub := range cmd.Commands() {
+		registered[sub.Name()] = true
+	}
+	for _, name := range subNames {
+		if !registered[name] {
+			t.Errorf("expected subcommand %q under session", name)
+		}
+	}
+}
+
+func TestSessionListRun(t *testing.T) {
+	if err := runSessionList(); err != nil {
+		t.Errorf("runSessionList returned error: %v", err)
+	}
+}
+
+func TestNormalizeAgentID(t *testing.T) {
+	cases := map[string]string{
+		"claude-code": "claude",
+		"Claude Code": "claude",
+		"open-code":   "opencode",
+		"gemini-cli":  "gemini",
+		"codex":       "codex",
+	}
+	for in, want := range cases {
+		if got := normalizeAgentID(in); got != want {
+			t.Errorf("normalizeAgentID(%q) = %q, want %q", in, got, want)
+		}
+	}
+}
+
+// ── Agent router ──────────────────────────────────────────────────────────────
+
+func TestAgentCommand(t *testing.T) {
+	cmd := newAgentCmd()
+	if cmd.Use != "agent <task...>" {
+		t.Logf("agent Use = %q", cmd.Use)
+	}
+}
+
+func TestClassifyTask(t *testing.T) {
+	cases := []struct {
+		task string
+		want string
+	}{
+		{"fix the authentication bug", "opencode"},
+		{"research the latest postgres release", "gemini"},
+		{"review this pull request for quality", "codex"},
+		{"harden the codebase against cve exploits", "security"},
+		{"design the system architecture", "claude"},
+	}
+	for _, c := range cases {
+		if got := classifyTask(c.task); got != c.want {
+			t.Errorf("classifyTask(%q) = %q, want %q", c.task, got, c.want)
+		}
+	}
 }
 
 // ── PrintGitHubCTA ───────────────────────────────────────────────────────────

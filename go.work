@@ -1,11 +1,12 @@
-go 1.22.2
+go 1.25.0
 
 use (
+	./packages/catalog
 	./packages/cli
 	./packages/core
-	./packages/scanner
-	./packages/installer
-	./packages/skills
 	./packages/github
-	./packages/catalog
+	./packages/installer
+	./packages/registry
+	./packages/scanner
+	./packages/skills
 )

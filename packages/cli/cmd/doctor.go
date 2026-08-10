@@ -13,6 +13,7 @@ import (
 
 	"github.com/autodev-sh/autodev/core/osinfo"
 	"github.com/autodev-sh/autodev/installer"
+	"github.com/autodev-sh/autodev/registry"
 	"github.com/autodev-sh/autodev/scanner"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
@@ -62,6 +63,19 @@ func runDoctor(fix bool) error {
 		fmt.Printf("  %-20s %s\n", boldStyle.Render("Package Manager"), info.PackageManager)
 		fmt.Println()
 	}
+
+	// 1b. AI agent registry status
+	fmt.Println(titleStyle.Render("AI AGENTS"))
+	for _, s := range registry.DetectAll() {
+		mark := warnStyle.Render("✗")
+		status := dimStyle.Render("not installed")
+		if s.Installed {
+			mark = okStyle.Render("✓")
+			status = okStyle.Render(s.Version)
+		}
+		fmt.Printf("  %-6s %-16s %s\n", mark, s.Agent.Name, status)
+	}
+	fmt.Println()
 
 	fmt.Println(titleStyle.Render("CODEBASE DIAGNOSTICS SCAN"))
 	fmt.Println(dimStyle.Render("  Scanning for secrets, configuration mismatches, and code errors..."))

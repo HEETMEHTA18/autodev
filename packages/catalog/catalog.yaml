@@ -808,6 +808,100 @@ packages:
     verify: python3 -c "import cv2; print(cv2.__version__)"
 
   # ============================================================
+  # AI AGENT CLIs
+  # ============================================================
+
+  - id: opencode
+    name: OpenCode
+    category: AI/ML
+    description: Terminal-based coding agent that runs like a VS Code session
+    icon: ⌘
+    deps: [nodejs]
+    install:
+      linux:
+        method: npm
+        packages: [opencode-ai]
+      darwin:
+        method: npm
+        packages: [opencode-ai]
+      windows:
+        method: npm
+        packages: [opencode-ai]
+    verify: opencode --version
+
+  - id: claude
+    name: Claude Code
+    category: AI/ML
+    description: Anthropic's terminal coding agent
+    icon: 🪐
+    deps: [nodejs]
+    install:
+      linux:
+        method: npm
+        packages: ["@anthropic-ai/claude-code"]
+      darwin:
+        method: npm
+        packages: ["@anthropic-ai/claude-code"]
+      windows:
+        method: npm
+        packages: ["@anthropic-ai/claude-code"]
+    verify: claude --version
+
+  - id: codex
+    name: Codex
+    category: AI/ML
+    description: OpenAI's CLI coding agent
+    icon: 🦖
+    deps: [nodejs]
+    install:
+      linux:
+        method: npm
+        packages: ["@openai/codex"]
+      darwin:
+        method: npm
+        packages: ["@openai/codex"]
+      windows:
+        method: npm
+        packages: ["@openai/codex"]
+    verify: codex --version
+
+  - id: gemini
+    name: Gemini CLI
+    category: AI/ML
+    description: Google's agentic research and coding CLI
+    icon: ✦
+    deps: [nodejs]
+    install:
+      linux:
+        method: npm
+        packages: ["@google/gemini-cli"]
+      darwin:
+        method: npm
+        packages: ["@google/gemini-cli"]
+      windows:
+        method: npm
+        packages: ["@google/gemini-cli"]
+    verify: gemini --version
+
+  - id: aider
+    name: Aider
+    category: AI/ML
+    description: AI pair programming in your terminal
+    icon: 🧑‍🤝‍🧑
+    deps: [python]
+    install:
+      linux:
+        method: pip
+        packages: [aider-chat]
+      darwin:
+        method: pip
+        packages: [aider-chat]
+      windows:
+        method: pip
+        packages: [aider-chat]
+    verify: aider --version
+
+  # ============================================================
   # PACKAGE MANAGERS / TOOLS
   # ============================================================
 
@@ -985,3 +1079,9 @@ profiles:
     description: AI-powered full-stack development
     icon: 🧠
     packages: [git, nodejs, python, pnpm, nextjs, fastapi, pytorch, langchain, docker, postgresql]
+
+  - id: ai-agents
+    name: AI Agent Stack
+    description: AutoDevs orchestrator agents (OpenCode, Claude, Codex, Gemini, Aider)
+    icon: 🤖
+    packages: [opencode, claude, codex, gemini, aider]

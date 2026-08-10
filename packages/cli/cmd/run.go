@@ -5,8 +5,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
-	"os/signal"
-	"syscall"
+	"runtime"
 
 	"github.com/autodev-sh/autodev/registry"
 	"github.com/creack/pty"
@@ -49,7 +48,8 @@ func runAgent(id string, args []string) error {
 	cmd := exec.Command(path, args...)
 	cmd.Env = os.Environ()
 
-	if !term.IsTerminal(int(os.Stdin.Fd())) {
+	// PTY is a Unix feature; on Windows (or non-TTY stdin) use stdio passthrough.
+	if runtime.GOOS == "windows" || !term.IsTerminal(int(os.Stdin.Fd())) {
 		cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
 		return cmd.Run()
 	}
@@ -68,14 +68,14 @@ func runAgent(id string, args []string) error {
 
 	// Forward window resize events to the child pty.
 	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, syscall.SIGWINCH)
-	defer signal.Stop(ch)
+	notifyResize(ch)
+	defer stopResize(ch)
 	go func() {
 		for range ch {
 			_ = pty.InheritSize(os.Stdin, ptmx)
 		}
 	}()
-	ch <- syscall.SIGWINCH
+	ch <- resizeSignal()
 
 	go func() { _, _ = io.Copy(ptmx, os.Stdin) }()
 	_, _ = io.Copy(os.Stdout, ptmx)

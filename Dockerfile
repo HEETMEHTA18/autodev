@@ -10,6 +10,7 @@ COPY packages/installer/ packages/installer/
 COPY packages/skills/ packages/skills/
 COPY packages/github/ packages/github/
 COPY packages/catalog/ packages/catalog/
+COPY packages/registry/ packages/registry/
 COPY packages/cli/ packages/cli/
 
 RUN cd packages/cli && \

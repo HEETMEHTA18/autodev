@@ -27,6 +27,12 @@ pseudo-terminal. Arguments after the agent name are passed through.
 		Args:               cobra.MinimumNArgs(1),
 		DisableFlagParsing: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if len(args) == 0 {
+				return cmd.Help()
+			}
+			if args[0] == "--help" || args[0] == "-h" || args[0] == "help" {
+				return cmd.Help()
+			}
 			return runAgent(args[0], args[1:])
 		},
 	}

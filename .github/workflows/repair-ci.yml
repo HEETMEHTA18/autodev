@@ -9,19 +9,16 @@ permissions:
 
 jobs:
   repair:
-    if: ${{ !contains(github.event.head_commit.message, 'ci: apply automated CI repair') }}
+    if: github.event.head_commit.message != 'ci: apply automated CI repair'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - uses: actions/setup-go@v5
         with:
           go-version: '1.26.5'
 
-      - name: Fix Go source and dependencies
-        shell: bash
+      - name: Repair Go source and modules
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -31,64 +28,45 @@ jobs:
           old = 'for i,c:=range commands { line=fmt.Sprintf'
           new = 'for i,c:=range commands { line:=fmt.Sprintf'
           if old not in s:
-              raise SystemExit('expected professional.go compile error was not found')
+              raise SystemExit('professional.go already repaired or source changed unexpectedly')
           p.write_text(s.replace(old, new, 1))
           PY
-
           for mod in packages/*/go.mod; do
             dir="$(dirname "$mod")"
             go mod edit -go=1.26.5 "$mod"
-            (
-              cd "$dir"
-              if grep -q 'golang.org/x/sys' go.mod; then go get golang.org/x/sys@v0.47.0; fi
-              if grep -q 'golang.org/x/text' go.mod; then go get golang.org/x/text@v0.40.0; fi
-              go mod tidy
-              GOWORK=off go test ./... >/dev/null
-            )
+            (cd "$dir" && if grep -q 'golang.org/x/sys' go.mod; then go get golang.org/x/sys@v0.47.0; fi && if grep -q 'golang.org/x/text' go.mod; then go get golang.org/x/text@v0.40.0; fi && go mod tidy)
           done
 
-      - name: Set up Node
+      - name: Repair JavaScript dependencies
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v6
         with:
           version: 9.15.4
-
-      - name: Repair JavaScript dependency lockfile
-        run: |
+      - run: |
           set -euo pipefail
-          pnpm --filter website add next@16.2.11 eslint-config-next@16.2.11
-          pnpm --filter website add lucide-react@1.22.0
+          pnpm --filter website add next@16.2.11 eslint-config-next@16.2.11 lucide-react@1.22.0
           pnpm add -D prettier@3.9.4
           pnpm install
 
-      - name: Verify repository
+      - name: Verify
         run: |
           set -euo pipefail
           for dir in packages/*; do
-            if [ -f "$dir/go.mod" ]; then
-              (cd "$dir" && GOWORK=off go test ./...)
-            fi
+            if [ -f "$dir/go.mod" ]; then (cd "$dir" && GOWORK=off go test ./...); fi
           done
           pnpm install --frozen-lockfile
           pnpm --filter website lint
           pnpm --filter website typecheck
           pnpm --filter website build
 
-      - name: Commit repaired repository
-        shell: bash
+      - name: Commit and push
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm .github/workflows/repair-ci.yml
           git add -- packages/cli/tui/professional.go packages/*/go.mod packages/*/go.sum package.json pnpm-lock.yaml apps/website/package.json
-          if git diff --cached --quiet; then
-            echo 'No repair changes were produced.'
-            exit 0
-          fi
           git commit -m 'ci: apply automated CI repair'
           git push

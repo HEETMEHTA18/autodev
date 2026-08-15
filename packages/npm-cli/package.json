@@ -10,7 +10,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "node bin/index.js --help"
+    "test": "node --check bin/index.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
     "installer",
     "bootstrap",
     "setup",
+    "bootstrap",
     "cli"
   ],
   "author": "Heet Mehta",

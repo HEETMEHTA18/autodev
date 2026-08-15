@@ -25,9 +25,10 @@ func TestCatalogResolution(t *testing.T) {
 	nodeIdx := -1
 	reactIdx := -1
 	for i, pkg := range resolved {
-		if pkg.ID == "nodejs" {
+		switch pkg.ID {
+		case "nodejs":
 			nodeIdx = i
-		} else if pkg.ID == "react" {
+		case "react":
 			reactIdx = i
 		}
 	}

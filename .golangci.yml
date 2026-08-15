@@ -1,0 +1,49 @@
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+
+linters-settings:
+  errcheck:
+    check-type-assertions: false
+    check-blank: false
+    exclude-functions:
+      - (io.Closer).Close
+      - (*os.File).Close
+      - (*os.File).Close
+      - (net.Conn).Close
+      - (*net.Conn).Close
+      - fmt.Fprintln
+      - fmt.Fprintf
+      - fmt.Printf
+      - fmt.Print
+      - os.Remove
+      - os.RemoveAll
+      - (*exec.Cmd).Close
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - errcheck
+    - linters:
+        - staticcheck
+      text: "QF1001"
+    - linters:
+        - staticcheck
+      text: "QF1003"
+    - linters:
+        - staticcheck
+      text: "QF1012"
+    - linters:
+        - staticcheck
+      text: "ST1005"
+    - linters:
+        - typecheck
+      text: "undefined"
+  max-issues-per-linter: 0
+  max-same-issues: 0

@@ -1,0 +1,138 @@
+/* AutoDev Professional Theme
+   Loaded after globals.css so existing components keep their structure while
+   sharing one restrained visual language across the site. */
+
+:root {
+  --pro-bg: #080B14;
+  --pro-surface: #0F1524;
+  --pro-surface-2: #141C2F;
+  --pro-border: #24304A;
+  --pro-text: #F8FAFC;
+  --pro-muted: #94A3B8;
+  --pro-violet: #8B5CF6;
+  --pro-violet-strong: #7C3AED;
+  --pro-cyan: #22D3EE;
+  --pro-green: #34D399;
+}
+
+body {
+  background:
+    radial-gradient(circle at 50% -10%, rgba(124, 58, 237, .16), transparent 34rem),
+    radial-gradient(circle at 90% 20%, rgba(34, 211, 238, .07), transparent 26rem),
+    var(--pro-bg) !important;
+  color: var(--pro-text) !important;
+}
+
+.bg-grid {
+  background-color: var(--pro-bg) !important;
+  background-image:
+    linear-gradient(rgba(148,163,184,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148,163,184,.035) 1px, transparent 1px) !important;
+  background-size: 48px 48px !important;
+}
+
+.gradient-mesh {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(124,58,237,.14), transparent 40%),
+    radial-gradient(circle at 80% 40%, rgba(34,211,238,.06), transparent 28%) !important;
+}
+
+.nb-card {
+  border: 1px solid var(--pro-border) !important;
+  border-radius: 14px !important;
+  background: rgba(15,21,36,.86) !important;
+  box-shadow: 0 12px 36px rgba(0,0,0,.18) !important;
+  transform: none !important;
+}
+
+.nb-card:hover {
+  border-color: rgba(139,92,246,.65) !important;
+  box-shadow: 0 16px 44px rgba(124,58,237,.14) !important;
+  transform: translateY(-2px) !important;
+}
+
+.nb-btn,
+.nb-btn-outline {
+  border-width: 1px !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+}
+
+.nb-btn {
+  background: linear-gradient(135deg, var(--pro-violet-strong), #6366F1) !important;
+  border-color: rgba(255,255,255,.12) !important;
+  color: white !important;
+}
+
+.nb-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 28px rgba(124,58,237,.28) !important;
+}
+
+.nb-btn-outline {
+  border-color: var(--pro-border) !important;
+  background: rgba(15,21,36,.65) !important;
+  color: var(--pro-text) !important;
+}
+
+.nb-btn-outline:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(139,92,246,.65) !important;
+  background: var(--pro-surface-2) !important;
+  color: white !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,.2) !important;
+}
+
+.terminal {
+  border: 1px solid var(--pro-border) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,.3) !important;
+  overflow: hidden !important;
+}
+
+.terminal-bar {
+  background: #0B1020 !important;
+  border-bottom: 1px solid var(--pro-border) !important;
+}
+
+/* Normalize the old neon palette used by older components. */
+[class*="text-[#C8F135]"] { color: var(--pro-violet) !important; }
+[class*="bg-[#C8F135]"] { background-color: var(--pro-violet) !important; }
+[class*="border-[#C8F135]"] { border-color: rgba(139,92,246,.65) !important; }
+[class*="text-[#00FF87]"] { color: var(--pro-green) !important; }
+[class*="border-[#2A2A2A]"] { border-color: var(--pro-border) !important; }
+[class*="bg-[#111]"] { background-color: var(--pro-surface) !important; }
+[class*="bg-[#111111]"] { background-color: var(--pro-surface) !important; }
+[class*="bg-[#0A0A0A]"] { background-color: var(--pro-bg) !important; }
+[class*="bg-black"] { background-color: #070A12 !important; }
+
+.text-gradient-yellow {
+  background: linear-gradient(90deg, #A78BFA, #22D3EE) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+.text-gradient-white {
+  background: linear-gradient(180deg, #FFFFFF, #CBD5E1) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+/* Reduce the visual noise of the decorative section separators. */
+section + .section-divider,
+.section-divider {
+  opacity: .45;
+}
+
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--pro-cyan) !important;
+  outline-offset: 3px !important;
+}
+
+::selection {
+  background: rgba(139,92,246,.35);
+  color: white;
+}

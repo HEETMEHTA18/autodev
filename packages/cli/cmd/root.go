@@ -20,10 +20,10 @@ var (
 	jsonOut bool
 )
 
-// rootCmd — running `autodev` with no args opens the interactive TUI.
+// rootCmd — running `autodev` with no args opens the interactive Command Center.
 var rootCmd = &cobra.Command{
 	Use:     "autodev",
-	Short:   "Set up any development environment in one command.",
+	Short:   "Understand, set up and operate your development environment.",
 	Version: "0.5.1",
 	Long: `
   █████╗ ██╗   ██╗████████╗ ██████╗ ██████╗ ███████╗██╗   ██╗
@@ -33,30 +33,26 @@ var rootCmd = &cobra.Command{
   ██║  ██║╚██████╔╝   ██║   ╚██████╔╝██████╔╝███████╗ ╚████╔╝ 
   ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚══════╝ ╚═════╝ ╚══════╝  ╚═══╝ 
 
-  The App Store for Developers.
-  Run with no arguments to open the interactive installer.`,
+  Developer Environment Control Center.
+  Run with no arguments to open the interactive command center.`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		// Avoid running for MCP communication or version/help checks to guarantee performance
 		if cmd.Name() == "start" && cmd.Parent() != nil && cmd.Parent().Name() == "mcp" {
 			return
 		}
 		if cmd.Name() == "help" || (cmd.Name() == "autodev" && len(args) == 0) {
 			return
 		}
-		// Run silently
 		AutoGenerateRulesSilent(".")
 	},
-	// When called with no subcommand → open the TUI
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, err := catalog.Load()
 		if err != nil {
 			return fmt.Errorf("failed to load catalog: %w", err)
 		}
-		return tui.Run(c)
+		return tui.RunProfessional(c)
 	},
 }
 
-// Execute runs the root command.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -110,11 +106,9 @@ func init() {
 		newAgentCmd(),
 	)
 
-	// Prompts manager command (displays history & groups prompt capture subcommands)
 	promptsCmd := newPromptsCmd()
 	rootCmd.AddCommand(promptsCmd)
 
-	// Keep top-level commands for compatibility but hide them from main help list
 	chatCmd := newChatCmd()
 	chatCmd.Hidden = true
 	rootCmd.AddCommand(chatCmd)
@@ -155,7 +149,6 @@ func initConfig() {
 	_ = viper.ReadInConfig()
 }
 
-// PrintGitHubCTA prints a friendly CTA requesting users to star the GitHub repo.
 func PrintGitHubCTA() {
 	if jsonOut {
 		return

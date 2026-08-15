@@ -7,7 +7,6 @@ const os = require("os");
 const crypto = require("crypto");
 const https = require("https");
 const http = require("http");
-const crypto = require("crypto");
 
 const REPO = "HEETMEHTA18/autodev";
 const platformMap = { darwin: "darwin", linux: "linux", win32: "windows" };
@@ -260,7 +259,6 @@ async function bootstrap() {
     }
     fail("Offline mode was requested, but no valid cached binary is available.", ["Connect to the network and run again, or remove --offline."]);
   }
-}
 
   if (!noCache && cacheIsValid()) {
     print("  ✓ Valid cached binary found");

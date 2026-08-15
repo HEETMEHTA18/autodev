@@ -15,8 +15,8 @@ func TestRootCommand(t *testing.T) {
 	if rootCmd.Use != "autodev" {
 		t.Errorf("root Use = %q, want %q", rootCmd.Use, "autodev")
 	}
-	if rootCmd.Version != "0.5.1" {
-		t.Errorf("root Version = %q, want %q", rootCmd.Version, "0.5.1")
+	if rootCmd.Version != "0.5.2" {
+		t.Errorf("root Version = %q, want %q", rootCmd.Version, "0.5.2")
 	}
 }
 
@@ -622,7 +622,7 @@ func TestExecuteHelp(t *testing.T) {
 		t.Errorf("rootCmd.Execute() with --help returned error: %v", err)
 	}
 	output := buf.String()
-	if !strings.Contains(output, "Usage:") || !strings.Contains(output, "Available Commands:") {
+	if !strings.Contains(output, "Usage:") || !strings.Contains(output, "Diagnose:") {
 		t.Errorf("help output missing expected sections, got: %s", output[:min(len(output), 500)])
 	}
 }

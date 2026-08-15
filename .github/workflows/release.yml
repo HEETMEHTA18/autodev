@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   packages: write
+  id-token: write
 
 jobs:
   goreleaser:
@@ -33,6 +34,71 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
+
+  npm:
+    name: Publish npm CLI
+    runs-on: ubuntu-latest
+    needs: goreleaser
+    if: ${{ secrets.NPM_TOKEN != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Download release binaries
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p packages/npm-cli/bin/native
+          tmp="$(mktemp -d)"
+
+          gh release download "${GITHUB_REF_NAME}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --pattern 'autodev_linux_amd64.tar.gz' \
+            --pattern 'autodev_linux_arm64.tar.gz' \
+            --pattern 'autodev_darwin_amd64.tar.gz' \
+            --pattern 'autodev_darwin_arm64.tar.gz' \
+            --pattern 'autodev_windows_amd64.zip' \
+            --dir "$tmp"
+
+          for target in linux-amd64 linux-arm64 darwin-amd64 darwin-arm64; do
+            mkdir -p "packages/npm-cli/bin/native/$target"
+          done
+          mkdir -p packages/npm-cli/bin/native/windows-amd64
+
+          tar -xzf "$tmp/autodev_linux_amd64.tar.gz" -C packages/npm-cli/bin/native/linux-amd64
+          tar -xzf "$tmp/autodev_linux_arm64.tar.gz" -C packages/npm-cli/bin/native/linux-arm64
+          tar -xzf "$tmp/autodev_darwin_amd64.tar.gz" -C packages/npm-cli/bin/native/darwin-amd64
+          tar -xzf "$tmp/autodev_darwin_arm64.tar.gz" -C packages/npm-cli/bin/native/darwin-arm64
+          unzip -q "$tmp/autodev_windows_amd64.zip" -d packages/npm-cli/bin/native/windows-amd64
+
+          # GoReleaser archives contain the binary plus release docs. Keep only the binary.
+          find packages/npm-cli/bin/native -type f ! -name 'autodev' ! -name 'autodev.exe' -delete
+          chmod +x packages/npm-cli/bin/native/linux-amd64/autodev
+          chmod +x packages/npm-cli/bin/native/linux-arm64/autodev
+          chmod +x packages/npm-cli/bin/native/darwin-amd64/autodev
+          chmod +x packages/npm-cli/bin/native/darwin-arm64/autodev
+
+      - name: Verify npm package contents
+        working-directory: packages/npm-cli
+        run: |
+          test -x bin/native/linux-amd64/autodev
+          test -x bin/native/linux-arm64/autodev
+          test -x bin/native/darwin-amd64/autodev
+          test -x bin/native/darwin-arm64/autodev
+          test -f bin/native/windows-amd64/autodev.exe
+          npm pack --dry-run
+
+      - name: Publish npm package
+        working-directory: packages/npm-cli
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public
 
   docker:
     name: Docker Image

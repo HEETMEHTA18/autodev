@@ -1,3 +1,3 @@
 module github.com/autodev-sh/autodev/scanner
 
-go 1.26.5
+go 1.26.6

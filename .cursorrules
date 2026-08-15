@@ -118,16 +118,3 @@ If you are running as a shell executor, invoke these commands to interact with t
 ---
 
 *File generated automatically by [AutoDev](https://github.com/HEETMEHTA18/autodev)*
-
-
-# ⚡ PONYTAIL: LAZY SENIOR DEV RULES
-
-The best code is the code you never wrote. Follow these steps for any task:
-1. Does this need to exist? → no: skip it (YAGNI)
-2. Stdlib does it? → use it
-3. Native platform feature? → use it
-4. Installed dependency? → use it
-5. One line? → one line
-6. Only then: the minimum that works
-
-Do not write unnecessary boilerplate. Do not over-engineer.

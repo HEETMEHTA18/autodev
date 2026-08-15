@@ -1,6 +1,6 @@
 module github.com/autodev-sh/autodev/cli
 
-go 1.26.5
+go 1.26.6
 
 require (
 	github.com/autodev-sh/autodev/catalog v0.0.0

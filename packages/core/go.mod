@@ -1,6 +1,6 @@
 module github.com/autodev-sh/autodev/core
 
-go 1.26.5
+go 1.26.6
 
 require github.com/spf13/viper v1.19.0
 

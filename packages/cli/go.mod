@@ -1,6 +1,6 @@
 module github.com/autodev-sh/autodev/cli
 
-go 1.22.2
+go 1.26.5
 
 require (
 	github.com/autodev-sh/autodev/catalog v0.0.0
@@ -52,8 +52,8 @@ require (
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
 	golang.org/x/sync v0.11.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/text v0.19.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/text v0.40.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 )
 

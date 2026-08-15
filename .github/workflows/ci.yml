@@ -17,7 +17,7 @@ jobs:
           go-version: "1.26.5"
       - name: Install golangci-lint
         run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
+          go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.1.1
       - name: Run golangci-lint on each module
         run: |
           for dir in packages/*; do

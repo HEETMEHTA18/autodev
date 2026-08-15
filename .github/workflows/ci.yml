@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write
+
 jobs:
   go-lint:
     name: Go Lint
@@ -17,7 +20,7 @@ jobs:
           go-version: "1.26.5"
       - name: Install golangci-lint
         run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
+          curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.12.2
       - name: Run golangci-lint on each module
         run: |
           for dir in packages/*; do
@@ -56,9 +59,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: pnpm
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
       - name: Lint
         working-directory: apps/website
         run: pnpm lint

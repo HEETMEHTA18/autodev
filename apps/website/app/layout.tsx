@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+import "./professional-theme.css";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -18,13 +19,14 @@ const jetbrainsMono = JetBrains_Mono({
 export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL("https://autodevs.dev"),
-    title: "AutoDevs — Turn any GitHub repository into actionable development tasks",
+    title: "AutoDevs — Developer environment intelligence",
     description:
-      "AutoDevs analyzes your codebase, finds issues, generates improvements, and helps you ship faster. Turn any GitHub repository into actionable development tasks in seconds.",
+      "AutoDevs understands your project and development environment, helps you set up tools, diagnose problems, and ship with an AI-assisted workflow.",
     keywords: [
       "developer tools",
+      "developer environment",
       "CLI",
-      "package manager",
+      "AI developer tools",
       "environment setup",
       "autodev",
       "autodevs",
@@ -47,16 +49,16 @@ export async function generateMetadata(): Promise<Metadata> {
       apple: "/apple-touch-icon.png",
     },
     openGraph: {
-      title: "AutoDevs — Turn GitHub repos into development tasks",
-      description: "AutoDevs analyzes your codebase, finds issues, generates improvements, and helps you ship faster.",
+      title: "AutoDevs — Developer environment intelligence",
+      description: "Understand, set up, diagnose and operate your development environment with one workflow.",
       url: "https://autodevs.dev/",
       siteName: "AutoDevs",
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: "AutoDevs — Turn GitHub repos into development tasks",
-      description: "AutoDevs analyzes your codebase, finds issues, generates improvements, and helps you ship faster.",
+      title: "AutoDevs — Developer environment intelligence",
+      description: "Understand, set up, diagnose and operate your development environment with one workflow.",
     },
   };
 }

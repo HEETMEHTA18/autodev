@@ -20,43 +20,54 @@ var (
 	jsonOut bool
 )
 
-// rootCmd — running `autodev` with no args opens the interactive TUI.
+const (
+	groupDiagnose    = "diagnose"
+	groupSetup       = "setup"
+	groupBuild       = "build"
+	groupAI          = "ai"
+	groupIntegrate   = "integrations"
+	groupSecurity    = "security"
+	groupUtilities   = "utilities"
+)
+
 var rootCmd = &cobra.Command{
 	Use:     "autodev",
-	Short:   "Set up any development environment in one command.",
+	Short:   "Understand, set up and operate your development environment.",
 	Version: "0.5.1",
-	Long: `
-  █████╗ ██╗   ██╗████████╗ ██████╗ ██████╗ ███████╗██╗   ██╗
-  ██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗██╔══██╗██╔════╝██║   ██║
-  ███████║██║   ██║   ██║   ██║   ██║██║  ██║█████╗  ██║   ██║
-  ██╔══██║██║   ██║   ██║   ██║   ██║██║  ██║██╔══╝  ╚██╗ ██╔╝
-  ██║  ██║╚██████╔╝   ██║   ╚██████╔╝██████╔╝███████╗ ╚████╔╝ 
-  ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚══════╝ ╚═════╝ ╚══════╝  ╚═══╝ 
+	Long: `AutoDev is a developer environment control center.
 
-  The App Store for Developers.
-  Run with no arguments to open the interactive installer.`,
+Use the interactive command center when you are new to AutoDev, or use the
+focused commands below when you already know what you want to do.`,
+	Example: `  # Recommended first steps
+  autodev
+  autodev doctor
+  autodev scan
+  autodev setup
+  autodev agent
+
+  # Preview changes before executing them
+  autodev setup --dry-run
+
+  # Machine-readable automation
+  autodev doctor --json`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		// Avoid running for MCP communication or version/help checks to guarantee performance
 		if cmd.Name() == "start" && cmd.Parent() != nil && cmd.Parent().Name() == "mcp" {
 			return
 		}
 		if cmd.Name() == "help" || (cmd.Name() == "autodev" && len(args) == 0) {
 			return
 		}
-		// Run silently
 		AutoGenerateRulesSilent(".")
 	},
-	// When called with no subcommand → open the TUI
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, err := catalog.Load()
 		if err != nil {
 			return fmt.Errorf("failed to load catalog: %w", err)
 		}
-		return tui.Run(c)
+		return tui.RunProfessional(c)
 	},
 }
 
-// Execute runs the root command.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -76,68 +87,56 @@ func init() {
 	_ = viper.BindPFlag("verbose", rootCmd.PersistentFlags().Lookup("verbose"))
 	_ = viper.BindPFlag("no_color", rootCmd.PersistentFlags().Lookup("no-color"))
 
-	rootCmd.AddCommand(
-		newScanCmd(),
-		newSetupCmd(),
-		newGitHubCmd(),
-		newDoctorCmd(),
-		newReportCmd(),
-		newInstallCmd(),
-		newUpdateCmd(),
-		newCleanCmd(),
-		newSkillsCmd(),
-		newExportCmd(),
-		newProfileCmd(),
-		newUICmd(),
-		newCloneCmd(),
-		newAuditCmd(),
-		newMCPCmd(),
-		newCreateCmd(),
-		newBenchmarkCmd(),
-		newContainerizeCmd(),
-		newMigrateCmd(),
-		newCICmd(),
-		newPluginCmd(),
-		newCanvasCmd(),
-		newPonytailCmd(),
-		newSecurityCmd(),
-		newSecretsCmd(),
-		newHardenCmd(),
-		newUpgradeCmd(),
-		newToolsCmd(),
-		newRunCmd(),
-		newSessionCmd(),
-		newAgentCmd(),
+	rootCmd.AddGroup(
+		&cobra.Group{ID: groupDiagnose, Title: "Diagnose:"},
+		&cobra.Group{ID: groupSetup, Title: "Setup & Environment:"},
+		&cobra.Group{ID: groupBuild, Title: "Build & Delivery:"},
+		&cobra.Group{ID: groupAI, Title: "AI & Agents:"},
+		&cobra.Group{ID: groupIntegrate, Title: "Integrations:"},
+		&cobra.Group{ID: groupSecurity, Title: "Security:"},
+		&cobra.Group{ID: groupUtilities, Title: "Utilities:"},
 	)
 
-	// Prompts manager command (displays history & groups prompt capture subcommands)
+	commands := []*cobra.Command{
+		newScanCmd(), newSetupCmd(), newGitHubCmd(), newDoctorCmd(), newReportCmd(),
+		newInstallCmd(), newUpdateCmd(), newCleanCmd(), newSkillsCmd(), newExportCmd(),
+		newProfileCmd(), newUICmd(), newCloneCmd(), newAuditCmd(), newMCPCmd(), newCreateCmd(),
+		newBenchmarkCmd(), newContainerizeCmd(), newMigrateCmd(), newCICmd(), newPluginCmd(),
+		newCanvasCmd(), newPonytailCmd(), newSecurityCmd(), newSecretsCmd(), newHardenCmd(),
+		newUpgradeCmd(), newToolsCmd(), newRunCmd(), newSessionCmd(), newAgentCmd(),
+	}
+	for _, command := range commands {
+		command.GroupID = commandGroup(command.Name())
+		rootCmd.AddCommand(command)
+	}
+
 	promptsCmd := newPromptsCmd()
+	promptsCmd.GroupID = groupUtilities
 	rootCmd.AddCommand(promptsCmd)
 
-	// Keep top-level commands for compatibility but hide them from main help list
-	chatCmd := newChatCmd()
-	chatCmd.Hidden = true
-	rootCmd.AddCommand(chatCmd)
+	for _, command := range []*cobra.Command{newChatCmd(), newCaptureCmd(), newDaemonCmd(), newReplayCmd(), newExportPromptsCmd(), newSyncCmd()} {
+		command.Hidden = true
+		rootCmd.AddCommand(command)
+	}
+}
 
-	captureCmd := newCaptureCmd()
-	captureCmd.Hidden = true
-	rootCmd.AddCommand(captureCmd)
-
-	daemonCmd := newDaemonCmd()
-	daemonCmd.Hidden = true
-	rootCmd.AddCommand(daemonCmd)
-
-	replayCmd := newReplayCmd()
-	replayCmd.Hidden = true
-	rootCmd.AddCommand(replayCmd)
-
-	exportPromptsCmd := newExportPromptsCmd()
-	exportPromptsCmd.Hidden = true
-	rootCmd.AddCommand(exportPromptsCmd)
-
-	syncCmd := newSyncCmd()
-	syncCmd.Hidden = true
-	rootCmd.AddCommand(syncCmd)
+func commandGroup(name string) string {
+	switch name {
+	case "doctor", "scan", "report", "benchmark":
+		return groupDiagnose
+	case "setup", "install", "update", "clean", "profile", "upgrade", "tools", "clone", "migrate":
+		return groupSetup
+	case "create", "run", "containerize", "ci", "build":
+		return groupBuild
+	case "agent", "chat", "session", "skills":
+		return groupAI
+	case "github", "mcp", "plugin", "canvas", "ui":
+		return groupIntegrate
+	case "audit", "security", "secrets", "harden":
+		return groupSecurity
+	default:
+		return groupUtilities
+	}
 }
 
 func initConfig() {
@@ -155,20 +154,14 @@ func initConfig() {
 	_ = viper.ReadInConfig()
 }
 
-// PrintGitHubCTA prints a friendly CTA requesting users to star the GitHub repo.
 func PrintGitHubCTA() {
-	if jsonOut {
-		return
-	}
+	if jsonOut { return }
 	starStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD700")).Bold(true)
 	linkStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Underline(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))
-
 	fmt.Println()
 	fmt.Println(dimStyle.Render("  ──────────────────────────────────────────────────────────"))
-	fmt.Printf("  %s Star the repo to support AutoDev: %s\n",
-		starStyle.Render("⭐ Love this tool?"),
-		linkStyle.Render("https://github.com/HEETMEHTA18/autodev"))
+	fmt.Printf("  %s Star the repo to support AutoDev: %s\n", starStyle.Render("⭐ Love this tool?"), linkStyle.Render("https://github.com/HEETMEHTA18/autodev"))
 	fmt.Println(dimStyle.Render("  ──────────────────────────────────────────────────────────"))
 	fmt.Println()
 }

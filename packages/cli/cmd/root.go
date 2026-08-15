@@ -20,21 +20,36 @@ var (
 	jsonOut bool
 )
 
-// rootCmd — running `autodev` with no args opens the interactive Command Center.
+const (
+	groupDiagnose    = "diagnose"
+	groupSetup       = "setup"
+	groupBuild       = "build"
+	groupAI          = "ai"
+	groupIntegrate   = "integrations"
+	groupSecurity    = "security"
+	groupUtilities   = "utilities"
+)
+
 var rootCmd = &cobra.Command{
 	Use:     "autodev",
 	Short:   "Understand, set up and operate your development environment.",
 	Version: "0.5.1",
-	Long: `
-  █████╗ ██╗   ██╗████████╗ ██████╗ ██████╗ ███████╗██╗   ██╗
-  ██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗██╔══██╗██╔════╝██║   ██║
-  ███████║██║   ██║   ██║   ██║   ██║██║  ██║█████╗  ██║   ██║
-  ██╔══██║██║   ██║   ██║   ██║   ██║██║  ██║██╔══╝  ╚██╗ ██╔╝
-  ██║  ██║╚██████╔╝   ██║   ╚██████╔╝██████╔╝███████╗ ╚████╔╝ 
-  ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚══════╝ ╚═════╝ ╚══════╝  ╚═══╝ 
+	Long: `AutoDev is a developer environment control center.
 
-  Developer Environment Control Center.
-  Run with no arguments to open the interactive command center.`,
+Use the interactive command center when you are new to AutoDev, or use the
+focused commands below when you already know what you want to do.`,
+	Example: `  # Recommended first steps
+  autodev
+  autodev doctor
+  autodev scan
+  autodev setup
+  autodev agent
+
+  # Preview changes before executing them
+  autodev setup --dry-run
+
+  # Machine-readable automation
+  autodev doctor --json`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		if cmd.Name() == "start" && cmd.Parent() != nil && cmd.Parent().Name() == "mcp" {
 			return
@@ -72,66 +87,56 @@ func init() {
 	_ = viper.BindPFlag("verbose", rootCmd.PersistentFlags().Lookup("verbose"))
 	_ = viper.BindPFlag("no_color", rootCmd.PersistentFlags().Lookup("no-color"))
 
-	rootCmd.AddCommand(
-		newScanCmd(),
-		newSetupCmd(),
-		newGitHubCmd(),
-		newDoctorCmd(),
-		newReportCmd(),
-		newInstallCmd(),
-		newUpdateCmd(),
-		newCleanCmd(),
-		newSkillsCmd(),
-		newExportCmd(),
-		newProfileCmd(),
-		newUICmd(),
-		newCloneCmd(),
-		newAuditCmd(),
-		newMCPCmd(),
-		newCreateCmd(),
-		newBenchmarkCmd(),
-		newContainerizeCmd(),
-		newMigrateCmd(),
-		newCICmd(),
-		newPluginCmd(),
-		newCanvasCmd(),
-		newPonytailCmd(),
-		newSecurityCmd(),
-		newSecretsCmd(),
-		newHardenCmd(),
-		newUpgradeCmd(),
-		newToolsCmd(),
-		newRunCmd(),
-		newSessionCmd(),
-		newAgentCmd(),
+	rootCmd.AddGroup(
+		&cobra.Group{ID: groupDiagnose, Title: "Diagnose:"},
+		&cobra.Group{ID: groupSetup, Title: "Setup & Environment:"},
+		&cobra.Group{ID: groupBuild, Title: "Build & Delivery:"},
+		&cobra.Group{ID: groupAI, Title: "AI & Agents:"},
+		&cobra.Group{ID: groupIntegrate, Title: "Integrations:"},
+		&cobra.Group{ID: groupSecurity, Title: "Security:"},
+		&cobra.Group{ID: groupUtilities, Title: "Utilities:"},
 	)
 
+	commands := []*cobra.Command{
+		newScanCmd(), newSetupCmd(), newGitHubCmd(), newDoctorCmd(), newReportCmd(),
+		newInstallCmd(), newUpdateCmd(), newCleanCmd(), newSkillsCmd(), newExportCmd(),
+		newProfileCmd(), newUICmd(), newCloneCmd(), newAuditCmd(), newMCPCmd(), newCreateCmd(),
+		newBenchmarkCmd(), newContainerizeCmd(), newMigrateCmd(), newCICmd(), newPluginCmd(),
+		newCanvasCmd(), newPonytailCmd(), newSecurityCmd(), newSecretsCmd(), newHardenCmd(),
+		newUpgradeCmd(), newToolsCmd(), newRunCmd(), newSessionCmd(), newAgentCmd(),
+	}
+	for _, command := range commands {
+		command.GroupID = commandGroup(command.Name())
+		rootCmd.AddCommand(command)
+	}
+
 	promptsCmd := newPromptsCmd()
+	promptsCmd.GroupID = groupUtilities
 	rootCmd.AddCommand(promptsCmd)
 
-	chatCmd := newChatCmd()
-	chatCmd.Hidden = true
-	rootCmd.AddCommand(chatCmd)
+	for _, command := range []*cobra.Command{newChatCmd(), newCaptureCmd(), newDaemonCmd(), newReplayCmd(), newExportPromptsCmd(), newSyncCmd()} {
+		command.Hidden = true
+		rootCmd.AddCommand(command)
+	}
+}
 
-	captureCmd := newCaptureCmd()
-	captureCmd.Hidden = true
-	rootCmd.AddCommand(captureCmd)
-
-	daemonCmd := newDaemonCmd()
-	daemonCmd.Hidden = true
-	rootCmd.AddCommand(daemonCmd)
-
-	replayCmd := newReplayCmd()
-	replayCmd.Hidden = true
-	rootCmd.AddCommand(replayCmd)
-
-	exportPromptsCmd := newExportPromptsCmd()
-	exportPromptsCmd.Hidden = true
-	rootCmd.AddCommand(exportPromptsCmd)
-
-	syncCmd := newSyncCmd()
-	syncCmd.Hidden = true
-	rootCmd.AddCommand(syncCmd)
+func commandGroup(name string) string {
+	switch name {
+	case "doctor", "scan", "report", "benchmark":
+		return groupDiagnose
+	case "setup", "install", "update", "clean", "profile", "upgrade", "tools", "clone", "migrate":
+		return groupSetup
+	case "create", "run", "containerize", "ci", "build":
+		return groupBuild
+	case "agent", "chat", "session", "skills":
+		return groupAI
+	case "github", "mcp", "plugin", "canvas", "ui":
+		return groupIntegrate
+	case "audit", "security", "secrets", "harden":
+		return groupSecurity
+	default:
+		return groupUtilities
+	}
 }
 
 func initConfig() {
@@ -150,18 +155,13 @@ func initConfig() {
 }
 
 func PrintGitHubCTA() {
-	if jsonOut {
-		return
-	}
+	if jsonOut { return }
 	starStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD700")).Bold(true)
 	linkStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Underline(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))
-
 	fmt.Println()
 	fmt.Println(dimStyle.Render("  ──────────────────────────────────────────────────────────"))
-	fmt.Printf("  %s Star the repo to support AutoDev: %s\n",
-		starStyle.Render("⭐ Love this tool?"),
-		linkStyle.Render("https://github.com/HEETMEHTA18/autodev"))
+	fmt.Printf("  %s Star the repo to support AutoDev: %s\n", starStyle.Render("⭐ Love this tool?"), linkStyle.Render("https://github.com/HEETMEHTA18/autodev"))
 	fmt.Println(dimStyle.Render("  ──────────────────────────────────────────────────────────"))
 	fmt.Println()
 }

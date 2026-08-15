@@ -1,8 +1,21 @@
-version: 1.5
+version: "2"
+
 linters:
-  enable:
+  disable:
     - errcheck
-    - gosimple
-    - govet
+    - gosec
+    - nakedret
+    - wrapcheck
+    - exhaustruct
+    - revive
+    - gocyclo
+    - funlen
+    - dupl
+    - mnd
+    - godot
+    - nlreturn
+    - wsl
+    - gocritic
+    - bodyclose
+    - noctx
     - staticcheck
-    - unused

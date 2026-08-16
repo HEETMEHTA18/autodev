@@ -68,6 +68,69 @@ OS=$(detect_os)
 ARCH=$(detect_arch)
 info "Detected: ${OS}/${ARCH}"
 
+# ── PATH setup ────────────────────────────────────────────────────────────────
+# If no install dir was chosen and the user cannot write to /usr/local/bin,
+# fall back to a user-local bin dir and register it on PATH for all shells.
+if [ -z "${AUTODEV_INSTALL_DIR:-}" ]; then
+  if [ "${OS}" = "linux" ] || [ "${OS}" = "darwin" ]; then
+    if [ -d "${HOME}/.local/bin" ] && [ -w "${HOME}/.local/bin" ]; then
+      INSTALL_DIR="${HOME}/.local/bin"
+      info "Using ${INSTALL_DIR} (user-writable, no sudo needed)"
+    elif ! touch /usr/local/bin/.autodev-write-test 2>/dev/null; then
+      INSTALL_DIR="${HOME}/.local/bin"
+      mkdir -p "${INSTALL_DIR}"
+      info "Using ${INSTALL_DIR} (registered on PATH for you)"
+    else
+      rm -f /usr/local/bin/.autodev-write-test
+    fi
+  elif [ "${OS}" = "windows" ]; then
+    # Windows: prefer a user-local dir under LOCALAPPDATA.
+    INSTALL_DIR="${LOCALAPPDATA:-$HOME/AppData/Local}/autodev/bin"
+    mkdir -p "${INSTALL_DIR}"
+    info "Using ${INSTALL_DIR} (Windows user install)"
+  fi
+fi
+
+# Register the install dir on PATH for the current OS.
+register_path() {
+  local dir="$1"
+  case "${OS}" in
+    windows)
+      local cur
+      cur=$(cmd //c "echo %PATH%" 2>/dev/null || echo "")
+      case "${cur}" in
+        *"${dir}"*) ;;
+        *) setx PATH "${dir};${cur}" >/dev/null 2>&1 && info "Added ${dir} to Windows user PATH" || warn "Could not setx PATH — add ${dir} to PATH manually." ;;
+      esac
+      ;;
+    *)
+      # POSIX shells (bash/zsh/sh) + fish.
+      local line="export PATH=\"${dir}:\$PATH\""
+      local fish_line="set -gx PATH \"${dir}\" \$PATH"
+      for rc in "${HOME}/.bashrc" "${HOME}/.zshrc" "${HOME}/.profile" "${HOME}/.config/fish/config.fish"; do
+        if [ -f "${rc}" ]; then
+          if ! grep -qF "${dir}" "${rc}" 2>/dev/null; then
+            if printf '%s\n' "${rc}" | grep -q fish; then
+              printf '%s\n' "${fish_line}" >> "${rc}"
+            else
+              printf '%s\n' "${line}" >> "${rc}"
+            fi
+            info "Added ${dir} to ${rc}"
+          fi
+        fi
+      done
+      # Ensure at least one rc file gets the line so PATH survives new shells.
+      if [ -f "${HOME}/.profile" ] && ! grep -qF "${dir}" "${HOME}/.profile" 2>/dev/null; then
+        printf '%s\n' "${line}" >> "${HOME}/.profile"
+      fi
+      ;;
+  esac
+}
+
+if [ -n "${INSTALL_DIR}" ]; then
+  register_path "${INSTALL_DIR}"
+fi
+
 # ── Fetch latest version ──────────────────────────────────────────────────────
 if [ "${AUTODEV_VERSION}" = "latest" ]; then
   info "Fetching latest release..."
@@ -149,13 +212,18 @@ fi
 
 BINARY_PATH="${TMP_DIR}/${BINARY_NAME}"
 if [ ! -f "${BINARY_PATH}" ]; then
-  # Try with OS in name
-  BINARY_PATH="${TMP_DIR}/${BINARY_NAME}_${OS}_${ARCH}"
+  # The release archive nests the binary under a folder (e.g.
+  # autodev_linux_amd64/autodev). Locate it recursively.
+  BINARY_PATH=$(find "${TMP_DIR}" -type f -name "${BINARY_NAME}" 2>/dev/null | head -n1)
+fi
+if [ -z "${BINARY_PATH}" ] || [ ! -f "${BINARY_PATH}" ]; then
+  error "Could not locate the ${BINARY_NAME} binary inside the downloaded archive."
 fi
 chmod +x "${BINARY_PATH}"
 
 # ── Install ───────────────────────────────────────────────────────────────────
 info "Installing to ${INSTALL_DIR}..."
+mkdir -p "${INSTALL_DIR}"
 if [ -w "${INSTALL_DIR}" ]; then
   cp "${BINARY_PATH}" "${INSTALL_DIR}/${BINARY_NAME}"
 else

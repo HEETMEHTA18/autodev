@@ -41,8 +41,11 @@
 ## Quick Start
 
 ```bash
-# One-line install
+# One-line install (Linux/macOS — adds to PATH automatically)
 curl -fsSL https://raw.githubusercontent.com/HEETMEHTA18/autodev/main/scripts/install.sh | bash
+
+# Windows (PowerShell — adds to user PATH automatically)
+irm https://raw.githubusercontent.com/heetmehta18/autodev/main/scripts/install.ps1 | iex
 
 # Or via NPX
 npx autodev setup
@@ -58,6 +61,14 @@ scoop install autodev
 
 # Or via Docker
 docker run --rm -v $(pwd):/workspace ghcr.io/heetmehta18/autodev setup
+```
+
+Upgrade the CLI anytime (works on Linux, macOS and Windows, no manual downloads):
+
+```bash
+autodev upgrade              # check + install the latest release
+autodev upgrade --check-only # just check for a newer version
+autodev upgrade --install-dir ~/.local/bin  # install to a specific folder
 ```
 
 Then run in any repo to install its missing runtimes:
@@ -112,6 +123,9 @@ AutoDev will inspect your project, display missing configurations (like **Tailwi
 | `autodev report`         | Generate HTML/PDF/JSON environment report                            |
 | `autodev skills`         | Show personalized learning roadmap                                   |
 | `autodev install <tool>` | Install a specific runtime or tool                                   |
+| `autodev opencode`       | Start a new OpenCode session with shared codebase knowledge               |
+| `autodev agent <task>`   | Route a task to the best-fit AI agent                                     |
+| `autodev upgrade`        | Upgrade the CLI to the latest release                                     |
 | `autodev update`         | Update all managed runtimes                                          |
 | `autodev clean`          | Remove cached downloads and temp files                               |
 | `autodev export`         | Export environment config as reproducible JSON                       |
@@ -146,6 +160,22 @@ Whenever any AutoDev command is run in a project workspace, AutoDev automaticall
 - [`.github/copilot-instructions.md`](.github/copilot-instructions.md) (GitHub Copilot instructions)
 
 These rules instruct AI Agents to use AutoDev's telemetry instead of parsing directory structures or lockfiles recursively. This reduces context payloads from **200,000+ tokens to ~350 tokens (a 99.8% token context saving)** per roundtrip.
+
+### 🧠 Shared-Knowledge OpenCode Sessions
+
+`autodev opencode` launches a **new OpenCode session that is aware of the whole project**. Before launching, AutoDev writes a shared knowledge file (`.autodevs/context/opencode-knowledge.md`) that captures:
+
+- **Repository state** — branch, HEAD, working-tree changes, and the uncommitted diff
+- **Detected stack** — languages, frameworks, package managers, databases
+- **AutoDev memory** — successes, patterns, and mistakes from past loops
+- **Session outcomes** — a running log of what previous sessions did
+
+Each session reads that file for grounding, and AutoDev appends the outcome when the session finishes — so every new session knows what changed, what is in use, and what to do next.
+
+```bash
+autodev opencode "fix the auth bug"   # one-off task
+autodev opencode                       # interactive session
+```
 
 ### 👱‍♂️ Ponytail "Lazy Senior Dev" Mode (NEW)
 

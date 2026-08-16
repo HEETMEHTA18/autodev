@@ -70,26 +70,32 @@ release:
   footer: |
     **Full Changelog**: https://github.com/HEETMEHTA18/autodev/compare/{{ .PreviousTag }}...{{ .Tag }}
 
-# brews:
-#   - name: autodev
-#     repository:
-#       owner: HEETMEHTA18
-#       name: homebrew-tap
-#       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-#     directory: Formula
-#     homepage: "https://github.com/HEETMEHTA18/autodev"
-#     description: "The App Store for Developers"
-#     license: "MIT"
-#     test: |
-#       system "#{bin}/autodev --version"
+homebrew_casks:
+  - name: autodev
+    repository:
+      owner: HEETMEHTA18
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    directory: Casks
+    homepage: "https://github.com/HEETMEHTA18/autodev"
+    description: "The App Store for Developers"
+    license: "MIT"
+    url:
+      verified: github.com/heetmehta18/autodev
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/autodev"]
+          end
 
-# scoops:
-#   - name: autodev
-#     repository:
-#       owner: HEETMEHTA18
-#       name: scoop-bucket
-#       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-#     directory: bucket
-#     homepage: "https://github.com/HEETMEHTA18/autodev"
-#     description: "The App Store for Developers"
-#     license: "MIT"
+scoops:
+  - name: autodev
+    repository:
+      owner: HEETMEHTA18
+      name: scoop-bucket
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    directory: bucket
+    homepage: "https://github.com/HEETMEHTA18/autodev"
+    description: "The App Store for Developers"
+    license: "MIT"

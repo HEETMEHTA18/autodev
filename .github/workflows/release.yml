@@ -72,12 +72,11 @@ jobs:
           done
           mkdir -p packages/npm-cli/bin/native/windows-amd64
 
-          # GoReleaser archives nest the binary under a folder named after the
-          # target. Flatten with --strip-components then keep only the binary.
-          tar -xzf "$tmp/autodev_linux_amd64.tar.gz" --strip-components=1 -C packages/npm-cli/bin/native/linux-amd64
-          tar -xzf "$tmp/autodev_linux_arm64.tar.gz" --strip-components=1 -C packages/npm-cli/bin/native/linux-arm64
-          tar -xzf "$tmp/autodev_darwin_amd64.tar.gz" --strip-components=1 -C packages/npm-cli/bin/native/darwin-amd64
-          tar -xzf "$tmp/autodev_darwin_arm64.tar.gz" --strip-components=1 -C packages/npm-cli/bin/native/darwin-arm64
+          # GoReleaser archives place the binary at the archive root.
+          tar -xzf "$tmp/autodev_linux_amd64.tar.gz" -C packages/npm-cli/bin/native/linux-amd64
+          tar -xzf "$tmp/autodev_linux_arm64.tar.gz" -C packages/npm-cli/bin/native/linux-arm64
+          tar -xzf "$tmp/autodev_darwin_amd64.tar.gz" -C packages/npm-cli/bin/native/darwin-amd64
+          tar -xzf "$tmp/autodev_darwin_arm64.tar.gz" -C packages/npm-cli/bin/native/darwin-arm64
           unzip -q "$tmp/autodev_windows_amd64.zip" -d packages/npm-cli/bin/native/windows-amd64
 
           # GoReleaser archives contain the binary plus release docs. Keep only the binary.

@@ -33,7 +33,7 @@ const (
 var rootCmd = &cobra.Command{
 	Use:     "autodev",
 	Short:   "Understand, set up and operate your development environment.",
-	Version: "0.5.2",
+	Version: "0.6.0",
 	Long: `AutoDev is a developer environment control center.
 
 Use the interactive command center when you are new to AutoDev, or use the

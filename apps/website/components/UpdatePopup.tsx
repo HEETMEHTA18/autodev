@@ -42,7 +42,7 @@ export default function UpdatePopup() {
     if (isLighthouse) return;
 
     // Check if user has already dismissed this update notification
-    const isDismissed = localStorage.getItem("autodev_update_dismissed_v0.5.2");
+    const isDismissed = localStorage.getItem("autodev_update_dismissed_v0.6.0");
     if (!isDismissed) {
       // Delay showing the popup slightly for better UX
       const timer = setTimeout(() => {
@@ -62,7 +62,7 @@ export default function UpdatePopup() {
   }, []);
 
   const handleDismiss = () => {
-    localStorage.setItem("autodev_update_dismissed_v0.5.2", "true");
+    localStorage.setItem("autodev_update_dismissed_v0.6.0", "true");
     setIsOpen(false);
   };
 
@@ -99,22 +99,23 @@ export default function UpdatePopup() {
                 New Release
               </span>
               <span className="text-neutral-400 text-xs font-mono font-bold">
-                v0.5.2 is live!
+                v0.6.0 is live!
               </span>
             </div>
 
             <h3 className="text-xl font-black tracking-tight text-white mb-2 flex items-center gap-1.5">
               <Sparkles className="w-5 h-5 text-[#C8F135] shrink-0" />
-              UPGRADE TO AUTODEV v0.5.2
+              UPGRADE TO AUTODEV v0.6.0
             </h3>
 
             <p className="text-neutral-300 text-xs leading-relaxed mb-4">
-              AutoDevs is now a unified agent orchestrator: install, launch, and
-              manage multiple AI CLIs (OpenCode, Claude Code, Codex, Gemini
-              CLI, Aider) with <code className="text-[#C8F135]">autodev tools</code>,{" "}
-              <code className="text-[#C8F135]">autodev run</code>,{" "}
-              <code className="text-[#C8F135]">autodev session</code>, and{" "}
-              <code className="text-[#C8F135]">autodev agent</code> task routing.
+              v0.6.0 brings shared-knowledge OpenCode sessions:{" "}
+              <code className="text-[#C8F135]">autodev opencode</code> builds a
+              context bundle from your git state, detected stack, and past
+              session outcomes so every AI session knows the whole codebase.
+              <code className="text-[#C8F135]">autodev upgrade</code> is rebuilt
+              to work across Linux, macOS, and Windows with nested-archive
+              support and <code className="text-[#C8F135]">--install-dir</code>.
             </p>
 
             {/* Selector Tabs */}
@@ -170,7 +171,7 @@ export default function UpdatePopup() {
             {/* Action buttons */}
             <div className="flex gap-2">
               <a
-                href="https://github.com/HEETMEHTA18/autodev/releases/tag/v0.5.2"
+                href="https://github.com/HEETMEHTA18/autodev/releases/tag/v0.6.0"
                 target="_blank"
                 rel="noreferrer"
                 className="nb-btn-small flex items-center justify-center gap-1.5 flex-1 py-1.5 bg-[#C8F135] text-black text-xs font-black tracking-wider uppercase"

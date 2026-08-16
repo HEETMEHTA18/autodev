@@ -382,7 +382,7 @@ func currentVersion() string {
 	v := rootCmd.Version
 	v = strings.TrimPrefix(strings.TrimSpace(v), "v")
 	if v == "" {
-		v = "0.5.2"
+		v = "0.6.0"
 	}
 	return v
 }

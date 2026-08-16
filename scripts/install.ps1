@@ -1,6 +1,6 @@
 # AutoDev Installer for Windows
 # Usage: irm https://raw.githubusercontent.com/heetmehta18/autodev/main/scripts/install.ps1 | iex
-# Optional: -Version 0.5.2, -InstallDir "C:\autodev"
+# Optional: -Version 0.6.0, -InstallDir "C:\autodev"
 
 param(
     [string]$Version = "latest",

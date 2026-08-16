@@ -417,6 +417,22 @@ func findBinary(root string, isWindows bool) (string, error) {
 	return found, nil
 }
 
+// safeExtractPath resolves an archive entry name inside dir, returning the
+// absolute target path. It returns ok=false for any entry that would escape
+// dir via path traversal (e.g. "../", absolute paths, or symlink-writable
+// paths), preventing "Zip Slip" style attacks.
+func safeExtractPath(dir, name string) (string, bool) {
+	if filepath.IsAbs(name) {
+		return "", false
+	}
+	target := filepath.Join(dir, name)
+	rel, err := filepath.Rel(dir, target)
+	if err != nil || rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+		return "", false
+	}
+	return target, true
+}
+
 // extractTarGz extracts a .tar.gz archive into dir, tolerating both flat and
 // single-top-level-folder layouts.
 func extractTarGz(archivePath, dir string) error {
@@ -443,10 +459,10 @@ func extractTarGz(archivePath, dir string) error {
 		}
 		// Prevent path traversal from malicious archives.
 		name := filepath.Clean(hdr.Name)
-		if strings.HasPrefix(name, "..") || filepath.IsAbs(name) {
+		target, ok := safeExtractPath(dir, name)
+		if !ok {
 			continue
 		}
-		target := filepath.Join(dir, name)
 		switch hdr.Typeflag {
 		case tar.TypeDir:
 			if err := os.MkdirAll(target, 0755); err != nil {
@@ -480,10 +496,10 @@ func extractZip(archivePath, dir string) error {
 
 	for _, file := range zr.File {
 		name := filepath.Clean(file.Name)
-		if strings.HasPrefix(name, "..") || filepath.IsAbs(name) {
+		target, ok := safeExtractPath(dir, name)
+		if !ok {
 			continue
 		}
-		target := filepath.Join(dir, name)
 		if file.FileInfo().IsDir() {
 			if err := os.MkdirAll(target, 0755); err != nil {
 				return err

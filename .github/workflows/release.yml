@@ -39,7 +39,8 @@ jobs:
     name: Publish npm CLI
     runs-on: ubuntu-latest
     needs: goreleaser
-    if: ${{ secrets.NPM_TOKEN != '' }}
+    env:
+      HAS_NPM_TOKEN: ${{ secrets.NPM_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -97,6 +98,7 @@ jobs:
           npm pack --dry-run
 
       - name: Publish npm package
+        if: ${{ env.HAS_NPM_TOKEN == 'true' }}
         working-directory: packages/npm-cli
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

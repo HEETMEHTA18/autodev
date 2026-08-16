@@ -21,13 +21,13 @@ var (
 )
 
 const (
-	groupDiagnose    = "diagnose"
-	groupSetup       = "setup"
-	groupBuild       = "build"
-	groupAI          = "ai"
-	groupIntegrate   = "integrations"
-	groupSecurity    = "security"
-	groupUtilities   = "utilities"
+	groupDiagnose  = "diagnose"
+	groupSetup     = "setup"
+	groupBuild     = "build"
+	groupAI        = "ai"
+	groupIntegrate = "integrations"
+	groupSecurity  = "security"
+	groupUtilities = "utilities"
 )
 
 var rootCmd = &cobra.Command{
@@ -103,7 +103,7 @@ func init() {
 		newProfileCmd(), newUICmd(), newCloneCmd(), newAuditCmd(), newMCPCmd(), newCreateCmd(),
 		newBenchmarkCmd(), newContainerizeCmd(), newMigrateCmd(), newCICmd(), newPluginCmd(),
 		newCanvasCmd(), newPonytailCmd(), newSecurityCmd(), newSecretsCmd(), newHardenCmd(),
-		newUpgradeCmd(), newToolsCmd(), newRunCmd(), newSessionCmd(), newAgentCmd(),
+		newUpgradeCmd(), newToolsCmd(), newRunCmd(), newSessionCmd(), newAgentCmd(), newOpenCodeCmd(),
 	}
 	for _, command := range commands {
 		command.GroupID = commandGroup(command.Name())
@@ -128,7 +128,7 @@ func commandGroup(name string) string {
 		return groupSetup
 	case "create", "run", "containerize", "ci", "build":
 		return groupBuild
-	case "agent", "chat", "session", "skills":
+	case "agent", "chat", "session", "skills", "opencode":
 		return groupAI
 	case "github", "mcp", "plugin", "canvas", "ui":
 		return groupIntegrate
@@ -155,7 +155,9 @@ func initConfig() {
 }
 
 func PrintGitHubCTA() {
-	if jsonOut { return }
+	if jsonOut {
+		return
+	}
 	starStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD700")).Bold(true)
 	linkStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Underline(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))

@@ -25,7 +25,6 @@ var (
 	pcText    = lipgloss.Color("#FFFFFF")
 	pcMuted   = lipgloss.Color("#888888")
 	pcAccent  = lipgloss.Color("#FFD700")
-	pcCyan    = lipgloss.Color("#00FF87")
 	pcGreen   = lipgloss.Color("#00FF87")
 	pcRed     = lipgloss.Color("#FF5F56")
 

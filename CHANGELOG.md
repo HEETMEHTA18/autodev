@@ -11,6 +11,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.6.1] - 2026-10-27
+
+### Added
+
+- **Repo Health Score**: New `autodev score` command grades your repository 0–100 (A–F) across weighted checks — secrets and supply-chain findings ×3, git/env/lockfile hygiene ×2, linter availability ×1. Supports `--badge` (shields.io README badge), `--json` (machine-readable report), and `--min` (CI quality gate).
+- **Disciplined AI Chat**: `autodev chat` now runs with a bounded thinking budget (`--thinking-budget`), a scope guard that keeps answers inside AutoDev's domain, anti-hallucination checks, Google-search grounding, and a two-phase `<<REFINED>>` prompt refinement pass.
+- **`.autodevs/` Agent Protocol**: Structured multi-agent workflow (Planner → Context Builder → Builder → Reviewer → Verifier) with memory retrieval and a Stage 2b Refiner for self-reprompting.
+
+### Changed
+
+- **Minimal Galaxy Theme**: Full TUI overhaul on a shared design system — blue accent (`#0070f3`), single-width icons (no emoji), normal-weight borders, no italics, and new `Panel` / `StatusRow` / `ProgressBar` / heading helpers used across every command view.
+- Regenerated AI rule files (`.autodev-skills.md`, `.clinerules`, `.cursorrules`, `.github/copilot-instructions.md`) to document the `score` command.
+
+---
+
 ## [0.2.0] - 2026-05-31
 
 ### Added
@@ -38,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - HTML, JSON, and Markdown report generation
 - Multi-platform binaries (Linux x86_64/arm64, macOS, Windows)
 
-[Unreleased]: https://github.com/HEETMEHTA18/autodev/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/HEETMEHTA18/autodev/compare/v0.6.1...HEAD
+[0.6.1]: https://github.com/HEETMEHTA18/autodev/compare/v0.6.0...v0.6.1
 [0.2.0]: https://github.com/HEETMEHTA18/autodev/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/HEETMEHTA18/autodev/releases/tag/v0.1.0

@@ -15,8 +15,8 @@ func TestRootCommand(t *testing.T) {
 	if rootCmd.Use != "autodev" {
 		t.Errorf("root Use = %q, want %q", rootCmd.Use, "autodev")
 	}
-	if rootCmd.Version != "0.6.1" {
-		t.Errorf("root Version = %q, want %q", rootCmd.Version, "0.6.1")
+	if rootCmd.Version != "0.6.2" {
+		t.Errorf("root Version = %q, want %q", rootCmd.Version, "0.6.2")
 	}
 }
 

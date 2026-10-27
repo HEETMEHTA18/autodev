@@ -33,7 +33,7 @@ const (
 var rootCmd = &cobra.Command{
 	Use:     "autodev",
 	Short:   "Understand, set up and operate your development environment.",
-	Version: "0.6.1",
+	Version: "0.6.2",
 	// Errors are printed once, styled, by Execute(); usage is not dumped on
 	// runtime failures. This keeps both interactive and CI output clean.
 	SilenceErrors: true,

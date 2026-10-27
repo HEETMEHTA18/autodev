@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.6.2] - 2026-10-27
+
+### Security
+
+- **Go toolchain → go1.26.10**: clears 14 stdlib advisories flagged by osv-scanner across all 8 modules (114 alerts) — `crypto/x509` distrust of compromised intermediaries (CVE-2026-111943), HTTP/1 desync, HTTP/2 HPACK/Trailer/initial-window DoS, `crypto/tls` ECH rejection, `os` junction escapes, and `html/template` context bugs. GoReleaser, CI, CodeQL, and the local `go.work` now all build on 1.26.10.
+- **Next.js 16.2.11 → 16.4.3**: fixes 5 critical RCEs (GHSA-2464-fhr4-w9xw image-optimization SVG, GHSA-vcvr-r3jv-pc5j `next/og`, GHSA-673q-mjm6-r5xr `use cache`, GHSA-2xp9-vwfh-vxw4 AVIF, GHSA-p293-qw3h-jr36 Windows-hosted) plus SSRF, App Router DoS, and SSG/ISR cache-poisoning advisories; `eslint-config-next` aligned to ^16.4.3.
+- **Transitive npm advisories**: `pnpm audit` now reports **0 vulnerabilities** — bounded overrides for browserslist ≥4.28.7, zod ≥4.6.6, source-map-js ≥1.2.2, js-yaml ≥5.4.1, sharp ≥0.35.5, baseline-browser-mapping ≥2.11.0, and per-family `brace-expansion` pins (1.1.21 / 5.0.12) that keep `minimatch@3` consumers off 5.x.
+
+### Changed
+
+- v0.6.2 supersedes the GitHub-only v0.6.1 and is the first release published to npm since 0.6.0 — all shipped binaries are built with the patched toolchain.
+
+---
+
 ## [0.6.1] - 2026-10-27
 
 ### Added
@@ -53,7 +67,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - HTML, JSON, and Markdown report generation
 - Multi-platform binaries (Linux x86_64/arm64, macOS, Windows)
 
-[Unreleased]: https://github.com/HEETMEHTA18/autodev/compare/v0.6.1...HEAD
+[Unreleased]: https://github.com/HEETMEHTA18/autodev/compare/v0.6.2...HEAD
+[0.6.2]: https://github.com/HEETMEHTA18/autodev/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/HEETMEHTA18/autodev/compare/v0.6.0...v0.6.1
 [0.2.0]: https://github.com/HEETMEHTA18/autodev/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/HEETMEHTA18/autodev/releases/tag/v0.1.0

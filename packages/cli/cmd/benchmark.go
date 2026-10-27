@@ -28,14 +28,14 @@ func newBenchmarkCmd() *cobra.Command {
 }
 
 func runBenchmark() error {
-	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	greenStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
-	cyanStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00E5FF"))
-	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#666666"))
-	purpleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#D100F3"))
-	borderStyle := lipgloss.NewStyle().Border(lipgloss.RoundedBorder()).BorderForeground(lipgloss.Color("#00E5FF")).Padding(1, 2)
+	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	greenStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
+	cyanStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))
+	purpleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	borderStyle := lipgloss.NewStyle().Border(lipgloss.NormalBorder()).BorderForeground(lipgloss.Color("#0070f3")).Padding(1, 2)
 
-	fmt.Printf("\n  %s\n", goldStyle.Render("⚡ AUTODEV AI EFFICIENCY & TOKEN BENCHMARK"))
+	fmt.Printf("\n  %s\n", goldStyle.Render("AUTODEV AI EFFICIENCY & TOKEN BENCHMARK"))
 	fmt.Println(dimStyle.Render("  Measurements based on comparative A/B testing of project bootstrappings."))
 	fmt.Println()
 
@@ -64,7 +64,7 @@ func runBenchmark() error {
 	fmt.Println()
 
 	// Ponytail Benchmark Stats
-	fmt.Println(purpleStyle.Render("  👱‍♂️ PONYTAIL (LAZY SENIOR DEV) BENCHMARKS"))
+	fmt.Println(purpleStyle.Render("  PONYTAIL (LAZY SENIOR DEV) BENCHMARKS"))
 	fmt.Println(dimStyle.Render("  Measured on real Claude Code sessions editing a real open-source repo (FastAPI + React)."))
 	fmt.Println()
 	fmt.Println(cyanStyle.Render("  | Metric             | Trad. Agent | AutoDev + Ponytail | Improvement |"))
@@ -77,7 +77,7 @@ func runBenchmark() error {
 	fmt.Println()
 
 	// Dynamic scan of current directory
-	fmt.Println(purpleStyle.Render("  📊 DYNAMIC REAL-TIME BENCHMARK FOR CURRENT WORKSPACE"))
+	fmt.Println(purpleStyle.Render("  DYNAMIC REAL-TIME BENCHMARK FOR CURRENT WORKSPACE"))
 
 	wd, err := os.Getwd()
 	if err != nil {
@@ -122,9 +122,9 @@ func runBenchmark() error {
 				"Lines of Code:   %d lines\n"+
 				"Config Size:     %.2f KB\n\n"+
 				"Token Overhead Comparison:\n"+
-				"• Traditional full context prompting: %s tokens\n"+
-				"• AutoDev Telemetry Configuration:    %s tokens\n\n"+
-				"🏆 Token Savings: %s (%.1f%%)",
+				"·Traditional full context prompting: %s tokens\n"+
+				"·AutoDev Telemetry Configuration:    %s tokens\n\n"+
+				"Token Savings: %s (%.1f%%)",
 			wd,
 			cyanStyle.Render(techsStr),
 			fileCount,
@@ -140,7 +140,7 @@ func runBenchmark() error {
 		fmt.Println()
 	}
 
-	fmt.Println(goldStyle.Render("  🔍 WHY DOES AUTODEV SAVE TOKENS?"))
+	fmt.Println(goldStyle.Render("  WHY DOES AUTODEV SAVE TOKENS?"))
 	fmt.Println("  1. Context Optimization: AI assistants (Cursor, Claude Desktop, Copilot, Cline) do not")
 	fmt.Println("     need to repeatedly exchange prompts to discover your OS, package managers, compilers,")
 	fmt.Println("     or workspace folder structures. AutoDev provides instant telemetry config templates.")

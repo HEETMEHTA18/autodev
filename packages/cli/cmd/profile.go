@@ -40,7 +40,7 @@ backend-dev, android-dev, data-scientist, rust-dev, fullstack-ai`,
 }
 
 func printProfiles(c *catalog.Catalog) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 	boldStyle := lipgloss.NewStyle().Bold(true)
 
@@ -63,10 +63,10 @@ func printProfiles(c *catalog.Catalog) error {
 }
 
 func runProfile(c *catalog.Catalog, profileID string) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FF6B6B"))
+	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#ee0000"))
 
 	prof, ok := c.GetProfile(profileID)
 	if !ok {
@@ -91,7 +91,7 @@ func runProfile(c *catalog.Catalog, profileID string) error {
 	fmt.Println()
 
 	if dryRun {
-		fmt.Println(warnStyle.Render("  [dry-run] No changes made."))
+		fmt.Println(warnStyle.Render("  ! dry-run: no changes made"))
 		return nil
 	}
 
@@ -110,14 +110,14 @@ func runProfile(c *catalog.Catalog, profileID string) error {
 			continue
 		}
 		if err := installCatalogPackage(pkg); err != nil {
-			fmt.Println(warnStyle.Render(fmt.Sprintf("  [FAIL] %s: %v", pkg.Name, err)))
+			fmt.Println(warnStyle.Render(fmt.Sprintf("  ✗ %s: %v", pkg.Name, err)))
 		} else {
-			fmt.Println(okStyle.Render(fmt.Sprintf("  [OK] %s installed", pkg.Name)))
+			fmt.Println(okStyle.Render(fmt.Sprintf("  ✓ %s installed", pkg.Name)))
 		}
 	}
 
 	fmt.Println()
-	fmt.Println(okStyle.Render("  [OK] Profile installation complete!"))
+	fmt.Println(okStyle.Render("  ✓ Profile installation complete!"))
 	fmt.Println(dimStyle.Render("  Run 'autodev doctor' to verify everything is working."))
 	fmt.Println()
 	return nil
@@ -129,10 +129,10 @@ func installCatalogPackage(pkg *catalog.Package) error {
 }
 
 func runProfileNoConfirm(c *catalog.Catalog, profileID string) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FF6B6B"))
+	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#ee0000"))
 
 	prof, ok := c.GetProfile(profileID)
 	if !ok {
@@ -162,14 +162,14 @@ func runProfileNoConfirm(c *catalog.Catalog, profileID string) error {
 			continue
 		}
 		if err := installCatalogPackage(pkg); err != nil {
-			fmt.Println(warnStyle.Render(fmt.Sprintf("  [FAIL] %s: %v", pkg.Name, err)))
+			fmt.Println(warnStyle.Render(fmt.Sprintf("  ✗ %s: %v", pkg.Name, err)))
 		} else {
-			fmt.Println(okStyle.Render(fmt.Sprintf("  [OK] %s installed", pkg.Name)))
+			fmt.Println(okStyle.Render(fmt.Sprintf("  ✓ %s installed", pkg.Name)))
 		}
 	}
 
 	fmt.Println()
-	fmt.Println(okStyle.Render("  [OK] Profile installation complete!"))
+	fmt.Println(okStyle.Render("  ✓ Profile installation complete!"))
 	fmt.Println()
 	return nil
 }

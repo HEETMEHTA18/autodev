@@ -270,7 +270,7 @@ const nextJsReadme = `# AutoDev NextJS Production Starter
 
 This project is bootstrapped with **Next.js** + **TypeScript** + **Tailwind CSS** + **Docker** + **GitHub Actions CI/CD** via AutoDev.
 
-## 🚀 Getting Started
+## Getting Started
 
 First, run the development server:
 
@@ -286,7 +286,7 @@ __BT____BT____BT__
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 To build and run the Docker container locally:
 
@@ -295,7 +295,7 @@ docker build -t nextjs-autodev-app .
 docker run -p 3000:3000 nextjs-autodev-app
 __BT____BT____BT__
 
-## 📦 Features Added
+## Features Added
 * **TypeScript** for strict type checking
 * **Tailwind CSS** for layout utility styles
 * **ESLint** & **Prettier** pre-configured for code quality
@@ -360,9 +360,9 @@ let ai = null;
 
 if (apiKey) {
   ai = new GoogleGenAI({ apiKey });
-  console.log("⚡ Gemini API Client successfully initialized.");
+  console.log("Gemini API Client successfully initialized.");
 } else {
-  console.warn("⚠️ Warning: GEMINI_API_KEY environment variable is missing.");
+  console.warn("! Warning: GEMINI_API_KEY environment variable is missing.");
 }
 
 // API Chat Endpoint
@@ -406,7 +406,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.listen(PORT, () => {
-  console.log(__BT__🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}__BT__);
+  console.log(__BT__Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}__BT__);
 });
 `
 
@@ -599,7 +599,7 @@ const aiChatbotReadme = `# AutoDev AI Chatbot (Gemini) Boilerplate
 
 This template sets up a beautiful chatbot frontend (Vite + React) linked to a fast Node.js backend integrating Google's **Gemini 2.5 Flash** model via the official __BT__@google/genai__BT__ library.
 
-## ⚙️ Configuration
+## · Configuration
 
 Generate a free Gemini API key in [Google AI Studio](https://aistudio.google.com/).
 
@@ -610,7 +610,7 @@ GEMINI_API_KEY=your_gemini_api_key_here
 PORT=5000
 __BT____BT____BT__
 
-## 🚀 Running the App
+## Running the App
 
 Run both the server and the frontend client concurrently:
 
@@ -621,7 +621,7 @@ __BT____BT____BT__
 
 Open [http://localhost:5173](http://localhost:5173) to start testing.
 
-## 🐳 Running inside Docker
+## Running inside Docker
 
 Build and spin up the Docker container:
 
@@ -722,7 +722,7 @@ app.use(express.json());
 
 // Connection to MongoDB
 mongoose.connect(MONGO_URI)
-  .then(() => console.log('📁 MongoDB successfully connected.'))
+  .then(() => console.log('MongoDB successfully connected.'))
   .catch(err => console.error('✗ Failed to connect to MongoDB:', err));
 
 // Test Schema
@@ -753,7 +753,7 @@ app.post('/api/items', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(__BT__🚀 Express server running on port ${PORT}__BT__);
+  console.log(__BT__Express server running on port ${PORT}__BT__);
 });
 `
 
@@ -908,7 +908,7 @@ const mernReadme = `# AutoDev MERN Stack (Containerized)
 
 This template boots a full-stack container environment containing a **MongoDB** database, an **Express Node.js** API backend, and a **Vite + React** client frontend.
 
-## 🐳 Launching the Environment
+## Launching the Environment
 
 To compile, link and start all the containers, use Docker Compose in one command:
 
@@ -920,7 +920,7 @@ __BT____BT____BT__
 * Express API Server: [http://localhost:5000](http://localhost:5000)
 * MongoDB endpoint: mongodb://localhost:27017
 
-## 📦 Directory Structure
+## Directory Structure
 * **/client**: Vite + React + TS dashboard client
 * **/server**: Express database API server endpoint
 * **/docker-compose.yml**: Container deployment links orchestrator
@@ -993,7 +993,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('⚡ AutoDev Flutter'),
+        title: const Text('AutoDev Flutter'),
         centerTitle: true,
       ),
       body: Center(
@@ -1086,7 +1086,7 @@ const flutterReadme = `# AutoDev Flutter Starter
 
 This is a Flutter mobile and web environment starter generated automatically by AutoDev CLI, incorporating clean project architecture structures, a Docker build workflow, and a pre-set GitHub Actions pipeline.
 
-## 🚀 Commands
+## Commands
 
 First, retrieve the package dependencies:
 
@@ -1100,7 +1100,7 @@ __BT____BT____BT__bash
 flutter run
 __BT____BT____BT__
 
-## 🐳 Web Container Deployment
+## Web Container Deployment
 
 To build and compile the Flutter web application using multi-stage Docker and serve it via Nginx:
 

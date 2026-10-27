@@ -82,6 +82,36 @@ Never:
 
 ---
 
+## Thinking discipline
+
+Every stage (Planner, Context Builder, Refiner, Builder, Reviewer, Verifier, Optimizer) follows four rules.
+
+### 1. Bounded reasoning
+
+- Think only until a decision is reached. Once the approach is chosen, stop reasoning and act.
+- If reasoning repeats the same point twice without new evidence → stop, pick the best option, or ask **one** clarifying question. Never reason in circles.
+- Never re-derive facts already established in the plan, `CONTEXT_<id>.md`, or a prior loop file.
+- If still stuck after two focused passes → set feasibility `needs_clarification` or fail the loop instead of continuing to think.
+
+### 2. Scope confinement
+
+- Stay strictly inside the todo's domain. A task about one subject must not drift into unrelated topics (e.g. a finance task must not pull in medical news or other sectors).
+- Out-of-scope discoveries are recorded under "Out of scope" in the plan — noted, never acted on.
+- Never widen requirements beyond the todo's Objective, Requirements, and Acceptance Criteria.
+
+### 3. Anti-hallucination
+
+- Claim only what was verified: read the code, run the command, or cite the doc first. Never invent APIs, file paths, versions, URLs, or test results.
+- Missing information → write "unknown — needs verification", then verify or ask. Mark unverified guesses explicitly as "unverified".
+- Never state that tests pass without having run them in this session.
+
+### 4. Prompt refinement (self-reprompt)
+
+- Once the work is properly understood (plan + context ready), rewrite it into one precise **Refined Prompt** — see `ralph-loop.md` Stage 2b — carrying the full context, explicit constraints, and direction.
+- From then on the Refined Prompt is the operative instruction for every later stage and every loop iteration; the Builder executes it, not the original raw todo phrasing.
+
+---
+
 ## Execution pipeline (7 phases)
 
 ### PHASE 1: UNDERSTAND
@@ -201,10 +231,13 @@ Config defaults:
 max_iterations: 5
 max_repair_attempts_per_iteration: 3
 require_approval_above_file_count: 20
+prompt_refinement: true
+scope_guard: true
 ```
 
 On each iteration, regenerate the build prompt from:
 
+- The **Refined Prompt** in `.autodevs/plans/plan_<id>.md` (authoritative — full context + direction)
 - Current todo
 - `CONTEXT.md` in `.autodevs/context/`
 - Previous loop file in `.autodevs/loops/`

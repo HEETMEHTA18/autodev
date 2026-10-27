@@ -26,12 +26,12 @@ and convert them into the new unified .autodev.yaml configuration format.`,
 }
 
 func runMigrate() error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
-	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FF6B6B"))
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
+	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#ee0000"))
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("⚡ AutoDev Profile Config Migrator"))
+	fmt.Println(titleStyle.Render("AutoDev Profile Config Migrator"))
 
 	home, err := os.UserHomeDir()
 	var pathsToMigrate []string

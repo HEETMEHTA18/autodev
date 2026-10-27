@@ -38,12 +38,12 @@ reproducible .github/workflows/ci.yml configuration.`,
 }
 
 func runCI(path string) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("⚡ AutoDev CI/CD Template Generator"))
+	fmt.Println(titleStyle.Render("AutoDev CI/CD Template Generator"))
 	fmt.Println(dimStyle.Render("  Scanning stack to generate GitHub Actions workflow..."))
 
 	s := scanner.New(path)

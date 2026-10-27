@@ -13,9 +13,9 @@ import (
 
 func newReplayCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "replay",
-		Short: "Replay a prompt from the latest session",
-		Long:  `Display a list of captured prompts from the latest session and select one to rerun against the codebase.`,
+		Use:     "replay",
+		Short:   "Replay a prompt from the latest session",
+		Long:    `Display a list of captured prompts from the latest session and select one to rerun against the codebase.`,
 		Example: `  autodev replay`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runReplay()
@@ -25,11 +25,11 @@ func newReplayCmd() *cobra.Command {
 }
 
 func runReplay() error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	accentStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	accentStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF8700"))
-	cmdStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FFFF"))
+	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#f5a623"))
+	cmdStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3"))
 
 	engine, err := promptcapture.NewEngine("")
 	if err != nil {
@@ -49,7 +49,7 @@ func runReplay() error {
 	}
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("  🔄 Replay Prompts from Session: " + engine.Session.SessionID))
+	fmt.Println(titleStyle.Render("  Replay Prompts from Session: " + engine.Session.SessionID))
 	fmt.Println(dimStyle.Render("  Select a prompt below to rerun it against the codebase:"))
 	fmt.Println()
 
@@ -73,7 +73,8 @@ func runReplay() error {
 	apiKey := os.Getenv("GEMINI_API_KEY")
 	var responseText string
 	if apiKey != "" {
-		responseText, err = queryGemini(selectedPrompt, engine.Session.Events)
+		// Same two-phase discipline as `autodev chat`: refine, then answer.
+		responseText, err = askGemini(selectedPrompt, engine.Session.Events, chatOptions{thinkingBudget: 1024})
 		if err != nil {
 			fmt.Println(warnStyle.Render(fmt.Sprintf("  Error querying Gemini: %v. Falling back to simulation.", err)))
 			responseText = getSimulatedResponse(selectedPrompt)
@@ -82,7 +83,7 @@ func runReplay() error {
 		responseText = getSimulatedResponse(selectedPrompt)
 	}
 
-	fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#F0F0F0")).Render(responseText))
+	fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#ededed")).Render(responseText))
 	fmt.Println()
 
 	suggestedCommands, suggestedFiles := parseActions(responseText)

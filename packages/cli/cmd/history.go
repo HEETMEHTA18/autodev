@@ -103,13 +103,13 @@ func showTodayPrompts(engine *promptcapture.Engine) error {
 		return fmt.Errorf("failed to read sessions: %w", err)
 	}
 
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	accentStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	accentStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	todayStr := time.Now().Format("2006-01-02")
 	fmt.Println()
-	fmt.Println(titleStyle.Render(fmt.Sprintf("  📅 Captured Prompts for Today (%s)", todayStr)))
+	fmt.Println(titleStyle.Render(fmt.Sprintf("  Captured Prompts for Today (%s)", todayStr)))
 	fmt.Println()
 
 	found := false

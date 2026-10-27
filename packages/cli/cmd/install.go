@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"sync"
@@ -52,9 +53,9 @@ Dependencies are resolved automatically. Run --list to see all available package
 }
 
 func printCatalogList(c *catalog.Catalog) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	catStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#4A90E2"))
+	catStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 
 	fmt.Println()
 	fmt.Println(titleStyle.Render("  AutoDev Package Catalog"))
@@ -88,9 +89,9 @@ func printCatalogList(c *catalog.Catalog) error {
 }
 
 func runCatalogInstall(c *catalog.Catalog, id string, skipConfirm bool) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
-	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FF6B6B"))
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
+	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#ee0000"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	// Resolve with deps
@@ -101,7 +102,7 @@ func runCatalogInstall(c *catalog.Catalog, id string, skipConfirm bool) error {
 
 	fmt.Println()
 	pkg, _ := c.GetPackage(id)
-	fmt.Printf("%s\n", titleStyle.Render("Installing "+pkg.Name))
+	fmt.Printf("%s\n", titleStyle.Render("  Installing "+pkg.Name))
 
 	// Find out what is not installed
 	var toInstall []*catalog.Package
@@ -139,7 +140,7 @@ func runCatalogInstall(c *catalog.Catalog, id string, skipConfirm bool) error {
 					cmdDetail = strings.Join(p.Install.Windows.Packages, ", ")
 				}
 			}
-			fmt.Printf("    - %s (%s) → %s\n", p.Name, method, cmdDetail)
+			fmt.Printf("    · %s (%s) → %s\n", p.Name, method, cmdDetail)
 		}
 		fmt.Println()
 
@@ -166,9 +167,9 @@ func runCatalogInstall(c *catalog.Catalog, id string, skipConfirm bool) error {
 	var installedPkgs []*catalog.Package
 
 	for _, p := range resolved {
-		fmt.Printf(titleStyle.Render("  - %s\n"), p.Name)
+		fmt.Printf(styleH2.Render("  · %s\n"), p.Name)
 		if dryRun {
-			fmt.Println(warnStyle.Render("    [dry-run] skipped"))
+			fmt.Println(dimStyle.Render("    ○ skipped (dry-run)"))
 			continue
 		}
 
@@ -179,9 +180,9 @@ func runCatalogInstall(c *catalog.Catalog, id string, skipConfirm bool) error {
 		}
 
 		if err := execInstall(p); err != nil {
-			fmt.Println(warnStyle.Render(fmt.Sprintf("  [FAIL] %s: %v", p.Name, err)))
+			fmt.Println(warnStyle.Render(fmt.Sprintf("  ✗ %s: %v", p.Name, err)))
 		} else {
-			fmt.Println(okStyle.Render(fmt.Sprintf("  [OK] %s installed", p.Name)))
+			fmt.Println(okStyle.Render(fmt.Sprintf("  ✓ %s installed", p.Name)))
 			installedPkgs = append(installedPkgs, p)
 		}
 	}
@@ -191,24 +192,24 @@ func runCatalogInstall(c *catalog.Catalog, id string, skipConfirm bool) error {
 	}
 
 	fmt.Println()
-	fmt.Println(okStyle.Render(fmt.Sprintf("  [OK] %s ready!", pkg.Name)))
+	fmt.Println(okStyle.Render(fmt.Sprintf("  ✓ %s ready!", pkg.Name)))
 	return nil
 }
 
 func runBumblebeeSafetyCheck(pkgs []*catalog.Package) {
-	bumblebeeHeaderStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FFFF"))
+	bumblebeeHeaderStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
-	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FF6B6B")).Bold(true)
-	infoStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#4A90E2")).Bold(true)
+	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
+	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#ee0000")).Bold(true)
+	infoStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3")).Bold(true)
 
-	criticalStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF2A2A"))
-	highStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF6B6B"))
-	moderateStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
+	criticalStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#ee0000"))
+	highStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#ee0000"))
+	moderateStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 	lowStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
-	fmt.Println(bumblebeeHeaderStyle.Render("  🛡️  Bumblebee Post-Install Safety Audit"))
+	fmt.Println(bumblebeeHeaderStyle.Render("  Post-Install Safety Audit"))
 
 	type pkgInfo struct {
 		pkg       *catalog.Package
@@ -261,7 +262,7 @@ func runBumblebeeSafetyCheck(pkgs []*catalog.Package) {
 	go func() {
 		spinner := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
 		start := time.Now()
-		ticker := time.NewTicker(100 * time.Millisecond)
+		ticker := time.NewTicker(80 * time.Millisecond)
 		defer ticker.Stop()
 		i := 0
 		for {
@@ -271,9 +272,8 @@ func runBumblebeeSafetyCheck(pkgs []*catalog.Package) {
 				return
 			case <-ticker.C:
 				elapsed := time.Since(start).Seconds()
-				fmt.Printf("\r  %s %s Running safety audit on %s... %s",
-					lipgloss.NewStyle().Foreground(lipgloss.Color("#00FFFF")).Render(spinner[i%len(spinner)]),
-					dimStyle.Render("Bumblebee:"),
+				fmt.Printf("\r  %s Running safety audit on %s... %s",
+					lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3")).Render(spinner[i%len(spinner)]),
 					strings.Join(displayNames, ", "),
 					dimStyle.Render(fmt.Sprintf("[%.1fs]", elapsed)),
 				)
@@ -327,7 +327,7 @@ func runBumblebeeSafetyCheck(pkgs []*catalog.Package) {
 	}
 
 	if totalVulns == 0 {
-		fmt.Println(okStyle.Render(fmt.Sprintf("  ✓ Verified %s: No known vulnerabilities found! Safe from attackers' malicious files.", strings.Join(displayNames, ", "))))
+		fmt.Println(okStyle.Render(fmt.Sprintf("  ✓ Verified %s — no known vulnerabilities found.", strings.Join(displayNames, ", "))))
 		fmt.Println()
 		return
 	}
@@ -344,7 +344,7 @@ func runBumblebeeSafetyCheck(pkgs []*catalog.Package) {
 
 	for pkgName, pkgResults := range byPkg {
 		version := pkgResults[0].pkgVersion
-		fmt.Println(infoStyle.Render(fmt.Sprintf("    📦 %s@%s", pkgName, version)))
+		fmt.Println(infoStyle.Render(fmt.Sprintf("    %s@%s", pkgName, version)))
 		for _, r := range pkgResults {
 			fmt.Println(dimStyle.Render(fmt.Sprintf("      ecosystem: %s, package: %s", r.ecosystem, r.name)))
 			for _, v := range r.vulns {
@@ -363,7 +363,7 @@ func runBumblebeeSafetyCheck(pkgs []*catalog.Package) {
 				if len(v.Aliases) > 0 {
 					alias = fmt.Sprintf(" (%s)", v.Aliases[0])
 				}
-				fmt.Printf("        - %s %s%s: %s\n", sevBadge, v.ID, alias, v.Summary)
+				fmt.Printf("        · %s %s%s: %s\n", sevBadge, v.ID, alias, v.Summary)
 			}
 		}
 	}
@@ -473,7 +473,7 @@ func newUpdateCmd() *cobra.Command {
 		Short: "Check for and apply updates to managed packages",
 		Long:  `Check for available updates to installed packages from the catalog. Re-run 'autodev install <pkg>' to get the latest version.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
+			okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
 			fmt.Println()
 			fmt.Println(okStyle.Render("  AutoDev update: re-run 'autodev install <pkg>' to get the latest version."))
 			fmt.Println()
@@ -486,14 +486,160 @@ func newCleanCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "clean",
 		Short: "Remove AutoDev cache and temp files",
-		Long:  `Remove AutoDev cache, temporary files, and generated reports from the current project.`,
+		Long:  `Remove AutoDev cache, temporary files, and generated reports from the current project. Honors the global --dry-run flag to preview removals without deleting anything.`,
+		Example: `  autodev clean
+  autodev clean --dry-run
+  autodev clean --json`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
-			fmt.Println()
-			fmt.Println(okStyle.Render("  ✓ Cache cleaned."))
-			fmt.Println()
-			return nil
+			return runClean(dryRun, defaultCleanTargets())
 		},
+	}
+}
+
+// cleanItem reports one cleaned (or cleanable) path.
+type cleanItem struct {
+	Path    string `json:"path"`
+	Bytes   int64  `json:"bytes"`
+	Found   bool   `json:"found"`
+	Removed bool   `json:"removed"`
+}
+
+type cleanReport struct {
+	DryRun bool        `json:"dry_run"`
+	Items  []cleanItem `json:"items"`
+	Bytes  int64       `json:"bytes_total"`
+	Count  int         `json:"removed_count"`
+}
+
+// defaultCleanTargets lists the paths AutoDev is allowed to clean:
+// project reports, the user cache, and AutoDev temp files.
+func defaultCleanTargets() []string {
+	targets := []string{"autodev-reports"}
+	if dir, err := os.UserCacheDir(); err == nil {
+		targets = append(targets, filepath.Join(dir, "autodev"))
+	}
+	if tmp := os.TempDir(); tmp != "" {
+		if matches, err := filepath.Glob(filepath.Join(tmp, "autodev-*")); err == nil {
+			targets = append(targets, matches...)
+		}
+	}
+	return targets
+}
+
+// isSafeCleanTarget refuses anything outside AutoDev's own footprint.
+func isSafeCleanTarget(p string) bool {
+	abs, err := filepath.Abs(p)
+	if err != nil || abs == "" || abs == string(filepath.Separator) {
+		return false
+	}
+	if home, err := os.UserHomeDir(); err == nil && abs == home {
+		return false
+	}
+	if cwd, err := os.Getwd(); err == nil && abs == cwd {
+		return false
+	}
+	return strings.HasPrefix(filepath.Base(abs), "autodev")
+}
+
+func runClean(isDryRun bool, targets []string) error {
+	report := cleanReport{DryRun: isDryRun}
+
+	if !jsonOut {
+		fmt.Println()
+		verb := "Removing"
+		if isDryRun {
+			verb = "Would remove"
+		}
+		fmt.Println(styleHeading.Render(fmt.Sprintf("AutoDev clean — %s cache and temp files", verb)))
+		fmt.Println()
+	}
+
+	for _, target := range targets {
+		if !isSafeCleanTarget(target) {
+			continue
+		}
+		size, err := pathSize(target)
+		if err != nil {
+			if os.IsNotExist(err) {
+				continue
+			}
+			return fmt.Errorf("failed to inspect %s: %w", target, err)
+		}
+		item := cleanItem{Path: target, Bytes: size, Found: true}
+		if !isDryRun {
+			if err := os.RemoveAll(target); err != nil {
+				return fmt.Errorf("failed to remove %s: %w", target, err)
+			}
+			item.Removed = true
+			report.Count++
+		}
+		report.Items = append(report.Items, item)
+		report.Bytes += item.Bytes
+
+		if !jsonOut {
+			if isDryRun {
+				fmt.Printf("  %s %s %s\n", styleCyan.Render("→"), target, styleDim.Render(fmt.Sprintf("(%s)", formatBytes(size))))
+			} else {
+				fmt.Printf("  %s %s %s\n", styleOK.Render("✓"), target, styleDim.Render(fmt.Sprintf("(%s)", formatBytes(size))))
+			}
+		}
+	}
+
+	if jsonOut {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(report)
+	}
+
+	fmt.Println()
+	if len(report.Items) == 0 {
+		fmt.Println(styleOK.Render("  Nothing to clean — AutoDev is already tidy."))
+	} else if isDryRun {
+		fmt.Printf("  %s Would remove %d item(s) (%s). Re-run without --dry-run to delete.\n",
+			styleCyan.Render("→"), len(report.Items), formatBytes(report.Bytes))
+	} else {
+		fmt.Printf("  %s Removed %d item(s), freed %s.\n",
+			styleOK.Render("✓"), report.Count, formatBytes(report.Bytes))
+	}
+	fmt.Println()
+	return nil
+}
+
+// pathSize returns the total size in bytes of a file or directory tree.
+func pathSize(path string) (int64, error) {
+	info, err := os.Lstat(path)
+	if err != nil {
+		return 0, err
+	}
+	if !info.IsDir() {
+		return info.Size(), nil
+	}
+	var total int64
+	err = filepath.WalkDir(path, func(_ string, d os.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return nil
+		}
+		if d.IsDir() {
+			return nil
+		}
+		if info, err := d.Info(); err == nil {
+			total += info.Size()
+		}
+		return nil
+	})
+	return total, err
+}
+
+func formatBytes(b int64) string {
+	switch {
+	case b >= 1<<30:
+		return fmt.Sprintf("%.2f GB", float64(b)/(1<<30))
+	case b >= 1<<20:
+		return fmt.Sprintf("%.2f MB", float64(b)/(1<<20))
+	case b >= 1<<10:
+		return fmt.Sprintf("%.2f KB", float64(b)/(1<<10))
+	default:
+		return fmt.Sprintf("%d B", b)
 	}
 }
 
@@ -520,8 +666,8 @@ func newExportCmd() *cobra.Command {
 }
 
 func runExport(outFile string) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
@@ -565,7 +711,7 @@ func runExport(outFile string) error {
 		return fmt.Errorf("write lockfile: %w", err)
 	}
 
-	fmt.Println(okStyle.Render(fmt.Sprintf("  [OK] Reproducible environment lockfile saved to: %s", outFile)))
+	fmt.Println(okStyle.Render(fmt.Sprintf("  ✓ Reproducible environment lockfile saved to: %s", outFile)))
 	fmt.Println(dimStyle.Render(fmt.Sprintf("  %d active runtimes and build tools exported", len(envMap))))
 	fmt.Println()
 	return nil

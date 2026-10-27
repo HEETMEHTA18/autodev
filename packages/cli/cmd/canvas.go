@@ -56,13 +56,13 @@ Use --json to output raw JSON.`,
 }
 
 func runCanvas(path string, save, summary bool) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#666666"))
-	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))
+	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
 
 	if !summary && !jsonOut {
 		fmt.Println()
-		fmt.Println(titleStyle.Render("  🎨 Developer Knowledge Canvas"))
+		fmt.Println(titleStyle.Render("  Developer Knowledge Canvas"))
 		fmt.Println(dimStyle.Render(fmt.Sprintf("  Analyzing: %s", path)))
 		fmt.Println()
 	}
@@ -143,7 +143,7 @@ func printCanvasSummary(canvas *scanner.Canvas) {
 	if len(ai.Gotchas) > 0 {
 		fmt.Println("GOTCHAS:")
 		for _, g := range ai.Gotchas {
-			fmt.Printf("  ⚠ %s\n", g)
+			fmt.Printf("  ! %s\n", g)
 		}
 		fmt.Println()
 	}
@@ -158,13 +158,13 @@ func printCanvasSummary(canvas *scanner.Canvas) {
 }
 
 func printCanvasReport(canvas *scanner.Canvas) {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	sectionStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#4A90E2"))
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	sectionStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 	itemStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FFFFFF")).PaddingLeft(2)
-	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#666666"))
-	dangerStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FF6B6B"))
+	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))
+	dangerStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#ee0000"))
 
-	fmt.Println(titleStyle.Render("  📊 Project Overview"))
+	fmt.Println(titleStyle.Render("  Project Overview"))
 	fmt.Printf("  %s\n", canvas.AI.OneLiner)
 	fmt.Printf("  Files: %d | LOC: %d | Languages: %s\n",
 		canvas.Project.TotalFiles, canvas.Project.TotalLOC,
@@ -173,7 +173,7 @@ func printCanvasReport(canvas *scanner.Canvas) {
 
 	// Architecture
 	if len(canvas.Architecture.Layers) > 0 {
-		fmt.Println(sectionStyle.Render("  🏗️  Architecture Layers"))
+		fmt.Println(sectionStyle.Render("   Architecture Layers"))
 		for _, l := range canvas.Architecture.Layers {
 			if len(l.Paths) > 0 {
 				fmt.Printf("    %s (%d paths)\n", l.Name, len(l.Paths))
@@ -184,7 +184,7 @@ func printCanvasReport(canvas *scanner.Canvas) {
 
 	// Entry Points
 	if len(canvas.Architecture.EntryPoints) > 0 {
-		fmt.Println(sectionStyle.Render("  🚀 Entry Points"))
+		fmt.Println(sectionStyle.Render("  Entry Points"))
 		for _, ep := range canvas.Architecture.EntryPoints {
 			fmt.Println(itemStyle.Render(fmt.Sprintf("  %s [%s]", ep.Path, ep.Type)))
 		}
@@ -193,7 +193,7 @@ func printCanvasReport(canvas *scanner.Canvas) {
 
 	// Files by type
 	if len(canvas.Files) > 0 {
-		fmt.Println(sectionStyle.Render(fmt.Sprintf("  📁 Files (%d total)", len(canvas.Files))))
+		fmt.Println(sectionStyle.Render(fmt.Sprintf("  Files (%d total)", len(canvas.Files))))
 		typeCount := make(map[string]int)
 		for _, f := range canvas.Files {
 			typeCount[f.FileType]++
@@ -206,7 +206,7 @@ func printCanvasReport(canvas *scanner.Canvas) {
 
 	// API Routes
 	if len(canvas.API.Routes) > 0 {
-		fmt.Println(sectionStyle.Render(fmt.Sprintf("  🌐 API Routes (%d)", len(canvas.API.Routes))))
+		fmt.Println(sectionStyle.Render(fmt.Sprintf("  API Routes (%d)", len(canvas.API.Routes))))
 		for _, r := range canvas.API.Routes[:min(len(canvas.API.Routes), 15)] {
 			fmt.Printf("    %-7s %-30s %s\n", r.Method, r.Path, dimStyle.Render(r.File))
 		}
@@ -218,7 +218,7 @@ func printCanvasReport(canvas *scanner.Canvas) {
 
 	// Database
 	if len(canvas.Database.Models) > 0 {
-		fmt.Println(sectionStyle.Render(fmt.Sprintf("  🗄️  Database Models (%d)", len(canvas.Database.Models))))
+		fmt.Println(sectionStyle.Render(fmt.Sprintf("   Database Models (%d)", len(canvas.Database.Models))))
 		for _, m := range canvas.Database.Models {
 			fmt.Println(itemStyle.Render(fmt.Sprintf("  %s (%s)", m.Name, m.File)))
 		}
@@ -227,7 +227,7 @@ func printCanvasReport(canvas *scanner.Canvas) {
 
 	// Security
 	if canvas.Security.CriticalCnt > 0 || canvas.Security.HighCnt > 0 {
-		fmt.Println(sectionStyle.Render("  🔒 Security"))
+		fmt.Println(sectionStyle.Render("  Security"))
 		fmt.Printf("    Score: %d/100\n", canvas.Security.Score)
 		fmt.Printf("    Critical: %d | High: %d\n", canvas.Security.CriticalCnt, canvas.Security.HighCnt)
 		for _, f := range canvas.Security.Findings[:min(len(canvas.Security.Findings), 5)] {
@@ -241,7 +241,7 @@ func printCanvasReport(canvas *scanner.Canvas) {
 
 	// Dependencies
 	if len(canvas.Dependencies.DeadFiles) > 0 {
-		fmt.Println(sectionStyle.Render("  🗑️  Dead Code"))
+		fmt.Println(sectionStyle.Render("   Dead Code"))
 		for _, df := range canvas.Dependencies.DeadFiles[:min(len(canvas.Dependencies.DeadFiles), 5)] {
 			fmt.Println(dangerStyle.Render(fmt.Sprintf("    %s", df)))
 		}
@@ -249,11 +249,11 @@ func printCanvasReport(canvas *scanner.Canvas) {
 	}
 
 	// AI Context
-	fmt.Println(sectionStyle.Render("  🤖 AI Context"))
+	fmt.Println(sectionStyle.Render("  AI Context"))
 	fmt.Printf("    %s\n", canvas.AI.Summary)
 	if len(canvas.AI.KeyInsights) > 0 {
 		for _, i := range canvas.AI.KeyInsights {
-			fmt.Println(dimStyle.Render(fmt.Sprintf("    • %s", i)))
+			fmt.Println(dimStyle.Render(fmt.Sprintf("    ·%s", i)))
 		}
 	}
 	fmt.Println()

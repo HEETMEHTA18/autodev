@@ -41,15 +41,15 @@ are missing, and install them automatically. This is the main AutoDev command.`,
 }
 
 func runSetup(path string, isDryRun, skipConfirm bool) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
-	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FF6B6B"))
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
+	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#ee0000"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("⚡ AutoDev Setup"))
+	fmt.Println(titleStyle.Render("  AutoDev Setup"))
 	if isDryRun {
-		fmt.Println(warnStyle.Render("  [DRY RUN] No changes will be made."))
+		fmt.Println(warnStyle.Render("  ! dry-run: no changes will be made"))
 	}
 	fmt.Println()
 

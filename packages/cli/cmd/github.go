@@ -42,12 +42,12 @@ frameworks, and generate a recommended development environment setup plan.`,
 }
 
 func runGitHub(username, token string, doSetup bool) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FF6B6B"))
+	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#ee0000"))
 	badgeStyle := lipgloss.NewStyle().
-		Background(lipgloss.Color("#4A90E2")).
+		Background(lipgloss.Color("#0070f3")).
 		Foreground(lipgloss.Color("#FFFFFF")).
 		Padding(0, 1)
 

@@ -22,14 +22,14 @@ func newSecretsCmd() *cobra.Command {
 }
 
 func runSecrets() error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
-	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF6B6B"))
-	infoStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#4A90E2")).Bold(true)
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
+	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#ee0000"))
+	infoStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3")).Bold(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("🕵️  AutoDev Secrets Scanner"))
+	fmt.Println(titleStyle.Render("  AutoDev Secrets Scanner"))
 	fmt.Println()
 
 	foundSecrets := false
@@ -68,7 +68,7 @@ func runSecrets() error {
 func runBasicSecretScan() bool {
 	// A basic regex fallback just to prove functionality.
 	// In production, users should have gitleaks installed.
-	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF6B6B"))
+	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#ee0000"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	patterns := map[string]*regexp.Regexp{

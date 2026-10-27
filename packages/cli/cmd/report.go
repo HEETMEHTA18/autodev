@@ -42,8 +42,8 @@ func newReportCmd() *cobra.Command {
 }
 
 func runReport(path, format, outDir string) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
@@ -80,7 +80,7 @@ func runReport(path, format, outDir string) error {
 		}
 	}
 
-	fmt.Println(okStyle.Render(fmt.Sprintf("  [OK] Report saved: %s", outFile)))
+	fmt.Println(okStyle.Render(fmt.Sprintf("  ✓ Report saved: %s", outFile)))
 	fmt.Println(dimStyle.Render(fmt.Sprintf("  %d technologies detected", len(result.Technologies))))
 	fmt.Println()
 	return nil
@@ -164,24 +164,24 @@ const htmlTemplate = `<!DOCTYPE html>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Space Grotesk', sans-serif; background: #0a0a0a; color: #e8e8e8; padding: 2rem; min-height: 100vh; }
   .container { max-width: 900px; margin: 0 auto; }
-  header { border: 3px solid #FFD700; padding: 2rem; margin-bottom: 2rem; box-shadow: 6px 6px 0 #FFD700; }
-  h1 { font-size: 2.5rem; font-weight: 700; color: #FFD700; }
+  header { border: 3px solid #0070f3; padding: 2rem; margin-bottom: 2rem; box-shadow: 6px 6px 0 #0070f3; }
+  h1 { font-size: 2.5rem; font-weight: 700; color: #0070f3; }
   .meta { color: #888; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
   .section { border: 2px solid #333; padding: 1.5rem; margin-bottom: 1.5rem; }
-  .section h2 { font-size: 1.2rem; font-weight: 700; color: #FFD700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.1em; }
-  .tag { display: inline-block; background: #1a1a1a; border: 2px solid #FFD700; color: #FFD700; padding: 0.25rem 0.75rem; margin: 0.25rem; font-weight: 600; font-size: 0.9rem; }
-  .tag.green { border-color: #00FF87; color: #00FF87; }
-  .tag.blue { border-color: #4A90E2; color: #4A90E2; }
-  .tag.red { border-color: #FF6B6B; color: #FF6B6B; }
-  .setup-step { font-family: 'JetBrains Mono', monospace; background: #111; border-left: 4px solid #FFD700; padding: 0.75rem 1rem; margin: 0.5rem 0; font-size: 0.9rem; }
-  .badge { display: inline-block; background: #FFD700; color: #000; font-weight: 700; padding: 0.1rem 0.5rem; font-size: 0.8rem; margin-left: 0.5rem; }
+  .section h2 { font-size: 1.2rem; font-weight: 700; color: #0070f3; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.1em; }
+  .tag { display: inline-block; background: #1a1a1a; border: 2px solid #0070f3; color: #0070f3; padding: 0.25rem 0.75rem; margin: 0.25rem; font-weight: 600; font-size: 0.9rem; }
+  .tag.green { border-color: #00c853; color: #00c853; }
+  .tag.blue { border-color: #0070f3; color: #0070f3; }
+  .tag.red { border-color: #ee0000; color: #ee0000; }
+  .setup-step { font-family: 'JetBrains Mono', monospace; background: #111; border-left: 4px solid #0070f3; padding: 0.75rem 1rem; margin: 0.5rem 0; font-size: 0.9rem; }
+  .badge { display: inline-block; background: #0070f3; color: #000; font-weight: 700; padding: 0.1rem 0.5rem; font-size: 0.8rem; margin-left: 0.5rem; }
   footer { text-align: center; color: #555; margin-top: 3rem; font-size: 0.85rem; }
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <h1>⚡ AutoDev Report</h1>
+    <h1>AutoDev Report</h1>
     <p class="meta">Generated: {{.Generated}} · Repository: {{.Path}}</p>
     <p class="meta">{{.Count}} technologies detected</p>
   </header>

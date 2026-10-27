@@ -57,14 +57,14 @@ func runClone(repoURL, targetDir string, skipConfirm bool) error {
 		return fmt.Errorf("invalid target directory: cannot start with a hyphen")
 	}
 
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
-	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FF6B6B"))
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
+	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#ee0000"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	highlightStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD700")).Bold(true)
+	highlightStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3")).Bold(true)
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("⚡ AUTODEV CLONE & DEPLOY"))
+	fmt.Println(titleStyle.Render("AUTODEV CLONE & DEPLOY"))
 	fmt.Printf("  Target:  %s\n", highlightStyle.Render(repoURL))
 	fmt.Printf("  Folder:  %s\n\n", highlightStyle.Render(targetDir))
 

@@ -56,12 +56,12 @@ reproducible .devcontainer.json setup and recommended VSCode extension configura
 }
 
 func runContainerize(path string) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("⚡ AutoDev Cloud IDE Containerizer"))
+	fmt.Println(titleStyle.Render("AutoDev Cloud IDE Containerizer"))
 	fmt.Println(dimStyle.Render("  Scanning stack to configure DevContainer & VSCode..."))
 
 	s := scanner.New(path)

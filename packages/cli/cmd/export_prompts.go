@@ -36,7 +36,7 @@ func newExportPromptsCmd() *cobra.Command {
 }
 
 func runExportPrompts(outFile string, format string) error {
-	accentStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
+	accentStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	engine, err := promptcapture.NewEngine("")

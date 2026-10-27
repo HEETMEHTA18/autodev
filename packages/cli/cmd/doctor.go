@@ -10,28 +10,33 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/autodev-sh/autodev/core/osinfo"
 	"github.com/autodev-sh/autodev/installer"
 	"github.com/autodev-sh/autodev/registry"
 	"github.com/autodev-sh/autodev/scanner"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 )
 
 func newDoctorCmd() *cobra.Command {
 	var fix bool
+	var strict bool
 	cmd := &cobra.Command{
 		Use:   "doctor",
 		Short: "Check the health and security of your codebase",
 		Long:  `Verify that your codebase is healthy, secure, has correct git configurations, is free of exposed secrets, and matches standard linting and environment variables.`,
 		Example: `  autodev doctor
-  autodev doctor --fix`,
+  autodev doctor --fix
+  autodev doctor --json
+  autodev doctor --json --fix > report.json
+  autodev doctor --strict`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runDoctor(fix)
+			return runDoctorStrict(fix, strict)
 		},
 	}
 	cmd.Flags().BoolVar(&fix, "fix", false, "automatically attempt to fix detected codebase issues")
+	cmd.Flags().BoolVar(&strict, "strict", false, "exit with a non-zero status when issues are found")
 	return cmd
 }
 
@@ -42,98 +47,254 @@ type codebaseDiagnostic struct {
 	fixFn       func(path string) (bool, error)
 }
 
+// checkResult is the machine-readable outcome of a single diagnostic check.
+type checkResult struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Status      string `json:"status"` // ok | warning | error
+	Message     string `json:"message,omitempty"`
+}
+
+// fixResult is the machine-readable outcome of a single auto-fix attempt.
+type fixResult struct {
+	Name   string `json:"name"`
+	Status string `json:"status"` // fixed | manual | failed
+	Error  string `json:"error,omitempty"`
+}
+
+type systemReport struct {
+	OS             string `json:"os"`
+	Arch           string `json:"arch"`
+	Version        string `json:"version"`
+	PackageManager string `json:"package_manager"`
+	CPUCores       int    `json:"cpu_cores"`
+}
+
+type agentReport struct {
+	Name      string `json:"name"`
+	Installed bool   `json:"installed"`
+	Version   string `json:"version,omitempty"`
+}
+
+type doctorReport struct {
+	Version     string        `json:"version"`
+	Path        string        `json:"path"`
+	GeneratedAt string        `json:"generated_at"`
+	Healthy     bool          `json:"healthy"`
+	Issues      int           `json:"issues"`
+	System      *systemReport `json:"system,omitempty"`
+	Agents      []agentReport `json:"agents"`
+	Checks      []checkResult `json:"checks"`
+	Fix         fixReport     `json:"fix"`
+}
+
+type fixReport struct {
+	Attempted bool        `json:"attempted"`
+	Results   []fixResult `json:"results,omitempty"`
+	Log       string      `json:"log,omitempty"`
+}
+
+// runDoctor keeps the historical signature used by tests and call sites.
 func runDoctor(fix bool) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87"))
-	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FF6B6B"))
-	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	boldStyle := lipgloss.NewStyle().Bold(true)
-	cyanStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00E5FF"))
+	return runDoctorStrict(fix, false)
+}
+
+func runDoctorStrict(fix, strict bool) error {
+	path := "."
+	info, infoErr := osinfo.Detect()
+	agents := registry.DetectAll()
+
+	if jsonOut {
+		return runDoctorJSON(path, fix, strict, info, infoErr, agents)
+	}
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("⚡ AUTODEV CODEBASE HEALTH & SECURITY DOCTOR"))
+	fmt.Println(styleHeading.Render("AUTODEV CODEBASE HEALTH & SECURITY DOCTOR"))
 	fmt.Println()
 
-	// 1. System specifications summary
-	info, err := osinfo.Detect()
-	if err == nil {
-		fmt.Println(titleStyle.Render("SYSTEM SPECIFICATIONS"))
-		fmt.Printf("  %-20s %s\n", boldStyle.Render("OS"), info.Version)
-		fmt.Printf("  %-20s %s\n", boldStyle.Render("Architecture"), info.Arch)
-		fmt.Printf("  %-20s %s\n", boldStyle.Render("Package Manager"), info.PackageManager)
+	if infoErr == nil {
+		fmt.Println(styleHeading.Render("SYSTEM SPECIFICATIONS"))
+		fmt.Printf("  %-20s %s\n", styleBold.Render("OS"), info.Version)
+		fmt.Printf("  %-20s %s\n", styleBold.Render("Architecture"), info.Arch)
+		fmt.Printf("  %-20s %s\n", styleBold.Render("Package Manager"), info.PackageManager)
 		fmt.Println()
 	}
 
-	// 1b. AI agent registry status
-	fmt.Println(titleStyle.Render("AI AGENTS"))
-	for _, s := range registry.DetectAll() {
-		mark := warnStyle.Render("✗")
-		status := dimStyle.Render("not installed")
+	fmt.Println(styleHeading.Render("AI AGENTS"))
+	for _, s := range agents {
+		mark := styleWarn.Render("✗")
+		status := styleDim.Render("not installed")
 		if s.Installed {
-			mark = okStyle.Render("✓")
-			status = okStyle.Render(s.Version)
+			mark = styleOK.Render("✓")
+			status = styleOK.Render(s.Version)
 		}
 		fmt.Printf("  %-6s %-16s %s\n", mark, s.Agent.Name, status)
 	}
 	fmt.Println()
 
-	fmt.Println(titleStyle.Render("CODEBASE DIAGNOSTICS SCAN"))
-	fmt.Println(dimStyle.Render("  Scanning for secrets, configuration mismatches, and code errors..."))
+	fmt.Println(styleHeading.Render("CODEBASE DIAGNOSTICS SCAN"))
+	fmt.Println(styleDim.Render("  Scanning for secrets, configuration mismatches, and code errors..."))
 	fmt.Println()
 
-	diagnostics := getCodebaseDiagnostics()
-	path := "."
+	_, toFix := evaluateDiagnostics(path, printCheckResult)
 
-	unhealthyCount := 0
+	fmt.Println()
+	if len(toFix) == 0 {
+		fmt.Println(styleOK.Render("  ✓ Codebase is completely healthy, secure, and ready for production!"))
+		return nil
+	}
+
+	fmt.Printf("  %s issues detected in the codebase.\n", styleWarn.Render(fmt.Sprintf("%d", len(toFix))))
+
+	if fix {
+		fmt.Println()
+		fmt.Println(styleHeading.Render("Attempting auto-remediation (--fix)..."))
+		fmt.Println()
+		applyFixes(path, toFix, func(name string) {
+			fmt.Printf("  Healing %s...\n", name)
+		}, func(fr fixResult) {
+			switch fr.Status {
+			case "fixed":
+				fmt.Printf("    %s Successfully healed %s!\n", styleOK.Render("✓"), fr.Name)
+			case "failed":
+				fmt.Printf("    %s Failed to fix: %s\n", styleWarn.Render("✗"), fr.Error)
+			default:
+				fmt.Printf("    %s Requires manual action (refer to warning logs)\n", styleWarn.Render("!"))
+			}
+		})
+		fmt.Println()
+	} else {
+		fmt.Println()
+		fmt.Println(styleDim.Render("  Run 'autodev doctor --fix' to automatically resolve fixable issues."))
+	}
+
+	PrintGitHubCTA()
+	if strict {
+		return fmt.Errorf("%d issue(s) found", len(toFix))
+	}
+	return nil
+}
+
+func printCheckResult(r checkResult) {
+	switch r.Status {
+	case "ok":
+		fmt.Printf("  %s %-25s %s\n", styleOK.Render(fmt.Sprintf("%-3s", iconSuccess)), r.Name, styleDim.Render("Clean & Healthy"))
+	case "warning":
+		fmt.Printf("  %s %-25s %s\n", styleWarn.Render(fmt.Sprintf("%-3s", iconWarn)), r.Name, styleCyan.Render(r.Message))
+	default:
+		fmt.Printf("  %s %-25s %s\n", styleErr.Render(fmt.Sprintf("%-3s", iconError)), r.Name, styleDim.Render(r.Message))
+	}
+	if verbose && r.Status != "ok" && r.Description != "" {
+		fmt.Printf("  %-3s %s %s\n", "", "", styleDim.Render(r.Description))
+	}
+}
+
+// evaluateDiagnostics runs every diagnostic check. When report is non-nil it
+// is invoked as each check completes, which keeps text output streaming while
+// JSON output stays silent.
+func evaluateDiagnostics(path string, report func(checkResult)) ([]checkResult, []*codebaseDiagnostic) {
+	diagnostics := getCodebaseDiagnostics()
+	results := make([]checkResult, 0, len(diagnostics))
 	var toFix []*codebaseDiagnostic
 
 	for i := range diagnostics {
 		d := &diagnostics[i]
 		ok, msg, err := d.checkFn(path)
-		if err != nil {
-			fmt.Printf("  %-10s %-25s %s\n", warnStyle.Render("[ERROR]"), d.name, dimStyle.Render(err.Error()))
-			unhealthyCount++
+		r := checkResult{Name: d.name, Description: d.description}
+		switch {
+		case err != nil:
+			r.Status = "error"
+			r.Message = err.Error()
 			toFix = append(toFix, d)
-		} else if !ok {
-			fmt.Printf("  %-10s %-25s %s\n", warnStyle.Render("[WARNING]"), d.name, cyanStyle.Render(msg))
-			unhealthyCount++
+		case !ok:
+			r.Status = "warning"
+			r.Message = msg
 			toFix = append(toFix, d)
-		} else {
-			fmt.Printf("  %-10s %-25s %s\n", okStyle.Render("[OK]"), d.name, dimStyle.Render("Clean & Healthy"))
+		default:
+			r.Status = "ok"
+		}
+		results = append(results, r)
+		if report != nil {
+			report(r)
 		}
 	}
+	return results, toFix
+}
 
-	fmt.Println()
-	if unhealthyCount == 0 {
-		fmt.Println(okStyle.Render("  ✓ Codebase is completely healthy, secure, and ready for production!"))
-		return nil
-	}
-
-	fmt.Printf("  %s issues detected in the codebase.\n", warnStyle.Render(fmt.Sprintf("%d", unhealthyCount)))
-
-	if fix {
-		fmt.Println()
-		fmt.Println(titleStyle.Render("🔧 Attempting auto-remediation (--fix)..."))
-		fmt.Println()
-
-		for _, d := range toFix {
-			fmt.Printf("  Healing %s...\n", d.name)
-			fixed, err := d.fixFn(path)
-			if err != nil {
-				fmt.Printf("    %s Failed to fix: %v\n", warnStyle.Render("✗"), err)
-			} else if fixed {
-				fmt.Printf("    %s Successfully healed %s!\n", okStyle.Render("✓"), d.name)
-			} else {
-				fmt.Printf("    %s Requires manual action (refer to warning logs)\n", warnStyle.Render("!"))
-			}
+// applyFixes attempts remediation for every failing diagnostic.
+func applyFixes(path string, toFix []*codebaseDiagnostic, onStart func(string), report func(fixResult)) []fixResult {
+	results := make([]fixResult, 0, len(toFix))
+	for _, d := range toFix {
+		if onStart != nil {
+			onStart(d.name)
 		}
-		fmt.Println()
-	} else {
-		fmt.Println()
-		fmt.Println(dimStyle.Render("  Run 'autodev doctor --fix' to automatically resolve fixable issues."))
+		fixed, err := d.fixFn(path)
+		fr := fixResult{Name: d.name}
+		switch {
+		case err != nil:
+			fr.Status = "failed"
+			fr.Error = err.Error()
+		case fixed:
+			fr.Status = "fixed"
+		default:
+			fr.Status = "manual"
+		}
+		results = append(results, fr)
+		if report != nil {
+			report(fr)
+		}
+	}
+	return results
+}
+
+func runDoctorJSON(path string, fix, strict bool, info *osinfo.Info, infoErr error, agents []registry.Status) error {
+	results, toFix := evaluateDiagnostics(path, nil)
+
+	report := doctorReport{
+		Version:     rootCmd.Version,
+		Path:        path,
+		GeneratedAt: time.Now().UTC().Format(time.RFC3339),
+		Healthy:     len(toFix) == 0,
+		Issues:      len(toFix),
+		Agents:      make([]agentReport, 0, len(agents)),
+		Checks:      results,
+	}
+	if infoErr == nil {
+		report.System = &systemReport{
+			OS:             info.OS,
+			Arch:           info.Arch,
+			Version:        info.Version,
+			PackageManager: info.PackageManager,
+			CPUCores:       info.CPUCores,
+		}
+	}
+	for _, s := range agents {
+		report.Agents = append(report.Agents, agentReport{
+			Name:      s.Agent.Name,
+			Installed: s.Installed,
+			Version:   s.Version,
+		})
 	}
 
-	PrintGitHubCTA()
+	if fix && len(toFix) > 0 {
+		report.Fix.Attempted = true
+		// fix functions print progress to stdout; capture it so the JSON
+		// document on stdout stays valid.
+		log := captureStdoutStderr(func() {
+			report.Fix.Results = applyFixes(path, toFix, nil, nil)
+		})
+		report.Fix.Log = strings.TrimSpace(log)
+	}
+
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(report); err != nil {
+		return err
+	}
+
+	if strict && !report.Healthy {
+		return fmt.Errorf("%d issue(s) found", report.Issues)
+	}
 	return nil
 }
 
@@ -446,7 +607,7 @@ packages/cli/bin/
 						if idx := strings.Index(activeVer, "\n"); idx != -1 {
 							activeVer = activeVer[:idx]
 						}
-						if !strings.Contains(strings.ToLower(activeVer), strings.ToLower(targetVer)) && 
+						if !strings.Contains(strings.ToLower(activeVer), strings.ToLower(targetVer)) &&
 							!strings.Contains(strings.ToLower(targetVer), strings.ToLower(activeVer)) {
 							mismatches = append(mismatches, fmt.Sprintf("%s (active: %s, expected: %s)", name, activeVer, targetVer))
 						}
@@ -486,7 +647,7 @@ packages/cli/bin/
 						if idx := strings.Index(activeVer, "\n"); idx != -1 {
 							activeVer = activeVer[:idx]
 						}
-						if !strings.Contains(strings.ToLower(activeVer), strings.ToLower(targetVer)) && 
+						if !strings.Contains(strings.ToLower(activeVer), strings.ToLower(targetVer)) &&
 							!strings.Contains(strings.ToLower(targetVer), strings.ToLower(activeVer)) {
 							mismatch = true
 						}

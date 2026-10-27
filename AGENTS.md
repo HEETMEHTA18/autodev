@@ -49,6 +49,7 @@ Use the prompts in `.autodevs/agents/` for each stage:
 |-------|------|
 | Planner | `agents/planner.md` |
 | Context Builder | `agents/context.md` |
+| Refiner (self-reprompt) | `agents/refiner.md` |
 | Builder | `agents/builder.md` |
 | Reviewer | `agents/reviewer.md` |
 | Verifier | `agents/verifier.md` |

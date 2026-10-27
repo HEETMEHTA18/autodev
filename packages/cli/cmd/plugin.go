@@ -67,13 +67,13 @@ func newPluginInstallCmd() *cobra.Command {
 }
 
 func runPluginList() error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	accentStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	accentStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
 	headerStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFFFFF"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("⚡ AutoDev Community Plugin Registry (Beta)"))
+	fmt.Println(titleStyle.Render("AutoDev Community Plugin Registry (Beta)"))
 	fmt.Println(dimStyle.Render("  Pulls manifests from plugins.autodevs.dev..."))
 	fmt.Println()
 
@@ -101,9 +101,9 @@ func runPluginList() error {
 }
 
 func runPluginInstall(name string) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
-	errStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FF4444")).Bold(true)
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
+	errStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#ee0000")).Bold(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	var selected *pluginInfo
@@ -121,7 +121,7 @@ func runPluginInstall(name string) error {
 		return fmt.Errorf("plugin not found")
 	}
 
-	fmt.Println(titleStyle.Render("⚡ AutoDev Plugin Installer"))
+	fmt.Println(titleStyle.Render("AutoDev Plugin Installer"))
 	fmt.Printf("  Installing plugin: %s (v%s by %s)...\n", okStyle.Render(selected.Name), selected.Version, selected.Publisher)
 	fmt.Println(dimStyle.Render("  Downloading plugin manifest & compiling instructions..."))
 

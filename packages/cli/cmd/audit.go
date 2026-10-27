@@ -34,19 +34,19 @@ func newAuditCmd() *cobra.Command {
 }
 
 func runAudit(path string) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
-	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF6B6B"))
-	infoStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#4A90E2")).Bold(true)
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
+	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#ee0000"))
+	infoStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3")).Bold(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
-	criticalStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF2A2A"))
-	highStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF6B6B"))
-	moderateStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
+	criticalStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#ee0000"))
+	highStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#ee0000"))
+	moderateStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 	lowStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("🛡️  AutoDev Supply-Chain Safety Audit"))
+	fmt.Println(titleStyle.Render("  AutoDev Supply-Chain Safety Audit"))
 	fmt.Println(dimStyle.Render("  Auditing dependencies against the OSV Vulnerability Database..."))
 	fmt.Println()
 
@@ -73,7 +73,7 @@ func runAudit(path string) error {
 	fmt.Println()
 
 	for _, res := range results {
-		pkgHeader := fmt.Sprintf("📦 %s@%s (%s)", res.Package.Name, res.Package.Version, res.Package.Ecosystem)
+		pkgHeader := fmt.Sprintf("%s@%s (%s)", res.Package.Name, res.Package.Version, res.Package.Ecosystem)
 		fmt.Println(infoStyle.Render(pkgHeader))
 
 		for _, v := range res.Vulnerabilities {

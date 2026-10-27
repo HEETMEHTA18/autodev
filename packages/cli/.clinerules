@@ -1,4 +1,4 @@
-# ⚡ AUTODEV AI AGENT OPTIMIZATION & INSTRUCTION RULES
+# AUTODEV AI AGENT OPTIMIZATION & INSTRUCTION RULES
 
 This repository is optimized for AI Coding Assistants (Cursor, Claude Desktop, Windsurf, Cline, GitHub Copilot) via **AutoDev**.
 
@@ -6,14 +6,14 @@ This repository is optimized for AI Coding Assistants (Cursor, Claude Desktop, W
 > **DO NOT SPEND TOKENS SCANNING THE PROJECT MANUALLY.**
 > AI Assistants can save up to **99.8% of context window tokens** (e.g. from 200,000+ tokens down to 350 tokens) by calling AutoDev commands or its Model Context Protocol (MCP) server instead of reading individual source files, lockfiles, or configurations recursively.
 
-## 📊 TOKEN REDUCTION TELEMETRY
+## TOKEN REDUCTION TELEMETRY
 
 AutoDev optimizes the AI context window by exchanging condensed telemetry configs instead of raw source code payloads:
 * **Traditional Prompt Context Payload:** ~10,000 to 250,000 tokens (requires uploading recursive directory listings, package configs, `.env` files, compiler versions).
 * **AutoDev Telemetry Config:** ~300 to 900 tokens (retrieved instantly using a local compiler check and unified JSON report).
 * **Efficacy:** **99% - 99.9% saved tokens per prompt roundtrip**.
 
-## 💡 AI AGENT BEHAVIORAL PROTOCOLS
+## AI AGENT BEHAVIORAL PROTOCOLS
 
 When working in this codebase, you MUST adhere to the following operational guidelines:
 
@@ -36,13 +36,13 @@ When working in this codebase, you MUST adhere to the following operational guid
    5. One line? → one line
    6. Only then: the minimum that works
 
-## 🔌 MODEL CONTEXT PROTOCOL (MCP) INTERFACE
+## MODEL CONTEXT PROTOCOL (MCP) INTERFACE
 
 AutoDev starts a native MCP server over `stdin/stdout` containing tools that the AI can call automatically.
 * **Command to run:** `autodev mcp start`
 * **Auto-setup Claude/Cursor:** Run `autodev mcp setup` to inject this server config into Claude Desktop and all Cursor user files.
 
-### 🛠️ Exposed MCP Tools Reference for AI:
+### Exposed MCP Tools Reference for AI:
 
 *   **`autodev_scan`**
     *   *Purpose:* Performs a multi-file structural scan of the workspace.
@@ -63,7 +63,7 @@ AutoDev starts a native MCP server over `stdin/stdout` containing tools that the
     *   *Returns:* Vulnerability report details.
     *   *Use when:* Checking dependency security.
 
-## 🛠️ CLI CHEATSHEET FOR AI AGENTS (SHELL EXECUTOR)
+## CLI CHEATSHEET FOR AI AGENTS (SHELL EXECUTOR)
 
 If you are running as a shell executor, invoke these commands to interact with the dev environment:
 
@@ -78,13 +78,13 @@ If you are running as a shell executor, invoke these commands to interact with t
 | `autodev ui` | Launches local web cockpit at `http://127.0.0.1:8080` | `autodev ui` |
 | `autodev skills` | Access learning roadmap matrix and sync stats | `autodev skills --save-rules` |
 
-## 🔍 Environment & Technologies
+## Environment & Technologies
 
 | Technology | Competency Level |
 |------------|------------------|
 | Go | intermediate |
 
-## 🗺️ Recommended Roadmap & Next Steps
+## Recommended Roadmap & Next Steps
 
 ### Next Skills to Focus On
 *   **Docker** (intermediate)
@@ -96,7 +96,7 @@ If you are running as a shell executor, invoke these commands to interact with t
 *   **Terraform** (advanced)
     *   Resource: https://developer.hashicorp.com/terraform/tutorials
 
-## 🗺️ Future Horizon
+## Future Horizon
 
 *   **v0.3.0 Layer (Next)**: Local AI Assistant with Ollama integration, Devcontainer configuration templates generation, doctor auto-remediation (`autodev doctor --fix`).
 *   **v0.4.0 Layer**: Deployment adapters & cloud setup automation.

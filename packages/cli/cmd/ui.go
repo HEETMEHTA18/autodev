@@ -65,7 +65,7 @@ func runUI(port int) error {
 	}
 
 	url := fmt.Sprintf("http://%s", addr)
-	fmt.Printf("\n  ⚡ AutoDev UI dashboard starting at %s ...\n", url)
+	fmt.Printf("\n  AutoDev UI dashboard starting at %s ...\n", url)
 
 	// Register Handlers
 	http.HandleFunc("/", handleHome)
@@ -248,13 +248,13 @@ const dashboardHTML = `<!DOCTYPE html>
   <style>
     :root {
       --bg: #000000;
-      --card-bg: #0c0c0c;
-      --border: #222222;
+      --card-bg: #0a0a0a;
+      --border: #2a2a2a;
       --text: #ffffff;
       --text-dim: #888888;
-      --yellow: #FFD700;
-      --green: #00FF87;
-      --red: #FF5F56;
+      --yellow: #0070f3;
+      --green: #00c853;
+      --red: #ee0000;
     }
 
     * {
@@ -443,7 +443,7 @@ const dashboardHTML = `<!DOCTYPE html>
         <div class="subtitle">Clone. Scan. Install. Build.</div>
       </div>
       <div>
-        <span class="badge badge-ok" style="background: black; color: #FFD700; font-size: 0.9rem; padding: 6px 12px;">LOCAL SERVER RUNNING</span>
+        <span class="badge badge-ok" style="background: black; color: #0070f3; font-size: 0.9rem; padding: 6px 12px;">LOCAL SERVER RUNNING</span>
       </div>
     </header>
 

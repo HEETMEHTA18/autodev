@@ -22,9 +22,9 @@ func newSyncCmd() *cobra.Command {
 }
 
 func runSync() error {
-	accentStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
+	accentStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF8700"))
+	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#f5a623"))
 
 	engine, err := promptcapture.NewEngine("")
 	if err != nil {

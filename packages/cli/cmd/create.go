@@ -61,13 +61,13 @@ func newCreateCmd() *cobra.Command {
 }
 
 func runCreateReactTS(projectName string) error {
-	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
-	cyanStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00E5FF"))
-	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
+	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
+	cyanStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3"))
+	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 	whiteStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FFFFFF"))
-	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#666666"))
+	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))
 
-	fmt.Printf("\n  ⚡ %s\n\n", goldStyle.Render("AutoDev Project Creator — React + Tailwind + TypeScript"))
+	fmt.Printf("\n  %s\n\n", goldStyle.Render("AutoDev Project Creator — React + Tailwind + TypeScript"))
 
 	// Create directories
 	dirs := []string{
@@ -113,10 +113,10 @@ func runCreateReactTS(projectName string) error {
 	fmt.Printf("  %s Set up git metadata and config entrypoints\n", successStyle.Render("✓"))
 	fmt.Println()
 
-	fmt.Printf("  🚀 Project %s created successfully!\n\n", cyanStyle.Render(projectName))
+	fmt.Printf("  Project %s created successfully!\n\n", cyanStyle.Render(projectName))
 
 	// Benchmark Stats Card
-	fmt.Println(goldStyle.Render("  📊 AI EFFICIENCY BENCHMARK:"))
+	fmt.Println(goldStyle.Render("  AI EFFICIENCY BENCHMARK:"))
 	fmt.Println(dimStyle.Render("  ──────────────────────────────────────────────────────────"))
 	fmt.Printf("  Traditional AI-Prompted Setup:\n")
 	fmt.Printf("    - Prompts Exchanged: %s\n", whiteStyle.Render("18"))
@@ -140,13 +140,13 @@ func runCreateReactTS(projectName string) error {
 }
 
 func runCreateNextJS(projectName string) error {
-	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
-	cyanStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00E5FF"))
-	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
+	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
+	cyanStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3"))
+	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 	whiteStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FFFFFF"))
-	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#666666"))
+	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))
 
-	fmt.Printf("\n  ⚡ %s\n\n", goldStyle.Render("AutoDev Project Creator — Next.js + TS + Tailwind + Docker"))
+	fmt.Printf("\n  %s\n\n", goldStyle.Render("AutoDev Project Creator — Next.js + TS + Tailwind + Docker"))
 
 	dirs := []string{
 		projectName,
@@ -191,10 +191,10 @@ func runCreateNextJS(projectName string) error {
 	fmt.Printf("  %s Set up GitHub Actions CI/CD pipeline\n", successStyle.Render("✓"))
 	fmt.Println()
 
-	fmt.Printf("  🚀 Project %s created successfully!\n\n", cyanStyle.Render(projectName))
+	fmt.Printf("  Project %s created successfully!\n\n", cyanStyle.Render(projectName))
 
 	// Benchmark Stats Card
-	fmt.Println(goldStyle.Render("  📊 AI EFFICIENCY BENCHMARK:"))
+	fmt.Println(goldStyle.Render("  AI EFFICIENCY BENCHMARK:"))
 	fmt.Println(dimStyle.Render("  ──────────────────────────────────────────────────────────"))
 	fmt.Printf("  Traditional AI-Prompted Setup:\n")
 	fmt.Printf("    - Prompts Exchanged: %s\n", whiteStyle.Render("32"))
@@ -218,13 +218,13 @@ func runCreateNextJS(projectName string) error {
 }
 
 func runCreateAIChatbot(projectName string) error {
-	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
-	cyanStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00E5FF"))
-	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
+	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
+	cyanStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3"))
+	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 	whiteStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FFFFFF"))
-	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#666666"))
+	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))
 
-	fmt.Printf("\n  ⚡ %s\n\n", goldStyle.Render("AutoDev Project Creator — Gemini AI Chatbot + Express + React"))
+	fmt.Printf("\n  %s\n\n", goldStyle.Render("AutoDev Project Creator — Gemini AI Chatbot + Express + React"))
 
 	dirs := []string{
 		projectName,
@@ -268,10 +268,10 @@ func runCreateAIChatbot(projectName string) error {
 	fmt.Printf("  %s Configured Docker container and CI workflows\n", successStyle.Render("✓"))
 	fmt.Println()
 
-	fmt.Printf("  🚀 Project %s created successfully!\n\n", cyanStyle.Render(projectName))
+	fmt.Printf("  Project %s created successfully!\n\n", cyanStyle.Render(projectName))
 
 	// Benchmark Stats Card
-	fmt.Println(goldStyle.Render("  📊 AI EFFICIENCY BENCHMARK:"))
+	fmt.Println(goldStyle.Render("  AI EFFICIENCY BENCHMARK:"))
 	fmt.Println(dimStyle.Render("  ──────────────────────────────────────────────────────────"))
 	fmt.Printf("  Traditional AI-Prompted Setup:\n")
 	fmt.Printf("    - Prompts Exchanged: %s\n", whiteStyle.Render("45"))
@@ -295,13 +295,13 @@ func runCreateAIChatbot(projectName string) error {
 }
 
 func runCreateMERNStack(projectName string) error {
-	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
-	cyanStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00E5FF"))
-	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
+	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
+	cyanStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3"))
+	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 	whiteStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FFFFFF"))
-	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#666666"))
+	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))
 
-	fmt.Printf("\n  ⚡ %s\n\n", goldStyle.Render("AutoDev Project Creator — MERN Stack (Mongo + Express + React + Node)"))
+	fmt.Printf("\n  %s\n\n", goldStyle.Render("AutoDev Project Creator — MERN Stack (Mongo + Express + React + Node)"))
 
 	dirs := []string{
 		projectName,
@@ -346,10 +346,10 @@ func runCreateMERNStack(projectName string) error {
 	fmt.Printf("  %s Configured React/Vite web UI dashboard client\n", successStyle.Render("✓"))
 	fmt.Println()
 
-	fmt.Printf("  🚀 Project %s created successfully!\n\n", cyanStyle.Render(projectName))
+	fmt.Printf("  Project %s created successfully!\n\n", cyanStyle.Render(projectName))
 
 	// Benchmark Stats Card
-	fmt.Println(goldStyle.Render("  📊 AI EFFICIENCY BENCHMARK:"))
+	fmt.Println(goldStyle.Render("  AI EFFICIENCY BENCHMARK:"))
 	fmt.Println(dimStyle.Render("  ──────────────────────────────────────────────────────────"))
 	fmt.Printf("  Traditional AI-Prompted Setup:\n")
 	fmt.Printf("    - Prompts Exchanged: %s\n", whiteStyle.Render("55"))
@@ -373,13 +373,13 @@ func runCreateMERNStack(projectName string) error {
 }
 
 func runCreateFlutterApp(projectName string) error {
-	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
-	cyanStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00E5FF"))
-	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
+	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
+	cyanStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3"))
+	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 	whiteStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FFFFFF"))
-	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#666666"))
+	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))
 
-	fmt.Printf("\n  ⚡ %s\n\n", goldStyle.Render("AutoDev Project Creator — Flutter Clean Architecture Template"))
+	fmt.Printf("\n  %s\n\n", goldStyle.Render("AutoDev Project Creator — Flutter Clean Architecture Template"))
 
 	dirs := []string{
 		projectName,
@@ -417,10 +417,10 @@ func runCreateFlutterApp(projectName string) error {
 	fmt.Printf("  %s Created web container Dockerfile and GitHub Action CI\n", successStyle.Render("✓"))
 	fmt.Println()
 
-	fmt.Printf("  🚀 Project %s created successfully!\n\n", cyanStyle.Render(projectName))
+	fmt.Printf("  Project %s created successfully!\n\n", cyanStyle.Render(projectName))
 
 	// Benchmark Stats Card
-	fmt.Println(goldStyle.Render("  📊 AI EFFICIENCY BENCHMARK:"))
+	fmt.Println(goldStyle.Render("  AI EFFICIENCY BENCHMARK:"))
 	fmt.Println(dimStyle.Render("  ──────────────────────────────────────────────────────────"))
 	fmt.Printf("  Traditional AI-Prompted Setup:\n")
 	fmt.Printf("    - Prompts Exchanged: %s\n", whiteStyle.Render("24"))
@@ -594,7 +594,7 @@ function App() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 text-white p-6">
       <div className="max-w-md w-full bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl text-center">
         <h1 className="text-3xl font-extrabold bg-gradient-to-r from-amber-400 to-emerald-400 bg-clip-text text-transparent mb-4">
-          ⚡ AUTODEV APP
+          AUTODEV APP
         </h1>
         <p className="text-slate-300 mb-6">
           React + TypeScript + Tailwind CSS project bootstrapped instantly with AutoDev.
@@ -620,7 +620,7 @@ function App() {
 export default App`
 
 func installDependencies(projectPath string) {
-	cyanStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00E5FF"))
+	cyanStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3"))
 
 	// Check for pubspec.yaml (Flutter)
 	pubspecPath := filepath.Join(projectPath, "pubspec.yaml")
@@ -664,7 +664,7 @@ func installDependencies(projectPath string) {
 
 func runInstall(dir string) {
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
+	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
 
 	// Detect package manager
 	mgr := "npm"

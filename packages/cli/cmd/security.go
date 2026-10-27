@@ -24,14 +24,14 @@ func newSecurityCmd() *cobra.Command {
 }
 
 func runSecurity() error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
-	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF6B6B"))
-	infoStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#4A90E2")).Bold(true)
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
+	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#ee0000"))
+	infoStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3")).Bold(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("🛡️  AutoDev Security Doctor"))
+	fmt.Println(titleStyle.Render("  AutoDev Security Doctor"))
 	fmt.Println(dimStyle.Render("  Scanning local environment with available security tools..."))
 	fmt.Println()
 
@@ -42,7 +42,7 @@ func runSecurity() error {
 
 	// 1. Go Tools
 	if _, err := os.Stat("go.mod"); err == nil {
-		fmt.Println(infoStyle.Render("  📦 Checking Go Modules..."))
+		fmt.Println(infoStyle.Render("  Checking Go Modules..."))
 		if err := runExternalCommand("go", "mod", "verify"); err != nil {
 			recommendations = append(recommendations, "Fix module verification failures (run 'go mod verify')")
 			highCount++
@@ -55,7 +55,7 @@ func runSecurity() error {
 		// Actually, go mod tidy doesn't have -diff in all versions. We'll just suggest running go mod tidy if it's messy.
 
 		if commandExists("govulncheck") {
-			fmt.Println(infoStyle.Render("  🔍 Running govulncheck..."))
+			fmt.Println(infoStyle.Render("  Running govulncheck..."))
 			out, err := exec.Command("govulncheck", "./...").CombinedOutput()
 			if err != nil {
 				outStr := string(out)
@@ -74,7 +74,7 @@ func runSecurity() error {
 		}
 
 		if commandExists("gosec") {
-			fmt.Println(infoStyle.Render("  🔒 Running gosec..."))
+			fmt.Println(infoStyle.Render("  Running gosec..."))
 			out, err := exec.Command("gosec", "-quiet", "./...").CombinedOutput()
 			if err != nil {
 				outStr := string(out)
@@ -103,7 +103,7 @@ func runSecurity() error {
 	// 2. Node.js Tools
 	if _, err := os.Stat("package.json"); err == nil {
 		if commandExists("npm") {
-			fmt.Println(infoStyle.Render("  📦 Running npm audit..."))
+			fmt.Println(infoStyle.Render("  Running npm audit..."))
 			out, err := exec.Command("npm", "audit").CombinedOutput()
 			if err != nil {
 				outStr := string(out)
@@ -130,7 +130,7 @@ func runSecurity() error {
 	// 3. Python Tools
 	if _, err := os.Stat("requirements.txt"); err == nil {
 		if commandExists("pip-audit") {
-			fmt.Println(infoStyle.Render("  🐍 Running pip-audit..."))
+			fmt.Println(infoStyle.Render("  Running pip-audit..."))
 			out, err := exec.Command("pip-audit").CombinedOutput()
 			if err != nil {
 				if strings.Contains(string(out), "Found") || strings.Contains(string(out), "Vulnerabilities") {
@@ -150,7 +150,7 @@ func runSecurity() error {
 	// 4. Rust Tools
 	if _, err := os.Stat("Cargo.toml"); err == nil {
 		if commandExists("cargo-audit") || commandExists("cargo") { // cargo audit is a subcommand
-			fmt.Println(infoStyle.Render("  🦀 Running cargo audit..."))
+			fmt.Println(infoStyle.Render("  Running cargo audit..."))
 			out, err := exec.Command("cargo", "audit").CombinedOutput()
 			if err != nil {
 				if strings.Contains(string(out), "error") || strings.Contains(string(out), "Vulnerabilities") || err != nil {
@@ -168,7 +168,7 @@ func runSecurity() error {
 
 	// 5. General / Trivy / Semgrep
 	if commandExists("trivy") {
-		fmt.Println(infoStyle.Render("  🚢 Running trivy fs scanner..."))
+		fmt.Println(infoStyle.Render("  Running trivy fs scanner..."))
 		out, err := exec.Command("trivy", "fs", "--quiet", "--severity", "CRITICAL,HIGH", ".").CombinedOutput()
 		if err != nil {
 			if len(out) > 0 {
@@ -183,7 +183,7 @@ func runSecurity() error {
 	}
 
 	if commandExists("semgrep") {
-		fmt.Println(infoStyle.Render("  🔎 Running semgrep..."))
+		fmt.Println(infoStyle.Render("  Running semgrep..."))
 		out, err := exec.Command("semgrep", "scan", "--quiet", "--error").CombinedOutput()
 		if err != nil {
 			if len(out) > 0 {
@@ -211,7 +211,7 @@ func runSecurity() error {
 	if score < 70 {
 		scoreColor = warnStyle
 	} else if score < 90 {
-		scoreColor = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
+		scoreColor = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 	}
 
 	fmt.Printf("  %s %s\n", titleStyle.Render("Security Score:"), scoreColor.Render(fmt.Sprintf("%d/100", score)))
@@ -219,8 +219,8 @@ func runSecurity() error {
 
 	if criticalCount > 0 || highCount > 0 || mediumCount > 0 {
 		fmt.Printf("  %s %d\n", warnStyle.Render("Critical:"), criticalCount)
-		fmt.Printf("  %s %d\n", lipgloss.NewStyle().Foreground(lipgloss.Color("#FF6B6B")).Render("High:"), highCount)
-		fmt.Printf("  %s %d\n", lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD700")).Render("Medium:"), mediumCount)
+		fmt.Printf("  %s %d\n", lipgloss.NewStyle().Foreground(lipgloss.Color("#ee0000")).Render("High:"), highCount)
+		fmt.Printf("  %s %d\n", lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3")).Render("Medium:"), mediumCount)
 		fmt.Println()
 	}
 

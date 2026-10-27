@@ -21,7 +21,7 @@ import (
 )
 
 func newGitHubCTAForMCP() string {
-	return "\n⭐ Love AutoDev? Star the repo: https://github.com/HEETMEHTA18/autodev\n"
+	return "\nLove AutoDev? Star the repo: https://github.com/HEETMEHTA18/autodev\n"
 }
 
 func newMCPCmd() *cobra.Command {
@@ -54,31 +54,31 @@ func newMCPCmd() *cobra.Command {
 }
 
 func runMCPGuide() error {
-	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	cyanStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00E5FF"))
-	greenStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
+	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	cyanStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	greenStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	borderStyle := lipgloss.NewStyle().Border(lipgloss.RoundedBorder()).BorderForeground(lipgloss.Color("#00E5FF")).Padding(1, 2)
+	borderStyle := lipgloss.NewStyle().Border(lipgloss.NormalBorder()).BorderForeground(lipgloss.Color("#0070f3")).Padding(1, 2)
 
-	fmt.Printf("\n  %s\n", goldStyle.Render("🔌 AUTODEV MODEL CONTEXT PROTOCOL (MCP) INTEGRATION"))
+	fmt.Printf("\n  %s\n", goldStyle.Render("AUTODEV MODEL CONTEXT PROTOCOL (MCP) INTEGRATION"))
 	fmt.Println("  Connect your AI coding tools directly to your local development environment.")
 	fmt.Println()
 
-	toolsText := "🛠️  Available AI Tools through AutoDev MCP:\n\n" +
-		fmt.Sprintf("• %s: Scan repo structure and technology stack.\n", cyanStyle.Render("autodev_scan")) +
-		fmt.Sprintf("• %s: Check system compilers & runtime health.\n", cyanStyle.Render("autodev_doctor")) +
-		fmt.Sprintf("• %s: Install missing developer runtimes locally.\n", cyanStyle.Render("autodev_install")) +
-		fmt.Sprintf("• %s: Audit package dependencies for security issues.\n", cyanStyle.Render("autodev_audit"))
+	toolsText := " Available AI Tools through AutoDev MCP:\n\n" +
+		fmt.Sprintf("·%s: Scan repo structure and technology stack.\n", cyanStyle.Render("autodev_scan")) +
+		fmt.Sprintf("·%s: Check system compilers & runtime health.\n", cyanStyle.Render("autodev_doctor")) +
+		fmt.Sprintf("·%s: Install missing developer runtimes locally.\n", cyanStyle.Render("autodev_install")) +
+		fmt.Sprintf("·%s: Audit package dependencies for security issues.\n", cyanStyle.Render("autodev_audit"))
 
 	fmt.Println(borderStyle.Render(toolsText))
 	fmt.Println()
 
-	fmt.Println(goldStyle.Render("  🚀 QUICK CONNECT WITH CLAUDE DESKTOP:"))
+	fmt.Println(goldStyle.Render("  QUICK CONNECT WITH CLAUDE DESKTOP:"))
 	fmt.Println("  You can automatically write configuration for Claude Desktop with one command:")
 	fmt.Println("    " + greenStyle.Render("autodev mcp setup"))
 	fmt.Println()
 
-	fmt.Println(goldStyle.Render("  📋 MANUAL CONFIGURATION GUIDE:"))
+	fmt.Println(goldStyle.Render("  MANUAL CONFIGURATION GUIDE:"))
 	fmt.Println("  To connect with Cursor, Windsurf, or custom AI clients, add a command-based MCP server:")
 
 	executablePath, err := os.Executable()
@@ -86,8 +86,8 @@ func runMCPGuide() error {
 		executablePath = "autodev"
 	}
 
-	fmt.Printf("  • Server Command: %s\n", greenStyle.Render(executablePath))
-	fmt.Printf("  • Arguments:      %s\n", greenStyle.Render("mcp start"))
+	fmt.Printf("  ·Server Command: %s\n", greenStyle.Render(executablePath))
+	fmt.Printf("  ·Arguments:      %s\n", greenStyle.Render("mcp start"))
 	fmt.Println()
 
 	fmt.Println(dimStyle.Render("  Run 'autodev mcp start' to start the server over stdin/stdout manual pipe."))
@@ -123,7 +123,7 @@ func runMCPSetup() error {
 		return fmt.Errorf("failed to determine Claude config path: %w", err)
 	}
 
-	fmt.Printf("🔍 Locating Claude Desktop configuration...\n")
+	fmt.Printf("Locating Claude Desktop configuration...\n")
 	fmt.Printf("   Config file path: %s\n", configPath)
 
 	configDir := filepath.Dir(configPath)
@@ -143,7 +143,7 @@ func runMCPSetup() error {
 		if err := json.Unmarshal(fileBytes, &configData); err != nil {
 			backupPath := configPath + ".bak"
 			_ = os.WriteFile(backupPath, fileBytes, 0644)
-			fmt.Printf("⚠️  Existing config was invalid JSON. Backed up to %s and creating new config.\n", backupPath)
+			fmt.Printf("!  Existing config was invalid JSON. Backed up to %s and creating new config.\n", backupPath)
 			configData = make(map[string]interface{})
 		}
 	}
@@ -233,9 +233,9 @@ func runMCPSetup() error {
 		}
 	}
 
-	greenStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
-	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	cyanStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00E5FF"))
+	greenStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
+	goldStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	cyanStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
@@ -245,7 +245,7 @@ func runMCPSetup() error {
 	}
 	fmt.Println(dimStyle.Render("  Please restart your AI client (Claude or Cursor) to load the new tools."))
 	fmt.Println()
-	fmt.Println(goldStyle.Render("  👉 TO CONNECT CURSOR OR COGNITION WINDSURF MANUALLY:"))
+	fmt.Println(goldStyle.Render("  → TO CONNECT CURSOR OR COGNITION WINDSURF MANUALLY:"))
 	fmt.Println("  1. Open Cursor Settings > Features > MCP.")
 	fmt.Println("  2. Click '+ Add New MCP Server'.")
 	fmt.Println("  3. Set Name to: " + cyanStyle.Render("autodev"))
@@ -664,7 +664,7 @@ func handleToolCall(name string, args map[string]interface{}) mcpToolCallResult 
 		} else {
 			output.WriteString(fmt.Sprintf("✗ Found vulnerabilities across %d packages:\n\n", len(resList)))
 			for _, res := range resList {
-				output.WriteString(fmt.Sprintf("📦 %s@%s (%s)\n", res.Package.Name, res.Package.Version, res.Package.Ecosystem))
+				output.WriteString(fmt.Sprintf("%s@%s (%s)\n", res.Package.Name, res.Package.Version, res.Package.Ecosystem))
 				for _, v := range res.Vulnerabilities {
 					alias := ""
 					if len(v.Aliases) > 0 {
@@ -975,7 +975,7 @@ func runDoctorMCP(fix bool) string {
 
 	if missing > 0 {
 		if fix && len(missingRuntimes) > 0 {
-			report.WriteString("\n🔧 Remediation (fix mode active):\n")
+			report.WriteString("\nRemediation (fix mode active):\n")
 			inst := installer.New(false)
 			for _, rtName := range missingRuntimes {
 				rt, _ := installer.GetRuntime(rtName)

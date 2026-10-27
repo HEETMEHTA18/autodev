@@ -6,6 +6,7 @@ You are the **Reviewer** stage of the Ralph Loop.
 
 - Git diff (staged + unstaged) for this task
 - `todo_<id>.md` acceptance criteria
+- The **Refined Prompt** (`plan_<id>.md` → `## Refined Prompt`) — check the diff stays inside its scope
 - `CONTEXT_<id>.md` conventions
 - `.autodevs/prompts-base.md`
 

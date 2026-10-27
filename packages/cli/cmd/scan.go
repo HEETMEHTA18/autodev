@@ -76,9 +76,9 @@ func runScan(path string, asJSON bool) error {
 func printScanHeader(path string) {
 	headerStyle := lipgloss.NewStyle().
 		Bold(true).
-		Foreground(lipgloss.Color("#FFD700")).
+		Foreground(lipgloss.Color("#0070f3")).
 		BorderStyle(lipgloss.NormalBorder()).
-		BorderForeground(lipgloss.Color("#FFD700")).
+		BorderForeground(lipgloss.Color("#0070f3")).
 		Padding(0, 2)
 
 	fmt.Println(headerStyle.Render(fmt.Sprintf("Scanning: %s", path)))
@@ -86,88 +86,79 @@ func printScanHeader(path string) {
 }
 
 func printScanResult(result *scanner.ScanResult, elapsed time.Duration) {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
-	itemStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FFFFFF")).PaddingLeft(2)
-	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#666666"))
-	badgeStyle := lipgloss.NewStyle().
-		Background(lipgloss.Color("#FFD700")).
-		Foreground(lipgloss.Color("#000000")).
-		Padding(0, 1).
-		Bold(true)
-
-	if len(result.Languages) > 0 {
-		fmt.Println(titleStyle.Render("  [LANGUAGES]"))
-		for _, lang := range result.Languages {
-			fmt.Println(itemStyle.Render("  - " + lang))
+	printSection := func(label string, items []string) {
+		if len(items) == 0 {
+			return
+		}
+		fmt.Println(styleHeading.Render("  " + label))
+		for _, item := range items {
+			fmt.Printf("    %s %s\n", styleCyan.Render("▸"), item)
 		}
 		fmt.Println()
 	}
 
-	if len(result.Frameworks) > 0 {
-		fmt.Println(titleStyle.Render("  [FRAMEWORKS]"))
-		for _, fw := range result.Frameworks {
-			fmt.Println(itemStyle.Render("  - " + fw))
-		}
+	if len(result.Technologies) == 0 {
+		fmt.Printf("  %s No technologies detected in %s\n", styleWarn.Render("!"), result.Path)
+		fmt.Println("    " + styleDim.Render("Point at your project root: autodev scan <path>"))
 		fmt.Println()
 	}
 
-	if len(result.PackageManagers) > 0 {
-		fmt.Println(titleStyle.Render("  [PACKAGE MANAGERS]"))
-		for _, pm := range result.PackageManagers {
-			fmt.Println(itemStyle.Render("  - " + pm))
-		}
-		fmt.Println()
-	}
-
-	if len(result.Databases) > 0 {
-		fmt.Println(titleStyle.Render("  [DATABASES & SERVICES]"))
-		for _, db := range result.Databases {
-			fmt.Println(itemStyle.Render("  - " + db))
-		}
-		fmt.Println()
-	}
-
-	if len(result.Infra) > 0 {
-		fmt.Println(titleStyle.Render("  [INFRASTRUCTURE]"))
-		for _, inf := range result.Infra {
-			fmt.Println(itemStyle.Render("  - " + inf))
-		}
-		fmt.Println()
-	}
+	printSection("LANGUAGES", result.Languages)
+	printSection("FRAMEWORKS", result.Frameworks)
+	printSection("PACKAGE MANAGERS", result.PackageManagers)
+	printSection("DATABASES & SERVICES", result.Databases)
+	printSection("INFRASTRUCTURE", result.Infra)
 
 	if result.HasDocker {
-		fmt.Println("  " + badgeStyle.Render("Docker") + "  " + badgeStyle.Render("Container-ready"))
+		fmt.Println("  " + styleBadge.Render("Docker") + "  " + styleBadge.Render("Container-ready"))
 	}
 	if result.HasK8s {
-		fmt.Println("  " + badgeStyle.Render("Kubernetes") + "  Found k8s manifests")
+		fmt.Println("  " + styleBadge.Render("Kubernetes") + "  Found k8s manifests")
 	}
 	fmt.Println()
 
 	if len(result.Projects) > 0 {
-		fmt.Println(titleStyle.Render("  [MONOREPO SUBPROJECTS]"))
+		fmt.Println(styleHeading.Render("  MONOREPO SUBPROJECTS"))
 		for _, proj := range result.Projects {
 			var techs []string
 			for _, t := range proj.Technologies {
 				techs = append(techs, t.Name)
 			}
-			fmt.Printf("    - %s (%s) → %s\n", proj.Name, dimStyle.Render(proj.Path), strings.Join(techs, ", "))
+			fmt.Printf("    - %s (%s) → %s\n", proj.Name, styleDim.Render(proj.Path), strings.Join(techs, ", "))
 		}
 		fmt.Println()
 	}
 
 	if len(result.RecommendedSetup) > 0 {
-		fmt.Println()
-		fmt.Println(titleStyle.Render("  [SETUP PLAN]"))
+		fmt.Println(styleHeading.Render("  SETUP PLAN"))
 		for i, step := range result.RecommendedSetup {
-			fmt.Println(itemStyle.Render(fmt.Sprintf("  %d. %s", i+1, step)))
+			fmt.Printf("    %s %s\n", styleCyan.Render(fmt.Sprintf("%d.", i+1)), step)
 		}
+		fmt.Println()
 	}
 
+	if verbose && len(result.Technologies) > 0 {
+		fmt.Println(styleHeading.Render("  DETECTION DETAILS"))
+		for _, t := range result.Technologies {
+			fmt.Printf("    %s %s %s\n",
+				styleBold.Render(t.Name),
+				styleDim.Render("("+t.Type+")"),
+				styleDim.Render(fmt.Sprintf("confidence %.0f%%", t.Confidence*100)))
+			if t.InstallCmd != "" {
+				fmt.Printf("      %s %s\n", styleDim.Render("install:"), t.InstallCmd)
+			}
+			if t.DocsURL != "" {
+				fmt.Printf("      %s %s\n", styleDim.Render("docs:"), t.DocsURL)
+			}
+		}
+		fmt.Println()
+	}
+
+	fmt.Println(styleDim.Render(fmt.Sprintf("  Scanned in %s | %d technologies detected",
+		elapsed.Round(time.Millisecond), len(result.Technologies))))
 	fmt.Println()
-	fmt.Println(dimStyle.Render(fmt.Sprintf("  Scanned in %s | %d technologies detected", elapsed.Round(time.Millisecond), len(result.Technologies))))
-	fmt.Println()
-	fmt.Println(dimStyle.Render("  Run 'autodev setup' to install all missing tools."))
-	fmt.Println(dimStyle.Render("  Run 'autodev audit' to check dependencies for security risks."))
+	fmt.Println(styleDim.Render("  Run 'autodev setup' to install all missing tools."))
+	fmt.Println(styleDim.Render("  Run 'autodev audit' to check dependencies for security risks."))
 	fmt.Println()
 }
 
@@ -424,13 +415,13 @@ jobs:
 	}
 
 	// Print visual checklist
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
-	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FF6B6B")).Bold(true)
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	okStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
+	warnStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#ee0000")).Bold(true)
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render(fmt.Sprintf("  🛡️  PROJECT ENHANCEMENTS DETECTED (%s):", projectType)))
+	fmt.Println(titleStyle.Render(fmt.Sprintf("   PROJECT ENHANCEMENTS DETECTED (%s):", projectType)))
 	fmt.Println(dimStyle.Render("  ──────────────────────────────────────────────────────────"))
 
 	hasMissing := false

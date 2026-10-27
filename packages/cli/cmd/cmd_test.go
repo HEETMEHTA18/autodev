@@ -15,8 +15,8 @@ func TestRootCommand(t *testing.T) {
 	if rootCmd.Use != "autodev" {
 		t.Errorf("root Use = %q, want %q", rootCmd.Use, "autodev")
 	}
-	if rootCmd.Version != "0.6.0" {
-		t.Errorf("root Version = %q, want %q", rootCmd.Version, "0.6.0")
+	if rootCmd.Version != "0.6.1" {
+		t.Errorf("root Version = %q, want %q", rootCmd.Version, "0.6.1")
 	}
 }
 
@@ -31,7 +31,6 @@ func TestPersistentFlags(t *testing.T) {
 }
 
 // Test necessary commands are registered
-
 
 // ── Doctor ────────────────────────────────────────────────────────────────────
 
@@ -322,13 +321,19 @@ func TestMigrateRun(t *testing.T) {
 	dir := t.TempDir()
 	oldFile := filepath.Join(dir, ".autodev.json")
 	_ = os.WriteFile(oldFile, []byte(`{"github_token":"test"}`), 0644)
-	defer func() {
-		_ = os.Chdir(".") // restore
-	}()
-	_ = os.Chdir(dir)
 
-	err := runMigrate()
+	oldDir, err := os.Getwd()
 	if err != nil {
+		t.Fatalf("getwd: %v", err)
+	}
+	defer func() {
+		_ = os.Chdir(oldDir)
+	}()
+	if err := os.Chdir(dir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+
+	if err := runMigrate(); err != nil {
 		t.Logf("runMigrate returned: %v", err)
 	}
 }
@@ -380,29 +385,11 @@ func TestCanvasRun(t *testing.T) {
 
 // ── Graph ─────────────────────────────────────────────────────────────────────
 
-
-
-
-
-
-
 // ── Dashboard ─────────────────────────────────────────────────────────────────
-
-
-
-
 
 // ── Completion ────────────────────────────────────────────────────────────────
 
-
-
-
-
-
-
 // ── Uninstall ─────────────────────────────────────────────────────────────────
-
-
 
 // ── Upgrade ───────────────────────────────────────────────────────────────────
 
@@ -415,31 +402,13 @@ func TestUpgradeCommand(t *testing.T) {
 
 // ── Info ──────────────────────────────────────────────────────────────────────
 
-
-
 // ── Init ──────────────────────────────────────────────────────────────────────
-
-
 
 // ── Snapshot ──────────────────────────────────────────────────────────────────
 
-
-
 // ── Review ────────────────────────────────────────────────────────────────────
 
-
-
-
-
-
-
-
-
 // ── AI ────────────────────────────────────────────────────────────────────────
-
-
-
-
 
 // ── Prompts (history) ─────────────────────────────────────────────────────────
 
@@ -481,8 +450,6 @@ func TestIsPlaceholder(t *testing.T) {
 		}
 	}
 }
-
-
 
 // ── Telemetry ─────────────────────────────────────────────────────────────────
 
@@ -647,8 +614,6 @@ func TestExecuteDoctor(t *testing.T) {
 	}
 }
 
-
-
 func TestExecuteBenchmark(t *testing.T) {
 	buf := new(bytes.Buffer)
 	rootCmd.SetOut(buf)
@@ -681,20 +646,6 @@ func TestExecuteClean(t *testing.T) {
 		t.Errorf("clean command via root returned error: %v", err)
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 func TestExecuteExport(t *testing.T) {
 	tmpFile := filepath.Join(t.TempDir(), "test-lock.json")
@@ -746,10 +697,6 @@ func TestExecuteMCP(t *testing.T) {
 		t.Errorf("mcp via root returned error: %v", err)
 	}
 }
-
-
-
-
 
 func TestExecutePrompts(t *testing.T) {
 	// Skip: prompts command finds project root and may try to use less pager
@@ -822,8 +769,6 @@ func TestMCPTypes(t *testing.T) {
 
 // ── Custom nodes ──────────────────────────────────────────────────────────────
 
-
-
 // ── Doctor MCP ────────────────────────────────────────────────────────────────
 
 func TestRunDoctorMCP(t *testing.T) {
@@ -880,8 +825,6 @@ func TestDirExistsAndNotEmpty(t *testing.T) {
 
 // ── New commands that might be missing ────────────────────────────────────────
 
-
-
 func TestMCPSubcommands(t *testing.T) {
 	cmd := newMCPCmd()
 	subNames := []string{"start", "setup"}
@@ -897,8 +840,6 @@ func TestMCPSubcommands(t *testing.T) {
 }
 
 // ── Verify aliases ────────────────────────────────────────────────────────────
-
-
 
 // ── Doctor run with fix ───────────────────────────────────────────────────────
 
@@ -930,7 +871,6 @@ func TestAllCommandsHaveHelp(t *testing.T) {
 		{newMCPCmd(), "mcp"},
 		{newPluginCmd(), "plugin"},
 		{newPromptsCmd(), "prompts"},
-		
 	}
 	for _, p := range parents {
 		for _, sub := range p.cmd.Commands() {

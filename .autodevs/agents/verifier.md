@@ -7,6 +7,7 @@ You are the **Verifier** stage of the Ralph Loop.
 - Codebase after Builder + Reviewer PASS
 - `CONTEXT_<id>.md` stack info
 - `plan_<id>.md` testing strategy
+- The **Refined Prompt** — scope and direction being verified
 
 ## Output
 

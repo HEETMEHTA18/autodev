@@ -33,7 +33,11 @@ const (
 var rootCmd = &cobra.Command{
 	Use:     "autodev",
 	Short:   "Understand, set up and operate your development environment.",
-	Version: "0.6.0",
+	Version: "0.6.1",
+	// Errors are printed once, styled, by Execute(); usage is not dumped on
+	// runtime failures. This keeps both interactive and CI output clean.
+	SilenceErrors: true,
+	SilenceUsage:  true,
 	Long: `AutoDev is a developer environment control center.
 
 Use the interactive command center when you are new to AutoDev, or use the
@@ -51,6 +55,7 @@ focused commands below when you already know what you want to do.`,
   # Machine-readable automation
   autodev doctor --json`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		applyColorPreference(nil)
 		if cmd.Name() == "start" && cmd.Parent() != nil && cmd.Parent().Name() == "mcp" {
 			return
 		}
@@ -60,6 +65,11 @@ focused commands below when you already know what you want to do.`,
 		AutoGenerateRulesSilent(".")
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if !isInteractive() {
+			fmt.Println(styleDim.Render("Interactive mode needs a terminal — showing quick start instead."))
+			fmt.Println()
+			return cmd.Help()
+		}
 		c, err := catalog.Load()
 		if err != nil {
 			return fmt.Errorf("failed to load catalog: %w", err)
@@ -69,8 +79,9 @@ focused commands below when you already know what you want to do.`,
 }
 
 func Execute() {
+	applyColorPreference(os.Args)
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		printError(err)
 		os.Exit(1)
 	}
 }
@@ -99,11 +110,13 @@ func init() {
 
 	commands := []*cobra.Command{
 		newScanCmd(), newSetupCmd(), newGitHubCmd(), newDoctorCmd(), newReportCmd(),
+		newScoreCmd(),
 		newInstallCmd(), newUpdateCmd(), newCleanCmd(), newSkillsCmd(), newExportCmd(),
 		newProfileCmd(), newUICmd(), newCloneCmd(), newAuditCmd(), newMCPCmd(), newCreateCmd(),
 		newBenchmarkCmd(), newContainerizeCmd(), newMigrateCmd(), newCICmd(), newPluginCmd(),
 		newCanvasCmd(), newPonytailCmd(), newSecurityCmd(), newSecretsCmd(), newHardenCmd(),
 		newUpgradeCmd(), newToolsCmd(), newRunCmd(), newSessionCmd(), newAgentCmd(), newOpenCodeCmd(),
+		newVersionCmd(),
 	}
 	for _, command := range commands {
 		command.GroupID = commandGroup(command.Name())
@@ -122,7 +135,7 @@ func init() {
 
 func commandGroup(name string) string {
 	switch name {
-	case "doctor", "scan", "report", "benchmark":
+	case "doctor", "scan", "report", "benchmark", "score":
 		return groupDiagnose
 	case "setup", "install", "update", "clean", "profile", "upgrade", "tools", "clone", "migrate":
 		return groupSetup
@@ -158,12 +171,12 @@ func PrintGitHubCTA() {
 	if jsonOut {
 		return
 	}
-	starStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD700")).Bold(true)
-	linkStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Underline(true)
-	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))
+	starStyle := lipgloss.NewStyle().Foreground(lipgloss.Color(paletteFg)).Bold(true)
+	linkStyle := lipgloss.NewStyle().Foreground(lipgloss.Color(paletteAccent)).Underline(true)
+	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color(paletteMuted))
 	fmt.Println()
 	fmt.Println(dimStyle.Render("  ──────────────────────────────────────────────────────────"))
-	fmt.Printf("  %s Star the repo to support AutoDev: %s\n", starStyle.Render("⭐ Love this tool?"), linkStyle.Render("https://github.com/HEETMEHTA18/autodev"))
+	fmt.Printf("  %s Star the repo to support AutoDev: %s\n", starStyle.Render("Love this tool?"), linkStyle.Render("https://github.com/HEETMEHTA18/autodev"))
 	fmt.Println(dimStyle.Render("  ──────────────────────────────────────────────────────────"))
 	fmt.Println()
 }

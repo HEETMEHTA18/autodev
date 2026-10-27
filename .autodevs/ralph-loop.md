@@ -35,6 +35,10 @@ todo_<id>.md
 │ Context Builder │  writes .autodevs/context/CONTEXT_<id>.md
 └────┬────────────┘
      ▼
+┌──────────┐
+│ Refiner  │  rewrites todo+plan+context into the Refined Prompt
+└────┬─────┘  (plan_<id>.md → ## Refined Prompt)
+     ▼
 ┌─────────┐
 │ Builder │  implements smallest production-ready change
 └────┬────┘
@@ -60,6 +64,9 @@ todo_<id>.md
 max_iterations: 5
 max_repair_attempts_per_iteration: 3
 human_review_after_max_iterations: true
+prompt_refinement: true       # Stage 2b: rewrite the task once context is known
+scope_guard: true             # stay inside the todo's domain, no topic drift
+max_refinement_passes: 1      # refine once; the Optimizer updates it on failure
 ```
 
 If `loop_count > max_iterations` → write `failed_<id>.md` and stop.
@@ -115,9 +122,36 @@ Example:
 
 ---
 
+## Stage 2b: Prompt Refinement (self-reprompt)
+
+**Input:** `todo_<id>.md`, `plan_<id>.md`, `CONTEXT_<id>.md`, `memory/*`  
+**Output:** `## Refined Prompt` section at the top of `plans/plan_<id>.md`
+
+Once the work is properly understood, the Refiner rewrites the task into **one precise, self-contained prompt** that carries the whole context and explicit direction:
+
+```markdown
+## Refined Prompt
+
+<goal · in-scope · out-of-scope · key context · constraints · direction · acceptance criteria>
+```
+
+Rules:
+
+- **Bounded** — condense what Planner + Context Builder already established; no new investigation, no re-derivation
+- **Scoped** — strictly inside the todo's domain; anything else goes under "Out of scope", never answered or acted on
+- **Honest** — only facts present in the todo, plan, or CONTEXT; unverified items stay marked "unverified"
+- If Planner marked feasibility `needs_clarification`, skip refinement — keep the questions and stop the loop for a human
+- One pass per task (`max_refinement_passes`); on failure the Prompt Optimizer updates the Refined Prompt instead of re-refining from scratch
+
+The Refined Prompt is the **operative instruction** for Builder, Reviewer, and Verifier in this and every later iteration.
+
+**Agent prompt:** `.autodevs/agents/refiner.md`
+
+---
+
 ## Stage 3: Builder
 
-**Input:** todo, CONTEXT, plan, current loop prompt  
+**Input:** todo, CONTEXT, plan (including the **Refined Prompt** — authoritative), current loop prompt  
 **Output:** Code changes
 
 Rules:
@@ -201,6 +235,9 @@ Each iteration writes `.autodevs/loops/loop_<task_id>_<n>.md`:
 
 ## Plan Summary
 {from plan_<id>.md}
+
+## Refined Prompt (authoritative)
+{from plan_<id>.md → ## Refined Prompt — the operative instruction for this iteration}
 
 ## Previous Attempts
 {summary of loops 1..n-1}

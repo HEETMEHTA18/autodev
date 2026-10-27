@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"os/exec"
@@ -17,26 +18,51 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// chatOptions controls the AI behavior of the interactive chat session.
+type chatOptions struct {
+	thinkingBudget int  // cap on thinking tokens per turn (0 disables thinking)
+	showThoughts   bool // display the model's thought summaries
+	noRefine       bool // skip the two-phase prompt refinement step
+	noGrounding    bool // disable Google Search grounding for answers
+}
+
 func newChatCmd() *cobra.Command {
+	var opts chatOptions
+
 	cmd := &cobra.Command{
 		Use:   "chat",
 		Short: "Start an interactive prompt session to capture and track prompts",
 		Long: `Start an interactive AI coding session. AutoDev will capture all your prompts,
-responses, commands run, and files modified, saving them to .autodevs/sessions/ and prompts.md.`,
-		Example: `  autodev chat`,
+responses, commands run, and files modified, saving them to .autodevs/sessions/ and prompts.md.
+
+Each message is first refined into a scoped, self-contained prompt (full context,
+explicit direction), then answered with a capped thinking budget, a topic-scope
+guard, and search grounding to prevent hallucinated answers.`,
+		Example: `  autodev chat
+  autodev chat --thinking-budget 2048 --show-thoughts
+  autodev chat --no-refine --no-grounding`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runChat()
+			return runChat(opts)
 		},
 	}
+
+	cmd.Flags().IntVar(&opts.thinkingBudget, "thinking-budget", 1024,
+		"max thinking tokens per turn (0 disables thinking, max 24576)")
+	cmd.Flags().BoolVar(&opts.showThoughts, "show-thoughts", false,
+		"display the model's thought summaries")
+	cmd.Flags().BoolVar(&opts.noRefine, "no-refine", false,
+		"skip prompt refinement and answer the raw message directly")
+	cmd.Flags().BoolVar(&opts.noGrounding, "no-grounding", false,
+		"disable Google Search grounding for answers")
 	return cmd
 }
 
-func runChat() error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	accentStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
+func runChat(opts chatOptions) error {
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	accentStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF8700"))
-	cmdStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FFFF"))
+	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#f5a623"))
+	cmdStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3"))
 
 	engine, err := promptcapture.NewEngine("")
 	if err != nil {
@@ -50,14 +76,14 @@ func runChat() error {
 	defer func() { _ = engine.EndSession() }()
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("  ⚡ AutoDev Prompt Capture Chat Engine v0.3.2"))
+	fmt.Println(titleStyle.Render("  AutoDev Prompt Capture Chat Engine v0.3.2"))
 	fmt.Println(dimStyle.Render(fmt.Sprintf("  Session %s initialized.", engine.Session.SessionID)))
 	fmt.Println(dimStyle.Render("  Capturing prompts, files generated, and commands executed."))
 
 	apiKey := os.Getenv("GEMINI_API_KEY")
 	if apiKey == "" {
 		fmt.Println()
-		fmt.Println(warnStyle.Render("  ⚠️  GEMINI_API_KEY not set. Running in simulated developer mode."))
+		fmt.Println(warnStyle.Render("  !  GEMINI_API_KEY not set. Running in simulated developer mode."))
 		fmt.Println(dimStyle.Render("     Set GEMINI_API_KEY to query real AI models."))
 	} else {
 		fmt.Println()
@@ -88,8 +114,8 @@ func runChat() error {
 		var queryErr error
 
 		if apiKey != "" {
-			// Query Gemini
-			responseText, queryErr = queryGemini(input, engine.Session.Events)
+			// Two-phase turn: refine the message, then answer with bounded thinking.
+			responseText, queryErr = askGemini(input, engine.Session.Events, opts)
 			if queryErr != nil {
 				fmt.Println(warnStyle.Render(fmt.Sprintf("  Error querying Gemini: %v. Falling back to simulation.", queryErr)))
 				responseText = getSimulatedResponse(input)
@@ -100,7 +126,7 @@ func runChat() error {
 
 		// Display response
 		fmt.Println()
-		fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#F0F0F0")).Render(responseText))
+		fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#ededed")).Render(responseText))
 		fmt.Println()
 
 		// Parse commands and files suggested in response
@@ -350,97 +376,362 @@ Let's run a doctor toolchain health diagnostics scan to make sure the environmen
 `
 }
 
-func queryGemini(prompt string, history []promptcapture.PromptEvent) (string, error) {
+// ── Gemini integration ──────────────────────────────────────────────────────
+
+const (
+	geminiModel       = "gemini-2.5-flash"
+	maxThinkingBudget = 24576 // Gemini 2.5 Flash thinking limit
+	refineBudget      = 512   // phase-1 refinement stays cheap and fast
+	refineStartMarker = "<<REFINED>>"
+	refineEndMarker   = "<<END_REFINED>>"
+)
+
+type geminiPart struct {
+	Text    string `json:"text,omitempty"`
+	Thought bool   `json:"thought,omitempty"`
+}
+
+type geminiContent struct {
+	Role  string       `json:"role,omitempty"`
+	Parts []geminiPart `json:"parts"`
+}
+
+type geminiRequest struct {
+	Contents          []geminiContent `json:"contents"`
+	SystemInstruction struct {
+		Parts []geminiPart `json:"parts"`
+	} `json:"systemInstruction,omitempty"`
+	GenerationConfig *generationConfig `json:"generationConfig,omitempty"`
+	Tools            []map[string]any  `json:"tools,omitempty"`
+}
+
+type generationConfig struct {
+	ThinkingConfig *thinkingConfig `json:"thinkingConfig,omitempty"`
+}
+
+type thinkingConfig struct {
+	ThinkingBudget  int  `json:"thinkingBudget"`
+	IncludeThoughts bool `json:"includeThoughts"`
+}
+
+// geminiReply is the normalized result of one generateContent call.
+type geminiReply struct {
+	Text     string
+	Thoughts []string
+	Sources  []string
+}
+
+func clampThinkingBudget(n int) int {
+	if n < 0 {
+		return 0
+	}
+	if n > maxThinkingBudget {
+		return maxThinkingBudget
+	}
+	return n
+}
+
+// assistantSystemPrompt keeps the original lazy-senior-dev rules and adds
+// bounded-thinking, topic-scope, and anti-hallucination discipline.
+func assistantSystemPrompt() string {
+	return "You are AutoDev CLI Assistant, a helper to the developer. Respond concisely. " +
+		"You are a lazy senior dev. The best code is the code you never wrote. Follow these rules:\n" +
+		"1. Does this need to exist? → no: skip it (YAGNI)\n" +
+		"2. Stdlib does it? → use it\n" +
+		"3. Native platform feature? → use it\n" +
+		"4. Installed dependency? → use it\n" +
+		"5. One line? → one line\n" +
+		"6. Only then: the minimum that works\n\n" +
+		"Scope discipline:\n" +
+		"- Stay strictly on the topic of the user's question. Never drift into unrelated domains " +
+		"(a finance question must not turn into medical, sports, or celebrity news).\n" +
+		"- If the intent is ambiguous, ask ONE short clarifying question instead of guessing.\n" +
+		"- For out-of-scope follow-ups, say they are out of scope and return to the task.\n\n" +
+		"Anti-hallucination:\n" +
+		"- Never invent facts, statistics, URLs, citations, quotes, or API names.\n" +
+		"- If you are unsure or lack information, say so plainly instead of guessing.\n" +
+		"- Separate verified facts from opinions; cite grounded sources when provided.\n\n" +
+		"Bounded thinking:\n" +
+		"- Think only as long as needed to choose the approach, then answer directly.\n" +
+		"- Do not explore tangents or re-derive points already settled in this conversation.\n\n" +
+		"When you suggest running a command, output: [RUN_COMMAND:your command here]\n" +
+		"When you suggest writing/creating/modifying a file, output:\n" +
+		"[WRITE_FILE:path/to/file]\n" +
+		"file contents here\n" +
+		"[/WRITE_FILE]\n"
+}
+
+// refineSystemPrompt instructs phase 1: rewrite the raw message into one
+// scoped, self-contained prompt that carries the full context and direction.
+func refineSystemPrompt() string {
+	return "You are a prompt-refinement engine. You rewrite a user's raw message into ONE precise, " +
+		"self-contained prompt for an AI coding assistant. Rules:\n" +
+		"- Keep it strictly inside the original topic domain — never widen scope into unrelated subjects.\n" +
+		"- Fold in the relevant earlier conversation context so the prompt stands alone.\n" +
+		"- State the explicit constraints, the desired output, and the direction/next action.\n" +
+		"- Instruct the assistant to answer only from verifiable knowledge and to admit when it does not know.\n" +
+		"- Output ONLY the refined prompt wrapped in " + refineStartMarker + " and " + refineEndMarker +
+		". No commentary, no explanations."
+}
+
+func buildContents(prompt string, history []promptcapture.PromptEvent) []geminiContent {
+	var contents []geminiContent
+	for _, ev := range history {
+		if ev.Prompt == "" && ev.Response == "" {
+			continue
+		}
+		contents = append(contents, geminiContent{
+			Role:  "user",
+			Parts: []geminiPart{{Text: ev.Prompt}},
+		})
+		contents = append(contents, geminiContent{
+			Role:  "model",
+			Parts: []geminiPart{{Text: ev.Response}},
+		})
+	}
+	contents = append(contents, geminiContent{
+		Role:  "user",
+		Parts: []geminiPart{{Text: prompt}},
+	})
+	return contents
+}
+
+// askGemini runs one two-phase turn: refine the message into a scoped prompt
+// (shown to the user), then answer with bounded thinking and grounding.
+// Refinement failures fall back silently to the raw input.
+func askGemini(input string, history []promptcapture.PromptEvent, opts chatOptions) (string, error) {
+	prompt := input
+	if !opts.noRefine {
+		if refined, err := refinePrompt(input, history); err == nil {
+			prompt = refined
+			printRefinedPrompt(refined)
+		}
+	}
+
+	reply, err := callGemini(
+		buildContents(prompt, history),
+		assistantSystemPrompt(),
+		opts.thinkingBudget,
+		opts.showThoughts,
+		!opts.noGrounding,
+	)
+	if err != nil {
+		return "", err
+	}
+	printThoughts(reply.Thoughts)
+	printSources(reply.Sources)
+	return reply.Text, nil
+}
+
+// refinePrompt runs phase 1: fast, tiny thinking budget, no grounding.
+func refinePrompt(input string, history []promptcapture.PromptEvent) (string, error) {
+	reply, err := callGemini(buildContents(input, history), refineSystemPrompt(), refineBudget, false, false)
+	if err != nil {
+		return "", err
+	}
+	return extractRefinedPrompt(reply.Text)
+}
+
+func extractRefinedPrompt(text string) (string, error) {
+	start := strings.Index(text, refineStartMarker)
+	if start < 0 {
+		return "", fmt.Errorf("refinement start marker missing")
+	}
+	rest := text[start+len(refineStartMarker):]
+	end := strings.Index(rest, refineEndMarker)
+	if end < 0 {
+		return "", fmt.Errorf("refinement end marker missing")
+	}
+	refined := strings.TrimSpace(rest[:end])
+	if refined == "" {
+		return "", fmt.Errorf("empty refined prompt")
+	}
+	return refined, nil
+}
+
+// callGemini performs one generateContent request. When Google Search
+// grounding is rejected by the API, it retries once without tools.
+func callGemini(contents []geminiContent, system string, budget int, thoughts, grounding bool) (geminiReply, error) {
 	apiKey := os.Getenv("GEMINI_API_KEY")
 	if apiKey == "" {
-		return "", fmt.Errorf("GEMINI_API_KEY not set")
+		return geminiReply{}, fmt.Errorf("GEMINI_API_KEY not set")
 	}
 
-	type Part struct {
-		Text string `json:"text"`
+	var req geminiRequest
+	req.Contents = contents
+	req.SystemInstruction.Parts = []geminiPart{{Text: system}}
+	req.GenerationConfig = &generationConfig{
+		ThinkingConfig: &thinkingConfig{
+			ThinkingBudget:  clampThinkingBudget(budget),
+			IncludeThoughts: thoughts,
+		},
 	}
-	type Content struct {
-		Role  string `json:"role,omitempty"`
-		Parts []Part `json:"parts"`
-	}
-	type Request struct {
-		Contents          []Content `json:"contents"`
-		SystemInstruction struct {
-			Parts []Part `json:"parts"`
-		} `json:"systemInstruction,omitempty"`
-	}
-
-	var contents []Content
-
-	for _, ev := range history {
-		contents = append(contents, Content{
-			Role:  "user",
-			Parts: []Part{{Text: ev.Prompt}},
-		})
-		contents = append(contents, Content{
-			Role:  "model",
-			Parts: []Part{{Text: ev.Response}},
-		})
+	if grounding {
+		req.Tools = []map[string]any{{"google_search": map[string]any{}}}
 	}
 
-	contents = append(contents, Content{
-		Role:  "user",
-		Parts: []Part{{Text: prompt}},
-	})
-
-	reqBody := Request{
-		Contents: contents,
-	}
-
-	reqBody.SystemInstruction.Parts = []Part{{
-		Text: "You are AutoDev CLI Assistant, a helper to the developer. Respond concisely. " +
-			"You are a lazy senior dev. The best code is the code you never wrote. Follow these rules:\n" +
-			"1. Does this need to exist? → no: skip it (YAGNI)\n" +
-			"2. Stdlib does it? → use it\n" +
-			"3. Native platform feature? → use it\n" +
-			"4. Installed dependency? → use it\n" +
-			"5. One line? → one line\n" +
-			"6. Only then: the minimum that works\n\n" +
-			"When you suggest running a command, output: [RUN_COMMAND:your command here]\n" +
-			"When you suggest writing/creating/modifying a file, output:\n" +
-			"[WRITE_FILE:path/to/file]\n" +
-			"file contents here\n" +
-			"[/WRITE_FILE]\n",
-	}}
-
-	jsonData, err := json.Marshal(reqBody)
+	jsonData, err := json.Marshal(req)
 	if err != nil {
-		return "", err
+		return geminiReply{}, err
 	}
 
-	url := "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	url := "https://generativelanguage.googleapis.com/v1beta/models/" +
+		geminiModel + ":generateContent?key=" + apiKey
+
+	status, body, err := postGemini(url, jsonData)
 	if err != nil {
-		return "", err
+		return geminiReply{}, err
+	}
+
+	if status != http.StatusOK && grounding && status == http.StatusBadRequest {
+		// Search grounding is unavailable for some requests/accounts — retry once without it.
+		req.Tools = nil
+		jsonData, err = json.Marshal(req)
+		if err != nil {
+			return geminiReply{}, err
+		}
+		status, body, err = postGemini(url, jsonData)
+		if err != nil {
+			return geminiReply{}, err
+		}
+	}
+	if status != http.StatusOK {
+		return geminiReply{}, fmt.Errorf("Gemini API returned status %d: %s", status, trimAPIError(body))
+	}
+
+	return parseGeminiResponse(body, thoughts)
+}
+
+func postGemini(url string, payload []byte) (int, []byte, error) {
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(payload))
+	if err != nil {
+		return 0, nil, err
 	}
 	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("Gemini API returned status %d", resp.StatusCode)
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return 0, nil, err
 	}
+	return resp.StatusCode, body, nil
+}
 
-	var geminiResp struct {
+func trimAPIError(body []byte) string {
+	s := strings.Join(strings.Fields(string(body)), " ")
+	if len(s) > 200 {
+		s = s[:200] + "…"
+	}
+	return s
+}
+
+func parseGeminiResponse(body []byte, wantThoughts bool) (geminiReply, error) {
+	var parsed struct {
 		Candidates []struct {
 			Content struct {
-				Parts []struct {
-					Text string `json:"text"`
-				} `json:"parts"`
+				Parts []geminiPart `json:"parts"`
 			} `json:"content"`
+			GroundingMetadata struct {
+				GroundingChunks []struct {
+					Web struct {
+						URI   string `json:"uri"`
+						Title string `json:"title"`
+					} `json:"web"`
+				} `json:"groundingChunks"`
+			} `json:"groundingMetadata"`
 		} `json:"candidates"`
+		PromptFeedback struct {
+			BlockReason string `json:"blockReason"`
+		} `json:"promptFeedback"`
+	}
+	if err := json.Unmarshal(body, &parsed); err != nil {
+		return geminiReply{}, err
+	}
+	if parsed.PromptFeedback.BlockReason != "" {
+		return geminiReply{}, fmt.Errorf("request blocked by safety filter: %s", parsed.PromptFeedback.BlockReason)
+	}
+	if len(parsed.Candidates) == 0 {
+		return geminiReply{}, fmt.Errorf("no response candidate found")
 	}
 
-	if err := json.NewDecoder(resp.Body).Decode(&geminiResp); err != nil {
-		return "", err
+	cand := parsed.Candidates[0]
+	var reply geminiReply
+	var textParts []string
+	for _, p := range cand.Content.Parts {
+		if p.Thought {
+			if wantThoughts && p.Text != "" {
+				reply.Thoughts = append(reply.Thoughts, p.Text)
+			}
+			continue
+		}
+		if p.Text != "" {
+			textParts = append(textParts, p.Text)
+		}
+	}
+	reply.Text = strings.Join(textParts, "\n")
+
+	seen := map[string]bool{}
+	for _, chunk := range cand.GroundingMetadata.GroundingChunks {
+		uri := chunk.Web.URI
+		if uri == "" || seen[uri] {
+			continue
+		}
+		seen[uri] = true
+		title := chunk.Web.Title
+		if title == "" {
+			title = uri
+		}
+		reply.Sources = append(reply.Sources, title+" — "+uri)
+		if len(reply.Sources) >= 5 {
+			break
+		}
 	}
 
-	if len(geminiResp.Candidates) > 0 && len(geminiResp.Candidates[0].Content.Parts) > 0 {
-		return geminiResp.Candidates[0].Content.Parts[0].Text, nil
+	if reply.Text == "" {
+		return geminiReply{}, fmt.Errorf("empty response from Gemini")
+	}
+	return reply, nil
+}
+
+func printRefinedPrompt(p string) {
+	dim := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
+	accent := lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3"))
+
+	const maxDisplay = 600
+	shown := p
+	if len(shown) > maxDisplay {
+		shown = shown[:maxDisplay] + " …"
 	}
 
-	return "", fmt.Errorf("no response candidate found")
+	fmt.Println()
+	fmt.Println(accent.Render("  ▸ refined prompt (scoped, full context)"))
+	for _, line := range strings.Split(shown, "\n") {
+		fmt.Println(dim.Render("    " + line))
+	}
+}
+
+func printThoughts(thoughts []string) {
+	if len(thoughts) == 0 {
+		return
+	}
+	dim := lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))
+	for _, t := range thoughts {
+		t = strings.TrimSpace(t)
+		if t == "" {
+			continue
+		}
+		if len(t) > 400 {
+			t = t[:400] + " …"
+		}
+		fmt.Println(dim.Render("  · " + t))
+	}
+}
+
+func printSources(sources []string) {
+	if len(sources) == 0 {
+		return
+	}
+	dim := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
+	fmt.Println(dim.Render("  · grounded sources:"))
+	for _, s := range sources {
+		fmt.Println(dim.Render("    ·" + s))
+	}
 }

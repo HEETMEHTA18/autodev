@@ -61,13 +61,13 @@ on Linux/macOS and the Windows user PATH automatically).`,
 }
 
 func runUpgrade(checkOnly bool, installDir string) error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
-	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF6B6B"))
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
+	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#ee0000"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("  🔄 AutoDev Upgrade Check"))
+	fmt.Println(titleStyle.Render("  AutoDev Upgrade Check"))
 	fmt.Println()
 
 	latest, err := fetchLatestRelease()
@@ -113,7 +113,7 @@ func runUpgrade(checkOnly bool, installDir string) error {
 	// installed binary is runnable after a fresh shell.
 	if target, ok := upgradedBinaryDir(installDir); ok {
 		if err := ensureOnPath(target); err != nil {
-			fmt.Println(warnStyle.Render(fmt.Sprintf("  ⚠ Could not add %s to PATH: %v", target, err)))
+			fmt.Println(warnStyle.Render(fmt.Sprintf("  ! Could not add %s to PATH: %v", target, err)))
 		} else {
 			fmt.Println(dimStyle.Render(fmt.Sprintf("  ✓ %s is on your PATH", target)))
 		}
@@ -382,7 +382,7 @@ func currentVersion() string {
 	v := rootCmd.Version
 	v = strings.TrimPrefix(strings.TrimSpace(v), "v")
 	if v == "" {
-		v = "0.6.0"
+		v = "0.6.1"
 	}
 	return v
 }

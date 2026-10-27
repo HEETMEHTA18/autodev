@@ -22,12 +22,12 @@ func newHardenCmd() *cobra.Command {
 }
 
 func runHarden() error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("🛡️  AutoDev Repository Hardening"))
+	fmt.Println(titleStyle.Render("  AutoDev Repository Hardening"))
 	fmt.Println(dimStyle.Render("  Generating security boilerplate files..."))
 	fmt.Println()
 
@@ -120,9 +120,9 @@ paths = [
 	for path, content := range filesToGenerate {
 		if err := writeFileSafely(path, content); err != nil {
 			if err.Error() == "file already exists" {
-				fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD700")).Render(fmt.Sprintf("  ⚠ Skipped %s (already exists)", path)))
+				fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#0070f3")).Render(fmt.Sprintf("  ! Skipped %s (already exists)", path)))
 			} else {
-				fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#FF6B6B")).Render(fmt.Sprintf("  ✗ Failed to create %s: %v", path, err)))
+				fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#ee0000")).Render(fmt.Sprintf("  ✗ Failed to create %s: %v", path, err)))
 			}
 		} else {
 			fmt.Println(successStyle.Render(fmt.Sprintf("  ✓ Created %s", path)))

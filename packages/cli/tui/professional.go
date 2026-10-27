@@ -19,20 +19,20 @@ import (
 // browser remains available in the package for compatibility, while this model
 // provides a guided detect -> plan -> execute -> verify workflow.
 var (
-	pcBg      = lipgloss.Color("#000000")
-	pcSurface = lipgloss.Color("#0C0C0C")
-	pcBorder  = lipgloss.Color("#222222")
-	pcText    = lipgloss.Color("#FFFFFF")
+	pcBg      = lipgloss.Color("#0a0a0a")
+	pcSurface = lipgloss.Color("#0a0a0a")
+	pcBorder  = lipgloss.Color("#2a2a2a")
+	pcText    = lipgloss.Color("#ededed")
 	pcMuted   = lipgloss.Color("#888888")
-	pcAccent  = lipgloss.Color("#FFD700")
-	pcGreen   = lipgloss.Color("#00FF87")
-	pcRed     = lipgloss.Color("#FF5F56")
+	pcAccent  = lipgloss.Color("#0070f3")
+	pcGreen   = lipgloss.Color("#00c853")
+	pcRed     = lipgloss.Color("#ee0000")
 
 	pcTitle       = lipgloss.NewStyle().Bold(true).Foreground(pcText)
 	pcMutedStyle  = lipgloss.NewStyle().Foreground(pcMuted)
 	pcAccentStyle = lipgloss.NewStyle().Bold(true).Foreground(pcAccent)
-	pcSelected    = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#000000")).Background(pcAccent).Padding(0, 1)
-	pcCard        = lipgloss.NewStyle().Background(pcSurface).Border(lipgloss.RoundedBorder()).BorderForeground(pcBorder).Padding(1, 2)
+	pcSelected    = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#ffffff")).Background(pcAccent).Padding(0, 1)
+	pcCard        = lipgloss.NewStyle().Background(pcSurface).Border(lipgloss.NormalBorder()).BorderForeground(pcBorder).Padding(1, 2)
 	pcPill        = lipgloss.NewStyle().Background(lipgloss.Color("#1A1A1A")).Foreground(pcAccent).Padding(0, 1)
 )
 
@@ -338,7 +338,7 @@ func (m professionalModel) View() string {
 func (m professionalModel) header() string {
 	platform := runtime.GOOS + "/" + runtime.GOARCH
 	if m.sys != nil {
-		platform = fmt.Sprintf("%s • %s", m.sys.Version, m.sys.Arch)
+		platform = fmt.Sprintf("%s ·%s", m.sys.Version, m.sys.Arch)
 	}
 	return lipgloss.JoinHorizontal(lipgloss.Top, pcTitle.Render("◆ AutoDev"), "  ", pcPill.Render(platform), "  ", pcMutedStyle.Render("Developer Environment Control Center"))
 }
@@ -354,7 +354,7 @@ func (m professionalModel) viewHome() string {
 		}
 		items = append(items, line)
 	}
-	status := pcMutedStyle.Render(fmt.Sprintf("%d selected • %s • ↑↓ navigate • enter select • q quit", selected, platformLabel(m.sys)))
+	status := pcMutedStyle.Render(fmt.Sprintf("%d selected ·%s ·↑↓ navigate ·enter select ·q quit", selected, platformLabel(m.sys)))
 	if m.errorText != "" {
 		status = lipgloss.NewStyle().Foreground(pcRed).Render("! " + m.errorText)
 	}
@@ -376,7 +376,7 @@ func (m professionalModel) viewCatalog() string {
 		}
 		rows = append(rows, line)
 	}
-	return pcCard.Render(pcTitle.Render("Tool catalog") + "\n" + catLine + "\n" + pcMutedStyle.Render("←/→ category • ↑/↓ package • space select • a all • n none • enter review • esc back") + "\n\n" + strings.Join(rows, "\n"))
+	return pcCard.Render(pcTitle.Render("Tool catalog") + "\n" + catLine + "\n" + pcMutedStyle.Render("←/→ category ·↑/↓ package ·space select ·a all ·n none ·enter review ·esc back") + "\n\n" + strings.Join(rows, "\n"))
 }
 
 func (m professionalModel) viewProfiles() string {
@@ -411,9 +411,9 @@ func (m professionalModel) viewConfirm() string {
 		if p.IsInstalled() {
 			state = "already installed — verify"
 		}
-		rows = append(rows, fmt.Sprintf("• %-24s %s", p.Name, pcMutedStyle.Render(state)))
+		rows = append(rows, fmt.Sprintf("·%-24s %s", p.Name, pcMutedStyle.Render(state)))
 	}
-	return pcCard.Render(pcTitle.Render(fmt.Sprintf("Review setup • %d actions", len(m.queue))) + "\n" + pcMutedStyle.Render("Nothing changes until you confirm. Dependencies have already been resolved.") + "\n\n" + strings.Join(rows, "\n") + "\n\n" + pcAccentStyle.Render("Enter / y: install") + "  " + pcMutedStyle.Render("Esc / n: cancel"))
+	return pcCard.Render(pcTitle.Render(fmt.Sprintf("Review setup ·%d actions", len(m.queue))) + "\n" + pcMutedStyle.Render("Nothing changes until you confirm. Dependencies have already been resolved.") + "\n\n" + strings.Join(rows, "\n") + "\n\n" + pcAccentStyle.Render("Enter / y: install") + "  " + pcMutedStyle.Render("Esc / n: cancel"))
 }
 
 func (m professionalModel) viewInstalling() string {
@@ -434,7 +434,7 @@ func (m professionalModel) viewInstalling() string {
 }
 
 func (m professionalModel) viewComplete() string {
-	return pcCard.Render(pcTitle.Render("Environment setup complete") + "\n\n" + lipgloss.NewStyle().Foreground(pcGreen).Render(fmt.Sprintf("✓ %d succeeded", len(m.success))) + "   " + lipgloss.NewStyle().Foreground(pcRed).Render(fmt.Sprintf("✕ %d failed", len(m.failed))) + "\n" + pcMutedStyle.Render(fmt.Sprintf("Elapsed: %s", time.Since(m.started).Round(time.Second))) + "\n\n" + pcMutedStyle.Render("Recommended next commands:") + "\n  autodev doctor   — verify the environment\n  autodev scan     — understand the current project\n  autodev agent    — start the AI workflow\n\n" + pcMutedStyle.Render("Enter / Esc to return to the command center"))
+	return pcCard.Render(pcTitle.Render("Environment setup complete") + "\n\n" + lipgloss.NewStyle().Foreground(pcGreen).Render(fmt.Sprintf("✓ %d succeeded", len(m.success))) + "   " + lipgloss.NewStyle().Foreground(pcRed).Render(fmt.Sprintf("✗%d failed", len(m.failed))) + "\n" + pcMutedStyle.Render(fmt.Sprintf("Elapsed: %s", time.Since(m.started).Round(time.Second))) + "\n\n" + pcMutedStyle.Render("Recommended next commands:") + "\n  autodev doctor   — verify the environment\n  autodev scan     — understand the current project\n  autodev agent    — start the AI workflow\n\n" + pcMutedStyle.Render("Enter / Esc to return to the command center"))
 }
 
 func selectedIDs(selected map[string]bool) []string {

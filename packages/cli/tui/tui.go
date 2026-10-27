@@ -18,22 +18,22 @@ import (
 // ── Styles ───────────────────────────────────────────────────────────────────
 
 var (
-	colorYellow = lipgloss.Color("#FFD700")
-	colorGreen  = lipgloss.Color("#00FF87")
-	colorRed    = lipgloss.Color("#FF4444")
-	colorBlue   = lipgloss.Color("#4A90E2")
+	colorAccent = lipgloss.Color("#0070f3")
+	colorGreen  = lipgloss.Color("#00c853")
+	colorRed    = lipgloss.Color("#ee0000")
+	colorBlue   = lipgloss.Color("#0070f3")
 	colorGray   = lipgloss.Color("#555555")
-	colorWhite  = lipgloss.Color("#F0F0F0")
+	colorWhite  = lipgloss.Color("#ededed")
 
-	styleSelected = lipgloss.NewStyle().Bold(true).Foreground(colorYellow)
+	styleSelected = lipgloss.NewStyle().Bold(true).Foreground(colorAccent)
 	styleNormal   = lipgloss.NewStyle().Foreground(colorWhite)
 	styleDim      = lipgloss.NewStyle().Foreground(colorGray)
 	styleCheck    = lipgloss.NewStyle().Foreground(colorGreen).Bold(true)
 	styleCategory = lipgloss.NewStyle().Bold(true).Foreground(colorBlue).MarginTop(1)
-	styleBadge    = lipgloss.NewStyle().Background(colorYellow).Foreground(lipgloss.Color("#000000")).Padding(0, 1).Bold(true)
+	styleBadge    = lipgloss.NewStyle().Background(colorAccent).Foreground(lipgloss.Color("#ffffff")).Padding(0, 1).Bold(true)
 	styleSuccess  = lipgloss.NewStyle().Foreground(colorGreen).Bold(true)
 	styleError    = lipgloss.NewStyle().Foreground(colorRed).Bold(true)
-	styleHint     = lipgloss.NewStyle().Foreground(colorGray).Italic(true)
+	styleHint     = lipgloss.NewStyle().Foreground(colorGray)
 )
 
 // ── State machine ─────────────────────────────────────────────────────────────
@@ -478,7 +478,7 @@ func (m Model) viewDone() string {
 	b.WriteString(m.renderHeader())
 	b.WriteString("\n\n")
 
-	b.WriteString(lipgloss.NewStyle().Foreground(colorYellow).Bold(true).Render("  INSTALLATION SUMMARY"))
+	b.WriteString(lipgloss.NewStyle().Foreground(colorAccent).Bold(true).Render("  INSTALLATION SUMMARY"))
 	b.WriteString("\n")
 	b.WriteString(styleDim.Render("  ──────────────────────────────────────────────────────────"))
 	b.WriteString("\n\n")
@@ -551,7 +551,7 @@ func (m Model) renderHeader() string {
   ██╔══██║██║   ██║   ██║   ██║   ██║██║  ██║██╔══╝  ╚██╗ ██╔╝
   ██║  ██║╚██████╔╝   ██║   ╚██████╔╝██████╔╝███████╗ ╚████╔╝ 
   ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚══════╝ ╚═════╝ ╚══════╝  ╚═══╝ `
-	b.WriteString(lipgloss.NewStyle().Foreground(colorYellow).Bold(true).Render(ascii))
+	b.WriteString(GalaxyBlock(ascii))
 	b.WriteString("\n\n")
 	if m.sysInfo != nil {
 		specs := fmt.Sprintf("  OS: %s (%s) | RAM: %s | PM: %s",

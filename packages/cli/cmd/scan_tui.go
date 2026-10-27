@@ -354,25 +354,25 @@ func (m scanTUIModel) View() string {
 	}
 
 	// ── Lipgloss Styles ────────────────────────────────────────────────────────
-	colorGold := lipgloss.Color("#FFD700")
-	colorGreen := lipgloss.Color("#00FF87")
-	colorCyan := lipgloss.Color("#00E5FF")
+	colorGold := lipgloss.Color("#0070f3")
+	colorGreen := lipgloss.Color("#00c853")
+	colorCyan := lipgloss.Color("#0070f3")
 	colorGray := lipgloss.Color("#555555")
 	colorWhite := lipgloss.Color("#FFFFFF")
 
-	styleTitle := lipgloss.NewStyle().Bold(true).Foreground(colorGold).Padding(0, 1).BorderStyle(lipgloss.DoubleBorder()).BorderForeground(colorGold)
-	styleHeaderDesc := lipgloss.NewStyle().Foreground(colorCyan).Italic(true)
-	stylePane := lipgloss.NewStyle().Border(lipgloss.RoundedBorder()).BorderForeground(colorGray).Padding(1, 2)
-	styleSelectedNode := lipgloss.NewStyle().Background(lipgloss.Color("#2C2C2C")).Foreground(colorGold).Bold(true)
+	styleTitle := lipgloss.NewStyle().Bold(true).Foreground(colorGold).Padding(0, 1).BorderStyle(lipgloss.NormalBorder()).BorderForeground(colorGold)
+	styleHeaderDesc := lipgloss.NewStyle().Foreground(colorCyan)
+	stylePane := lipgloss.NewStyle().Border(lipgloss.NormalBorder()).BorderForeground(colorGray).Padding(1, 2)
+	styleSelectedNode := lipgloss.NewStyle().Background(lipgloss.Color("#2a2a2a")).Foreground(colorGold).Bold(true)
 	styleNormalNode := lipgloss.NewStyle().Foreground(colorWhite)
 	styleDetailTitle := lipgloss.NewStyle().Bold(true).Foreground(colorCyan).Underline(true)
 	styleDetailLabel := lipgloss.NewStyle().Foreground(colorGold).Bold(true)
 	styleDetailVal := lipgloss.NewStyle().Foreground(colorWhite)
 	styleBadge := lipgloss.NewStyle().Background(colorGreen).Foreground(lipgloss.Color("#000000")).Bold(true).Padding(0, 1)
-	styleFooter := lipgloss.NewStyle().Foreground(colorGray).Italic(true)
+	styleFooter := lipgloss.NewStyle().Foreground(colorGray)
 
 	// Render Header
-	headerStr := styleTitle.Render("⚡ AUTODEV DEPENDENCY TUI SCANNER")
+	headerStr := styleTitle.Render("AUTODEV DEPENDENCY TUI SCANNER")
 	headerDesc := styleHeaderDesc.Render("  Interactively explore directory hierarchy and configuration dependencies")
 	header := lipgloss.JoinVertical(lipgloss.Left, headerStr, headerDesc, "")
 
@@ -396,12 +396,12 @@ func (m scanTUIModel) View() string {
 
 		// Construct prefix guidelines representing tree depth
 		indent := strings.Repeat("  ", node.Level)
-		prefix := "📄 "
+		prefix := ""
 		if node.IsDir {
 			if node.IsOpen {
-				prefix = "📂 "
+				prefix = ""
 			} else {
-				prefix = "📁 "
+				prefix = ""
 			}
 		}
 
@@ -462,9 +462,9 @@ func (m scanTUIModel) View() string {
 				detailLines = append(detailLines, styleDetailVal.Render(fmt.Sprintf("  ... and %d more", len(selectedNode.Children)-10)))
 				break
 			}
-			childType := "📄"
+			childType := ""
 			if child.IsDir {
-				childType = "📁"
+				childType = ""
 			}
 			detailLines = append(detailLines, styleDetailVal.Render(fmt.Sprintf("  %s %s", childType, child.Name)))
 		}

@@ -26,16 +26,16 @@ laziest senior dev in the room. The best code is the code you never wrote.`,
 }
 
 func runPonytail() error {
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF87"))
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	successStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00c853"))
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 
 	fmt.Println()
-	fmt.Println(titleStyle.Render("  👱‍♂️  AutoDev Ponytail: Lazy Senior Dev Mode"))
+	fmt.Println(titleStyle.Render("   AutoDev Ponytail: Lazy Senior Dev Mode"))
 	fmt.Println(dimStyle.Render("  The best code is the code you never wrote."))
 	fmt.Println()
 
-	rulesContent := `# ⚡ PONYTAIL: LAZY SENIOR DEV RULES
+	rulesContent := `# PONYTAIL: LAZY SENIOR DEV RULES
 
 The best code is the code you never wrote. Follow these steps for any task:
 1. Does this need to exist? → no: skip it (YAGNI)

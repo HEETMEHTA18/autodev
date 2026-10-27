@@ -13,14 +13,14 @@ import (
 )
 
 var (
-	agentOKStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF87")).Bold(true)
-	agentWarnStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("#FF6B6B"))
+	agentOKStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("#00c853")).Bold(true)
+	agentWarnStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("#ee0000"))
 	agentDimStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	agentTitleStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD700"))
-	agentRoleStyle  = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#4A90E2"))
+	agentTitleStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
+	agentRoleStyle  = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#0070f3"))
 	agentBoxStyle   = lipgloss.NewStyle().
-			Border(lipgloss.RoundedBorder()).
-			BorderForeground(lipgloss.Color("#4A90E2")).
+			Border(lipgloss.NormalBorder()).
+			BorderForeground(lipgloss.Color("#0070f3")).
 			PaddingLeft(1).
 			PaddingRight(1).
 			Width(56)
